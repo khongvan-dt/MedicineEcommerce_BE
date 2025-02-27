@@ -19,6 +19,4 @@ public class Medicine extends BaseEntity {
     private Brand brand;
     private String origin;
     private String manufacturer;
-    @ManyToOne
-    private MedicineType type;
 }

@@ -6,9 +6,5 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum SocialProvider {
-    GOOGLE("google"),
-    FACEBOOK("facebook"),
-    GITHUB("github");
-
-    private final String providerType;
+    GOOGLE, FACEBOOK, GITHUB;
 }
