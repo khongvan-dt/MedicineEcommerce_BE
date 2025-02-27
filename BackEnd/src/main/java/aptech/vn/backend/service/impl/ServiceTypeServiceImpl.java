@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
+
 public class ServiceTypeServiceImpl implements ServiceTypeService {
 
     private final ServiceTypeRepository serviceTypeRepository;

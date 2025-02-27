@@ -6,10 +6,14 @@ import aptech.vn.backend.repository.SocialAccountRepository;
 import aptech.vn.backend.service.SocialAccountService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
+@Transactional
 public class SocialAccountServiceImpl implements SocialAccountService {
 
     private final SocialAccountRepository socialAccountRepository;

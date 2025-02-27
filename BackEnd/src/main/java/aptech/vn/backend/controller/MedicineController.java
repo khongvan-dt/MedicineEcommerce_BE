@@ -1,4 +1,4 @@
 package aptech.vn.backend.controller;
 
-public class Medicine {
+public class MedicineController {
 }

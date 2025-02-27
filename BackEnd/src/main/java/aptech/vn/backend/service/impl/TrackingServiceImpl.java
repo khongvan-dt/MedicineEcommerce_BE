@@ -6,10 +6,14 @@ import aptech.vn.backend.repository.TrackingRepository;
 import aptech.vn.backend.service.TrackingService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
+@Transactional
 public class TrackingServiceImpl implements TrackingService {
 
     private final TrackingRepository trackingRepository;

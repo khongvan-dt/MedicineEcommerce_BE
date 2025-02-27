@@ -65,12 +65,7 @@ public class MedicineServiceImpl implements MedicineService {
     public List<Medicine> findByManufacturer(String manufacturer) {
         return medicineRepository.findByManufacturer(manufacturer);
     }
-
-    @Override
-    public List<Medicine> findByTypeId(Long typeId) {
-        return medicineRepository.findByTypeId(typeId);
-    }
-
+    
     @Override
     public List<Medicine> findByNameContaining(String name) {
         return medicineRepository.findByNameContaining(name);

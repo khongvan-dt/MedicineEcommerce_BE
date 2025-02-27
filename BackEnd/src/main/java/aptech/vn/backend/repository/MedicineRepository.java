@@ -14,6 +14,5 @@ public interface MedicineRepository extends JpaRepository<Medicine, Long> {
     List<Medicine> findByBrandId(Long brandId);
     List<Medicine> findByOrigin(String origin);
     List<Medicine> findByManufacturer(String manufacturer);
-    List<Medicine> findByTypeId(Long typeId);
     List<Medicine> findByNameContaining(String name);
 }
