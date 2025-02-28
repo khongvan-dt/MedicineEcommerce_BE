@@ -2,6 +2,7 @@ package aptech.vn.backend.service.impl;
 
 import aptech.vn.backend.entity.BookingStatus;
 import aptech.vn.backend.entity.ServiceBooking;
+import aptech.vn.backend.repository.ServiceBookingRepository;
 import aptech.vn.backend.service.ServiceBookingService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,59 +17,59 @@ import java.util.Optional;
 @Transactional
 public class ServiceBookingServiceImpl implements ServiceBookingService {
 
-    private final ServiceBookingServiceImpl serviceBookingServiceImpl;
+    private final ServiceBookingRepository serviceBookingRepository;
 
-    public ServiceBookingServiceImpl() {
-        serviceBookingServiceImpl = new ServiceBookingServiceImpl();
+    public ServiceBookingServiceImpl(ServiceBookingRepository serviceBookingRepository) {
+        this.serviceBookingRepository = serviceBookingRepository;
     }
 
     @Override
     public ServiceBooking save(ServiceBooking serviceBooking) {
-        return serviceBookingServiceImpl.save(serviceBooking);
+        return serviceBookingRepository.save(serviceBooking);
     }
 
     @Override
     public Optional<ServiceBooking> findById(Long id) {
-        return serviceBookingServiceImpl.findById(id);
+        return serviceBookingRepository.findById(id);
     }
 
     @Override
     public List<ServiceBooking> findAll() {
-        return serviceBookingServiceImpl.findAll();
+        return serviceBookingRepository.findAll();
     }
 
     @Override
     public Page<ServiceBooking> findAll(Pageable pageable) {
-        return serviceBookingServiceImpl.findAll(pageable);
+        return serviceBookingRepository.findAll(pageable);
     }
 
     @Override
     public void deleteById(Long id) {
-        serviceBookingServiceImpl.deleteById(id);
+        serviceBookingRepository.deleteById(id);
     }
 
     @Override
     public List<ServiceBooking> findByPatientId(Long patientId) {
-        return serviceBookingServiceImpl.findByPatientId(patientId);
+        return serviceBookingRepository.findByPatientId(patientId);
     }
 
     @Override
     public List<ServiceBooking> findByServiceId(Long serviceId) {
-        return serviceBookingServiceImpl.findByServiceId(serviceId);
+        return serviceBookingRepository.findByServiceId(serviceId);
     }
 
     @Override
     public List<ServiceBooking> findByStatus(BookingStatus status) {
-        return serviceBookingServiceImpl.findByStatus(status);
+        return serviceBookingRepository.findByStatus(status);
     }
 
     @Override
     public boolean updateStatus(Long bookingId, BookingStatus newStatus) {
-        return serviceBookingServiceImpl.updateStatus(bookingId, newStatus);
+        return false;
     }
 
     @Override
     public List<ServiceBooking> findByCreatedAtBetween(LocalDateTime start, LocalDateTime end) {
-        return serviceBookingServiceImpl.findByCreatedAtBetween(start, end);
+       return serviceBookingRepository.findByCreatedAtBetween(start, end);
     }
 }
