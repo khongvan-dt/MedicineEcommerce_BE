@@ -3,13 +3,16 @@ package aptech.vn.backend.service.impl;
 import aptech.vn.backend.entity.ServiceType;
 import aptech.vn.backend.repository.ServiceTypeRepository;
 import aptech.vn.backend.service.ServiceTypeService;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-
+@Service
+@Transactional
 public class ServiceTypeServiceImpl implements ServiceTypeService {
 
     private final ServiceTypeRepository serviceTypeRepository;
