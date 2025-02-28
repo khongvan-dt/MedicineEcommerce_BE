@@ -70,10 +70,6 @@ public class ServiceBookingServiceImpl implements ServiceBookingService {
 
     @Override
     public List<ServiceBooking> findByCreatedAtBetween(LocalDateTime start, LocalDateTime end) {
-<<<<<<< HEAD
+
        return serviceBookingRepository.findByCreatedAtBetween(start, end);
-=======
-        return serviceBookingRepository.findByCreatedAtBetween(start, end);
->>>>>>> d14dab6cf29d74652a4604ab2234cf41fc8aad00
-    }
-}
+}}
