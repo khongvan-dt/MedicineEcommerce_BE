@@ -1,5 +1,6 @@
 package aptech.vn.backend.controller;
 
+import aptech.vn.backend.DTO.CategoryDTO;
 import aptech.vn.backend.entity.Category;
 import aptech.vn.backend.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,7 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<List<Category>> getAllCategories() {
-        List<Category> categories = categoryService.findAll();
-        return new ResponseEntity<>(categories, HttpStatus.OK);
+        return new ResponseEntity<>(categoryService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -28,20 +28,30 @@ public class CategoryController {
                 .map(category -> new ResponseEntity<>(category, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-
     @PostMapping
-    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
+    public ResponseEntity<Category> createCategory(@RequestBody CategoryDTO categoryDTO) {
+        Category category = new Category();
+        category.setName(categoryDTO.getName());
+
+        if (categoryDTO.getParentId() != null) {
+            categoryService.findById(categoryDTO.getParentId()).ifPresent(category::setParent);
+        }
+
         Category savedCategory = categoryService.save(category);
         return new ResponseEntity<>(savedCategory, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Category category) {
+    public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO) {
         return categoryService.findById(id)
                 .map(existingCategory -> {
-                    category.setId(id);
-                    Category updatedCategory = categoryService.save(category);
-                    return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
+                    existingCategory.setName(categoryDTO.getName());
+                    if (categoryDTO.getParentId() != null) {
+                        categoryService.findById(categoryDTO.getParentId()).ifPresent(existingCategory::setParent);
+                    } else {
+                        existingCategory.setParent(null);
+                    }
+                    return new ResponseEntity<>(categoryService.save(existingCategory), HttpStatus.OK);
                 })
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -54,30 +64,5 @@ public class CategoryController {
                     return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
                 })
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-
-    @GetMapping("/name/{name}")
-    public ResponseEntity<Category> getCategoryByName(@PathVariable String name) {
-        return categoryService.findByName(name)
-                .map(category -> new ResponseEntity<>(category, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-
-    @GetMapping("/parent/{parentId}")
-    public ResponseEntity<List<Category>> getCategoriesByParentId(@PathVariable Long parentId) {
-        List<Category> categories = categoryService.findByParentId(parentId);
-        return new ResponseEntity<>(categories, HttpStatus.OK);
-    }
-
-    @GetMapping("/root")
-    public ResponseEntity<List<Category>> getRootCategories() {
-        List<Category> categories = categoryService.findByParentIsNull();
-        return new ResponseEntity<>(categories, HttpStatus.OK);
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<List<Category>> getCategoriesContainingName(@RequestParam String name) {
-        List<Category> categories = categoryService.findByNameContaining(name);
-        return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 }

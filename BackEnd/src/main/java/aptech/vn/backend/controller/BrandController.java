@@ -1,5 +1,6 @@
 package aptech.vn.backend.controller;
 
+import aptech.vn.backend.DTO.BrandDTO;
 import aptech.vn.backend.entity.Brand;
 import aptech.vn.backend.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,17 +31,24 @@ public class BrandController {
     }
 
     @PostMapping
-    public ResponseEntity<Brand> createBrand(@RequestBody Brand brand) {
+    public ResponseEntity<Brand> createBrand(@RequestBody BrandDTO brandDTO) {
+        Brand brand = Brand.builder()
+                .name(brandDTO.getName())
+                .image(brandDTO.getImage())
+                .build();
+
         Brand savedBrand = brandService.save(brand);
         return new ResponseEntity<>(savedBrand, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Brand> updateBrand(@PathVariable Long id, @RequestBody Brand brand) {
+    public ResponseEntity<Brand> updateBrand(@PathVariable Long id, @RequestBody BrandDTO brandDTO) {
         return brandService.findById(id)
                 .map(existingBrand -> {
-                    brand.setId(id);
-                    Brand updatedBrand = brandService.save(brand);
+                    existingBrand.setName(brandDTO.getName());
+                    existingBrand.setImage(brandDTO.getImage());
+
+                    Brand updatedBrand = brandService.save(existingBrand);
                     return new ResponseEntity<>(updatedBrand, HttpStatus.OK);
                 })
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
