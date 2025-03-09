@@ -7,6 +7,7 @@ import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface MedicineMapper {
-    MedicineDTO toDto(Medicine entity);
-    Medicine toEntity(MedicineDTO dto);
+    MedicineDTO.GetDto toGetDto(Medicine medicine);
+    MedicineDTO.InsertDto toInsertDto(Medicine medicine);
+    Medicine toEntity(MedicineDTO.InsertDto dto);
 }

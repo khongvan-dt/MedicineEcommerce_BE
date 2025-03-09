@@ -9,10 +9,20 @@ import java.util.Optional;
 
 @Repository
 public interface MedicineRepository extends JpaRepository<Medicine, Long> {
-    Optional<Medicine> findByCode(String code);
-    List<Medicine> findByName(String name);
-    List<Medicine> findByNameContaining(String namePattern);
-    List<Medicine> findByBrand_Id(Long brandId);
-    List<Medicine> findByOrigin(String origin);
-    List<Medicine> findByManufacturer(String manufacturer);
+
+    List<Medicine> findAllByDeletedAtIsNull();
+
+    Optional<Medicine> findByIdAndDeletedAtIsNull(Long id);
+
+    Optional<Medicine> findByCodeAndDeletedAtIsNull(String code);
+
+    List<Medicine> findByNameAndDeletedAtIsNull(String name);
+
+    List<Medicine> findByNameContainingAndDeletedAtIsNull(String namePattern);
+
+    List<Medicine> findByBrandIdAndDeletedAtIsNull(Long brandId);
+
+    List<Medicine> findByOriginAndDeletedAtIsNull(String origin);
+
+    List<Medicine> findByManufacturerAndDeletedAtIsNull(String manufacturer);
 }

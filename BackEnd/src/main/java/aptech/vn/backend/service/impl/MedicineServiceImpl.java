@@ -7,8 +7,8 @@ import aptech.vn.backend.repository.MedicineRepository;
 import aptech.vn.backend.service.MedicineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,59 +25,71 @@ public class MedicineServiceImpl implements MedicineService {
         this.medicineMapper = medicineMapper;
     }
 
-    public List<MedicineDTO> findAll() {
-        return medicineRepository.findAll().stream()
-                .map(medicineMapper::toDto)
+    @Override
+    public List<MedicineDTO.GetDto> findAll() {
+        return medicineRepository.findAllByDeletedAtIsNull().stream()
+                .map(medicineMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 
-    public Optional<MedicineDTO> findById(Long id) {
-        return medicineRepository.findById(id)
-                .map(medicineMapper::toDto);
+    @Override
+    public Optional<MedicineDTO.GetDto> findById(Long id) {
+        return medicineRepository.findByIdAndDeletedAtIsNull(id)
+                .map(medicineMapper::toGetDto);
     }
 
-    public MedicineDTO save(MedicineDTO medicineDTO) {
+    @Override
+    public MedicineDTO.InsertDto save(MedicineDTO.InsertDto medicineDTO) {
         Medicine medicine = medicineMapper.toEntity(medicineDTO);
         Medicine savedMedicine = medicineRepository.save(medicine);
-        return medicineMapper.toDto(savedMedicine);
+        return medicineMapper.toInsertDto(savedMedicine);
     }
 
-    public void deleteById(Long id) {
-        medicineRepository.deleteById(id);
+    @Override
+    public void softDeleteByIds(List<Long> ids) {
+        List<Medicine> medicines = medicineRepository.findAllById(ids);
+        medicines.forEach(medicine -> medicine.setDeletedAt(LocalDateTime.now()));
+        medicineRepository.saveAll(medicines);
     }
 
-    public Optional<MedicineDTO> findByCode(String code) {
-        return medicineRepository.findByCode(code)
-                .map(medicineMapper::toDto);
+    @Override
+    public Optional<MedicineDTO.GetDto> findByCode(String code) {
+        return medicineRepository.findByCodeAndDeletedAtIsNull(code)
+                .map(medicineMapper::toGetDto);
     }
 
-    public List<MedicineDTO> findByName(String name) {
-        return medicineRepository.findByName(name).stream()
-                .map(medicineMapper::toDto)
+    @Override
+    public List<MedicineDTO.GetDto> findByName(String name) {
+        return medicineRepository.findByNameAndDeletedAtIsNull(name).stream()
+                .map(medicineMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 
-    public List<MedicineDTO> findByNameContaining(String namePattern) {
-        return medicineRepository.findByNameContaining(namePattern).stream()
-                .map(medicineMapper::toDto)
+    @Override
+    public List<MedicineDTO.GetDto> findByNameContaining(String namePattern) {
+        return medicineRepository.findByNameContainingAndDeletedAtIsNull(namePattern).stream()
+                .map(medicineMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 
-    public List<MedicineDTO> findByBrandId(Long brandId) {
-        return medicineRepository.findByBrand_Id(brandId).stream()
-                .map(medicineMapper::toDto)
+    @Override
+    public List<MedicineDTO.GetDto> findByBrandId(Long brandId) {
+        return medicineRepository.findByBrandIdAndDeletedAtIsNull(brandId).stream()
+                .map(medicineMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 
-    public List<MedicineDTO> findByOrigin(String origin) {
-        return medicineRepository.findByOrigin(origin).stream()
-                .map(medicineMapper::toDto)
+    @Override
+    public List<MedicineDTO.GetDto> findByOrigin(String origin) {
+        return medicineRepository.findByOriginAndDeletedAtIsNull(origin).stream()
+                .map(medicineMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 
-    public List<MedicineDTO> findByManufacturer(String manufacturer) {
-        return medicineRepository.findByManufacturer(manufacturer).stream()
-                .map(medicineMapper::toDto)
+    @Override
+    public List<MedicineDTO.GetDto> findByManufacturer(String manufacturer) {
+        return medicineRepository.findByManufacturerAndDeletedAtIsNull(manufacturer).stream()
+                .map(medicineMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 }

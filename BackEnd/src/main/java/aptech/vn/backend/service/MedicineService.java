@@ -5,14 +5,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MedicineService {
-    List<MedicineDTO> findAll();
-    Optional<MedicineDTO> findById(Long id);
-    MedicineDTO save(MedicineDTO medicineDTO);
-    void deleteById(Long id);
-    Optional<MedicineDTO> findByCode(String code);
-    List<MedicineDTO> findByName(String name);
-    List<MedicineDTO> findByNameContaining(String namePattern);
-    List<MedicineDTO> findByBrandId(Long brandId);
-    List<MedicineDTO> findByOrigin(String origin);
-    List<MedicineDTO> findByManufacturer(String manufacturer);
+    List<MedicineDTO.GetDto> findAll();
+    Optional<MedicineDTO.GetDto> findById(Long id);
+    MedicineDTO.InsertDto save(MedicineDTO.InsertDto medicineDTO);
+    void softDeleteByIds(List<Long> ids);
+    Optional<MedicineDTO.GetDto> findByCode(String code);
+    List<MedicineDTO.GetDto> findByName(String name);
+    List<MedicineDTO.GetDto> findByNameContaining(String namePattern);
+    List<MedicineDTO.GetDto> findByBrandId(Long brandId);
+    List<MedicineDTO.GetDto> findByOrigin(String origin);
+    List<MedicineDTO.GetDto> findByManufacturer(String manufacturer);
 }
