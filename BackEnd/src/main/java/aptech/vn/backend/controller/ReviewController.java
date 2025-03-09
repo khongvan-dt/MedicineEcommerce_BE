@@ -1,14 +1,12 @@
 package aptech.vn.backend.controller;
 
-import aptech.vn.backend.entity.Review;
+import aptech.vn.backend.dto.ReviewDTO;
 import aptech.vn.backend.service.ReviewService;
-import aptech.vn.backend.service.impl.ReviewServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/reviews")
@@ -16,60 +14,101 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-    @Autowired
-    public ReviewController(ReviewServiceImpl reviewService) {
+    public ReviewController(ReviewService reviewService) {
         this.reviewService = reviewService;
     }
 
     @GetMapping
-    public ResponseEntity<List<Review>> getAllReviews() {
-        return ResponseEntity.ok(reviewService.findAll());
+    public ResponseEntity<List<ReviewDTO>> getAllReviews() {
+        List<ReviewDTO> reviews = reviewService.findAll();
+        return ResponseEntity.ok(reviews);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Review> getReviewById(@PathVariable Long id) {
-        return reviewService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Review>> getReviewsByUserId(@PathVariable Long userId) {
-        return ResponseEntity.ok(reviewService.findByUserId(userId));
-    }
-
-    @GetMapping("/user/{userId}/average-rating")
-    public ResponseEntity<Double> getAverageRatingByUserId(@PathVariable Long userId) {
-        return ResponseEntity.ok(reviewService.getAverageRatingByUserId(userId));
-    }
-
-    @GetMapping("/rating/{rating}")
-    public ResponseEntity<List<Review>> getReviewsByRating(@PathVariable Integer rating) {
-        return ResponseEntity.ok(reviewService.findByRating(rating));
+    public ResponseEntity<ReviewDTO> getReviewById(@PathVariable Long id) {
+        Optional<ReviewDTO> review = reviewService.findById(id);
+        return review.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Review> createReview(@RequestBody Review review) {
-        return new ResponseEntity<>(reviewService.save(review), HttpStatus.CREATED);
+    public ResponseEntity<ReviewDTO> createReview(@RequestBody ReviewDTO reviewDTO) {
+        ReviewDTO savedReview = reviewService.save(reviewDTO);
+        return ResponseEntity.ok(savedReview);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Review> updateReview(@PathVariable Long id, @RequestBody Review review) {
-        return reviewService.findById(id)
-                .map(existingReview -> {
-                    review.setId(id);
-                    return ResponseEntity.ok(reviewService.save(review));
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<ReviewDTO> updateReview(@PathVariable Long id, @RequestBody ReviewDTO reviewDTO) {
+        if (!reviewService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        ReviewDTO updatedReview = reviewService.save(reviewDTO);
+        return ResponseEntity.ok(updatedReview);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReview(@PathVariable Long id) {
-        return reviewService.findById(id)
-                .map(review -> {
-                    reviewService.deleteById(id);
-                    return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-                })
-                .orElse(ResponseEntity.notFound().build());
+        if (!reviewService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        reviewService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/by-user/{userId}")
+    public ResponseEntity<List<ReviewDTO>> getReviewsByUserId(@PathVariable Long userId) {
+        List<ReviewDTO> reviews = reviewService.findByUserId(userId);
+        return ResponseEntity.ok(reviews);
+    }
+
+    @GetMapping("/by-rating/{rating}")
+    public ResponseEntity<List<ReviewDTO>> getReviewsByRating(@PathVariable Integer rating) {
+        List<ReviewDTO> reviews = reviewService.findByRating(rating);
+        return ResponseEntity.ok(reviews);
+    }
+
+    @GetMapping("/by-min-rating/{minRating}")
+    public ResponseEntity<List<ReviewDTO>> getReviewsByMinRating(@PathVariable Integer minRating) {
+        List<ReviewDTO> reviews = reviewService.findByRatingGreaterThanEqual(minRating);
+        return ResponseEntity.ok(reviews);
+    }
+
+    @GetMapping("/by-doctor/{doctorId}")
+    public ResponseEntity<List<ReviewDTO>> getReviewsByDoctorId(@PathVariable Long doctorId) {
+        List<ReviewDTO> reviews = reviewService.findByDoctorId(doctorId);
+        return ResponseEntity.ok(reviews);
+    }
+
+    @GetMapping("/by-medicine/{medicineId}")
+    public ResponseEntity<List<ReviewDTO>> getReviewsByMedicineId(@PathVariable Long medicineId) {
+        List<ReviewDTO> reviews = reviewService.findByMedicineId(medicineId);
+        return ResponseEntity.ok(reviews);
+    }
+
+    @GetMapping("/by-service/{serviceId}")
+    public ResponseEntity<List<ReviewDTO>> getReviewsByServiceId(@PathVariable Long serviceId) {
+        List<ReviewDTO> reviews = reviewService.findByServiceId(serviceId);
+        return ResponseEntity.ok(reviews);
+    }
+
+    @GetMapping("/by-doctor-and-min-rating")
+    public ResponseEntity<List<ReviewDTO>> getReviewsByDoctorAndMinRating(
+            @RequestParam Long doctorId, @RequestParam Integer minRating) {
+        List<ReviewDTO> reviews = reviewService.findByDoctorIdAndMinRating(doctorId, minRating);
+        return ResponseEntity.ok(reviews);
+    }
+
+    @GetMapping("/by-medicine-and-min-rating")
+    public ResponseEntity<List<ReviewDTO>> getReviewsByMedicineAndMinRating(
+            @RequestParam Long medicineId, @RequestParam Integer minRating) {
+        List<ReviewDTO> reviews = reviewService.findByMedicineIdAndMinRating(medicineId, minRating);
+        return ResponseEntity.ok(reviews);
+    }
+
+    @GetMapping("/by-service-and-min-rating")
+    public ResponseEntity<List<ReviewDTO>> getReviewsByServiceAndMinRating(
+            @RequestParam Long serviceId, @RequestParam Integer minRating) {
+        List<ReviewDTO> reviews = reviewService.findByServiceIdAndMinRating(serviceId, minRating);
+        return ResponseEntity.ok(reviews);
     }
 }

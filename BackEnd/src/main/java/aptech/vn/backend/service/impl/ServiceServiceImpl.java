@@ -1,6 +1,8 @@
 package aptech.vn.backend.service.impl;
 
+import aptech.vn.backend.dto.ServiceDTO;
 import aptech.vn.backend.entity.Service;
+import aptech.vn.backend.mapper.ServiceMapper;
 import aptech.vn.backend.repository.ServiceRepository;
 import aptech.vn.backend.service.ServiceService;
 import org.springframework.data.domain.Page;
@@ -10,35 +12,37 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Service
-@Transactional
 public class ServiceServiceImpl implements ServiceService {
+    private final ServiceMapper serviceMapper;
 
     private final ServiceRepository serviceRepository;
 
-    public ServiceServiceImpl(ServiceRepository serviceRepository) {
+    public ServiceServiceImpl(ServiceRepository serviceRepository, ServiceMapper serviceMapper) {
         this.serviceRepository = serviceRepository;
+        this.serviceMapper = serviceMapper;
     }
 
     @Override
-    public Service save(Service service) {
-        return serviceRepository.save(service);
+    public List<ServiceDTO> findAll() {
+        return serviceRepository.findAll()
+                .stream()
+                .map(serviceMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<Service> findById(Long id) {
-        return serviceRepository.findById(id);
+    public Optional<ServiceDTO> findById(Long id) {
+        return serviceRepository.findById(id).map(serviceMapper::toDto);
     }
 
     @Override
-    public List<Service> findAll() {
-        return serviceRepository.findAll();
-    }
-
-    @Override
-    public Page<Service> findAll(Pageable pageable) {
-        return serviceRepository.findAll(pageable);
+    public ServiceDTO save(ServiceDTO serviceDTO) {
+        Service service = serviceMapper.toEntity(serviceDTO);
+        serviceRepository.save(service);
+        return serviceMapper.toDto(service);
     }
 
     @Override
@@ -47,22 +51,42 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public List<Service> findByNameContaining(String keyword) {
-        return serviceRepository.findByNameContaining(keyword);
+    public List<ServiceDTO> findByName(String name) {
+        return serviceRepository.findByName(name)
+                .stream()
+                .map(serviceMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Service> findByPriceLessThan(BigDecimal maxPrice) {
-        return serviceRepository.findByPriceLessThanEqual(maxPrice);
+    public List<ServiceDTO> findByNameContaining(String namePattern) {
+        return serviceRepository.findByNameContaining(namePattern)
+                .stream()
+                .map(serviceMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Service> findByPriceGreaterThan(BigDecimal minPrice) {
-        return serviceRepository.findByPriceGreaterThanEqual(minPrice);
+    public List<ServiceDTO> findByPriceLessThanEqual(BigDecimal maxPrice) {
+        return serviceRepository.findByPriceLessThanEqual(maxPrice)
+                .stream()
+                .map(serviceMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Service> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice) {
-        return List.of();
+    public List<ServiceDTO> findByPriceGreaterThanEqual(BigDecimal minPrice) {
+        return serviceRepository.findByPriceGreaterThanEqual(minPrice)
+                .stream()
+                .map(serviceMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ServiceDTO> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice) {
+        return serviceRepository.findByPriceBetween(minPrice, maxPrice)
+                .stream()
+                .map(serviceMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

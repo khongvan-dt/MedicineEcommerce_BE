@@ -1,75 +1,84 @@
 package aptech.vn.backend.controller;
 
-import aptech.vn.backend.entity.OrderDetail;
+import aptech.vn.backend.dto.OrderDetailDTO;
 import aptech.vn.backend.service.OrderDetailService;
-import aptech.vn.backend.service.impl.OrderDetailServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/order-details")
+@CrossOrigin("*")
 public class OrderDetailController {
 
     private final OrderDetailService orderDetailService;
 
-    @Autowired
-    public OrderDetailController(OrderDetailServiceImpl orderDetailService) {
+    public OrderDetailController(OrderDetailService orderDetailService) {
         this.orderDetailService = orderDetailService;
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderDetail>> getAllOrderDetails() {
-        return ResponseEntity.ok(orderDetailService.findAll());
+    public ResponseEntity<List<OrderDetailDTO>> getAllOrderDetails() {
+        List<OrderDetailDTO> orderDetails = orderDetailService.findAll();
+        return ResponseEntity.ok(orderDetails);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderDetail> getOrderDetailById(@PathVariable Long id) {
-        return orderDetailService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/order/{orderId}")
-    public ResponseEntity<List<OrderDetail>> getOrderDetailsByOrderId(@PathVariable Long orderId) {
-        return ResponseEntity.ok(orderDetailService.findByOrderId(orderId));
-    }
-
-    @GetMapping("/medicine/{medicineId}")
-    public ResponseEntity<List<OrderDetail>> getOrderDetailsByMedicineId(@PathVariable Long medicineId) {
-        return ResponseEntity.ok(orderDetailService.findByMedicineId(medicineId));
-    }
-
-    @GetMapping("/medicine/{medicineId}/total-quantity")
-    public ResponseEntity<Integer> getTotalQuantityByMedicineId(@PathVariable Long medicineId) {
-        return ResponseEntity.ok(orderDetailService.getTotalQuantityByMedicineId(medicineId));
+    public ResponseEntity<OrderDetailDTO> getOrderDetailById(@PathVariable Long id) {
+        Optional<OrderDetailDTO> orderDetail = orderDetailService.findById(id);
+        return orderDetail.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<OrderDetail> createOrderDetail(@RequestBody OrderDetail orderDetail) {
-        return new ResponseEntity<>(orderDetailService.save(orderDetail), HttpStatus.CREATED);
+    public ResponseEntity<OrderDetailDTO> createOrderDetail(@RequestBody OrderDetailDTO orderDetailDTO) {
+        OrderDetailDTO savedOrderDetail = orderDetailService.save(orderDetailDTO);
+        return ResponseEntity.ok(savedOrderDetail);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<OrderDetail> updateOrderDetail(@PathVariable Long id, @RequestBody OrderDetail orderDetail) {
-        return orderDetailService.findById(id)
-                .map(existingOrderDetail -> {
-                    orderDetail.setId(id);
-                    return ResponseEntity.ok(orderDetailService.save(orderDetail));
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<OrderDetailDTO> updateOrderDetail(@PathVariable Long id, @RequestBody OrderDetailDTO orderDetailDTO) {
+        if (!orderDetailService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        OrderDetailDTO updatedOrderDetail = orderDetailService.save(orderDetailDTO);
+        return ResponseEntity.ok(updatedOrderDetail);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrderDetail(@PathVariable Long id) {
-        return orderDetailService.findById(id)
-                .map(orderDetail -> {
-                    orderDetailService.deleteById(id);
-                    return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-                })
-                .orElse(ResponseEntity.notFound().build());
+        if (!orderDetailService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        orderDetailService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/by-order/{orderId}")
+    public ResponseEntity<List<OrderDetailDTO>> getOrderDetailsByOrderId(@PathVariable Long orderId) {
+        List<OrderDetailDTO> orderDetails = orderDetailService.findByOrderId(orderId);
+        return ResponseEntity.ok(orderDetails);
+    }
+
+    @GetMapping("/by-medicine/{medicineId}")
+    public ResponseEntity<List<OrderDetailDTO>> getOrderDetailsByMedicineId(@PathVariable Long medicineId) {
+        List<OrderDetailDTO> orderDetails = orderDetailService.findByMedicineId(medicineId);
+        return ResponseEntity.ok(orderDetails);
+    }
+
+    @GetMapping("/by-order-and-medicine")
+    public ResponseEntity<List<OrderDetailDTO>> getOrderDetailsByOrderAndMedicine(
+            @RequestParam Long orderId,
+            @RequestParam Long medicineId) {
+        List<OrderDetailDTO> orderDetails = orderDetailService.findByOrderIdAndMedicineId(orderId, medicineId);
+        return ResponseEntity.ok(orderDetails);
+    }
+
+    @GetMapping("/by-quantity-greater-than/{quantity}")
+    public ResponseEntity<List<OrderDetailDTO>> getOrderDetailsByQuantityGreaterThan(@PathVariable Integer quantity) {
+        List<OrderDetailDTO> orderDetails = orderDetailService.findByQuantityGreaterThan(quantity);
+        return ResponseEntity.ok(orderDetails);
     }
 }

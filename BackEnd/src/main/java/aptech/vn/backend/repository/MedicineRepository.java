@@ -11,8 +11,8 @@ import java.util.Optional;
 public interface MedicineRepository extends JpaRepository<Medicine, Long> {
     Optional<Medicine> findByCode(String code);
     List<Medicine> findByName(String name);
-    List<Medicine> findByBrandId(Long brandId);
+    List<Medicine> findByNameContaining(String namePattern);
+    List<Medicine> findByBrand_Id(Long brandId);
     List<Medicine> findByOrigin(String origin);
     List<Medicine> findByManufacturer(String manufacturer);
-    List<Medicine> findByNameContaining(String name);
 }

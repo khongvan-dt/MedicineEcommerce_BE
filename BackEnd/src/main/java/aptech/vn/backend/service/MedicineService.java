@@ -1,18 +1,18 @@
 package aptech.vn.backend.service;
 
-import aptech.vn.backend.entity.Medicine;
+import aptech.vn.backend.dto.MedicineDTO;
 import java.util.List;
 import java.util.Optional;
 
 public interface MedicineService {
-    Medicine save(Medicine medicine);
-    List<Medicine> findAll();
-    Optional<Medicine> findById(Long id);
+    List<MedicineDTO> findAll();
+    Optional<MedicineDTO> findById(Long id);
+    MedicineDTO save(MedicineDTO medicineDTO);
     void deleteById(Long id);
-    Optional<Medicine> findByCode(String code);
-    List<Medicine> findByName(String name);
-    List<Medicine> findByBrandId(Long brandId);
-    List<Medicine> findByOrigin(String origin);
-    List<Medicine> findByManufacturer(String manufacturer);
-    List<Medicine> findByNameContaining(String name);
+    Optional<MedicineDTO> findByCode(String code);
+    List<MedicineDTO> findByName(String name);
+    List<MedicineDTO> findByNameContaining(String namePattern);
+    List<MedicineDTO> findByBrandId(Long brandId);
+    List<MedicineDTO> findByOrigin(String origin);
+    List<MedicineDTO> findByManufacturer(String manufacturer);
 }

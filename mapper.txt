@@ -1,0 +1,165 @@
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface AppointmentMapper {
+    AppointmentDTO toDto(Appointment entity);
+    Appointment toEntity(AppointmentDTO dto);
+}
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface AttributeMapper {
+    AttributeDTO toDto(Attribute entity);
+    Attribute toEntity(AttributeDTO dto);
+}
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface BrandMapper {
+    BrandDTO toDto(Brand entity);
+    Brand toEntity(BrandDTO dto);
+}
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface CategoryMapper {
+    CategoryDTO toDto(Category entity);
+    Category toEntity(CategoryDTO dto);
+}
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface ConsultationMapper {
+    ConsultationDTO toDto(Consultation entity);
+    Consultation toEntity(ConsultationDTO dto);
+}
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface DiscountMapper {
+    DiscountDTO toDto(Discount entity);
+    Discount toEntity(DiscountDTO dto);
+}
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface DoctorProfileMapper {
+    DoctorProfileDTO toDto(DoctorProfile entity);
+    DoctorProfile toEntity(DoctorProfileDTO dto);
+}
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface DoctorServiceMapper {
+    DoctorServiceDTO toDto(DoctorService entity);
+    DoctorService toEntity(DoctorServiceDTO dto);
+}
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface MedicineMapper {
+    MedicineDTO toDto(Medicine entity);
+    Medicine toEntity(MedicineDTO dto);
+}
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface MedicineBatchMapper {
+    MedicineBatchDTO toDto(MedicineBatch entity);
+    MedicineBatch toEntity(MedicineBatchDTO dto);
+}
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface MedicineCategoryMapper {
+    MedicineCategoryDTO toDto(MedicineCategory entity);
+    MedicineCategory toEntity(MedicineCategoryDTO dto);
+}
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface MedicineMediaMapper {
+    MedicineMediaDTO toDto(MedicineMedia entity);
+    MedicineMedia toEntity(MedicineMediaDTO dto);
+}
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface NotificationMapper {
+    NotificationDTO toDto(Notification entity);
+    Notification toEntity(NotificationDTO dto);
+}
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface OrderMapper {
+    OrderDTO toDto(Order entity);
+    Order toEntity(OrderDTO dto);
+}
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface OrderDetailMapper {
+    OrderDetailDTO toDto(OrderDetail entity);
+    OrderDetail toEntity(OrderDetailDTO dto);
+}
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface PatientProfileMapper {
+    PatientProfileDTO toDto(PatientProfile entity);
+    PatientProfile toEntity(PatientProfileDTO dto);
+}
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface PrescriptionMapper {
+    PrescriptionDTO toDto(Prescription entity);
+    Prescription toEntity(PrescriptionDTO dto);
+}
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface ReviewMapper {
+    ReviewDTO toDto(Review entity);
+    Review toEntity(ReviewDTO dto);
+}
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface RoleMapper {
+    RoleDTO toDto(Role entity);
+    Role toEntity(RoleDTO dto);
+}
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface SalaryMapper {
+    SalaryDTO toDto(Salary entity);
+    Salary toEntity(SalaryDTO dto);
+}
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface ServiceMapper {
+    ServiceDTO toDto(Service entity);
+    Service toEntity(ServiceDTO dto);
+}
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface ServiceBookingMapper {
+    ServiceBookingDTO toDto(ServiceBooking entity);
+    ServiceBooking toEntity(ServiceBookingDTO dto);
+}
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface SocialAccountMapper {
+    SocialAccountDTO toDto(SocialAccount entity);
+    SocialAccount toEntity(SocialAccountDTO dto);
+}
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface TrackingMapper {
+    TrackingDTO toDto(Tracking entity);
+    Tracking toEntity(TrackingDTO dto);
+}
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface UserMapper {
+    UserDTO toDto(User entity);
+    User toEntity(UserDTO dto);
+}
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface UserRoleMapper {
+    UserRoleDTO toDto(UserRole entity);
+    UserRole toEntity(UserRoleDTO dto);
+}
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface VoucherMapper {
+    VoucherDTO toDto(Voucher entity);
+    Voucher toEntity(VoucherDTO dto);
+}

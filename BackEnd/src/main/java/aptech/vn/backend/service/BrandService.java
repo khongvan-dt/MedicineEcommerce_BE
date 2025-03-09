@@ -1,14 +1,14 @@
 package aptech.vn.backend.service;
 
-import aptech.vn.backend.entity.Brand;
+import aptech.vn.backend.dto.BrandDTO;
 import java.util.List;
 import java.util.Optional;
 
 public interface BrandService {
-    Brand save(Brand brand);
-    List<Brand> findAll();
-    Optional<Brand> findById(Long id);
+    List<BrandDTO> findAll();
+    Optional<BrandDTO> findById(Long id);
+    BrandDTO save(BrandDTO brandDTO);
     void deleteById(Long id);
-    Optional<Brand> findByName(String name);
-    List<Brand> findByNameContaining(String name);
+    Optional<BrandDTO> findByName(String name);
+    List<BrandDTO> findByNameContaining(String namePattern);
 }

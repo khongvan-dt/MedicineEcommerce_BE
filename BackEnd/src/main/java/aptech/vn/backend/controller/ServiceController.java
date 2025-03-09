@@ -1,15 +1,13 @@
 package aptech.vn.backend.controller;
 
-import aptech.vn.backend.entity.Service;
+import aptech.vn.backend.dto.ServiceDTO;
 import aptech.vn.backend.service.ServiceService;
-import aptech.vn.backend.service.impl.ServiceServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/services")
@@ -17,67 +15,76 @@ public class ServiceController {
 
     private final ServiceService serviceService;
 
-    @Autowired
-    public ServiceController(ServiceServiceImpl serviceService) {
+    public ServiceController(ServiceService serviceService) {
         this.serviceService = serviceService;
     }
 
     @GetMapping
-    public ResponseEntity<List<Service>> getAllServices() {
-        return ResponseEntity.ok(serviceService.findAll());
+    public ResponseEntity<List<ServiceDTO>> getAllServices() {
+        List<ServiceDTO> services = serviceService.findAll();
+        return ResponseEntity.ok(services);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Service> getServiceById(@PathVariable Long id) {
-        return serviceService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<List<Service>> searchServicesByName(@RequestParam String keyword) {
-        return ResponseEntity.ok(serviceService.findByNameContaining(keyword));
-    }
-
-    @GetMapping("/price/less-than")
-    public ResponseEntity<List<Service>> getServicesByPriceLessThan(@RequestParam BigDecimal maxPrice) {
-        return ResponseEntity.ok(serviceService.findByPriceLessThan(maxPrice));
-    }
-
-    @GetMapping("/price/greater-than")
-    public ResponseEntity<List<Service>> getServicesByPriceGreaterThan(@RequestParam BigDecimal minPrice) {
-        return ResponseEntity.ok(serviceService.findByPriceGreaterThan(minPrice));
-    }
-
-    @GetMapping("/price/between")
-    public ResponseEntity<List<Service>> getServicesByPriceBetween(
-            @RequestParam BigDecimal minPrice,
-            @RequestParam BigDecimal maxPrice) {
-        return ResponseEntity.ok(serviceService.findByPriceBetween(minPrice, maxPrice));
+    public ResponseEntity<ServiceDTO> getServiceById(@PathVariable Long id) {
+        Optional<ServiceDTO> service = serviceService.findById(id);
+        return service.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Service> createService(@RequestBody Service service) {
-        return new ResponseEntity<>(serviceService.save(service), HttpStatus.CREATED);
+    public ResponseEntity<ServiceDTO> createService(@RequestBody ServiceDTO serviceDTO) {
+        ServiceDTO savedService = serviceService.save(serviceDTO);
+        return ResponseEntity.ok(savedService);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Service> updateService(@PathVariable Long id, @RequestBody Service service) {
-        return serviceService.findById(id)
-                .map(existingService -> {
-                    service.setId(id);
-                    return ResponseEntity.ok(serviceService.save(service));
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<ServiceDTO> updateService(@PathVariable Long id, @RequestBody ServiceDTO serviceDTO) {
+        if (!serviceService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        ServiceDTO updatedService = serviceService.save(serviceDTO);
+        return ResponseEntity.ok(updatedService);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteService(@PathVariable Long id) {
-        return serviceService.findById(id)
-                .map(service -> {
-                    serviceService.deleteById(id);
-                    return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-                })
-                .orElse(ResponseEntity.notFound().build());
+        if (!serviceService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        serviceService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/by-name/{name}")
+    public ResponseEntity<List<ServiceDTO>> getServicesByName(@PathVariable String name) {
+        List<ServiceDTO> services = serviceService.findByName(name);
+        return ResponseEntity.ok(services);
+    }
+
+    @GetMapping("/by-name-pattern")
+    public ResponseEntity<List<ServiceDTO>> getServicesByNamePattern(@RequestParam String namePattern) {
+        List<ServiceDTO> services = serviceService.findByNameContaining(namePattern);
+        return ResponseEntity.ok(services);
+    }
+
+    @GetMapping("/by-max-price/{maxPrice}")
+    public ResponseEntity<List<ServiceDTO>> getServicesByMaxPrice(@PathVariable BigDecimal maxPrice) {
+        List<ServiceDTO> services = serviceService.findByPriceLessThanEqual(maxPrice);
+        return ResponseEntity.ok(services);
+    }
+
+    @GetMapping("/by-min-price/{minPrice}")
+    public ResponseEntity<List<ServiceDTO>> getServicesByMinPrice(@PathVariable BigDecimal minPrice) {
+        List<ServiceDTO> services = serviceService.findByPriceGreaterThanEqual(minPrice);
+        return ResponseEntity.ok(services);
+    }
+
+    @GetMapping("/by-price-range")
+    public ResponseEntity<List<ServiceDTO>> getServicesByPriceRange(
+            @RequestParam("min") BigDecimal minPrice,
+            @RequestParam("max") BigDecimal maxPrice) {
+        List<ServiceDTO> services = serviceService.findByPriceBetween(minPrice, maxPrice);
+        return ResponseEntity.ok(services);
     }
 }

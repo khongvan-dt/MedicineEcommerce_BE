@@ -9,9 +9,9 @@ import java.util.List;
 
 @Repository
 public interface PrescriptionRepository extends JpaRepository<Prescription, Long> {
-    List<Prescription> findByDoctorId(Long doctorId);
-    List<Prescription> findByPatientId(Long patientId);
-    List<Prescription> findByMedicineId(Long medicineId);
-    List<Prescription> findByPatientIdAndDoctorId(Long patientId, Long doctorId);
-    List<Prescription> findByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
+    List<Prescription> findByDoctor_Id(Long doctorId);
+    List<Prescription> findByPatient_Id(Long patientId);
+    List<Prescription> findByMedicine_Id(Long medicineId);
+    List<Prescription> findByPatient_IdAndDoctor_Id(Long patientId, Long doctorId);
+    List<Prescription> findByPatient_IdAndMedicine_Id(Long patientId, Long medicineId);
 }

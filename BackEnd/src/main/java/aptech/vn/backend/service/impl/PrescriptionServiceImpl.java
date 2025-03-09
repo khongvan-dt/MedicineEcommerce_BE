@@ -1,6 +1,8 @@
 package aptech.vn.backend.service.impl;
 
+import aptech.vn.backend.dto.PrescriptionDTO;
 import aptech.vn.backend.entity.Prescription;
+import aptech.vn.backend.mapper.PrescriptionMapper;
 import aptech.vn.backend.repository.PrescriptionRepository;
 import aptech.vn.backend.service.PrescriptionService;
 import org.springframework.data.domain.Page;
@@ -10,35 +12,37 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class PrescriptionServiceImpl implements PrescriptionService {
 
     private final PrescriptionRepository prescriptionRepository;
+    private final PrescriptionMapper prescriptionMapper;
 
-    public PrescriptionServiceImpl(PrescriptionRepository prescriptionRepository) {
+    public PrescriptionServiceImpl(PrescriptionRepository prescriptionRepository, PrescriptionMapper prescriptionMapper) {
         this.prescriptionRepository = prescriptionRepository;
+        this.prescriptionMapper = prescriptionMapper;
     }
 
     @Override
-    public Prescription save(Prescription prescription) {
-        return prescriptionRepository.save(prescription);
+    public List<PrescriptionDTO> findAll() {
+        return prescriptionRepository.findAll()
+                .stream()
+                .map(prescriptionMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<Prescription> findById(Long id) {
-        return prescriptionRepository.findById(id);
+    public Optional<PrescriptionDTO> findById(Long id) {
+        return prescriptionRepository.findById(id).map(prescriptionMapper::toDto);
     }
 
     @Override
-    public List<Prescription> findAll() {
-        return prescriptionRepository.findAll();
-    }
-
-    @Override
-    public Page<Prescription> findAll(Pageable pageable) {
-        return prescriptionRepository.findAll(pageable);
+    public PrescriptionDTO save(PrescriptionDTO prescriptionDTO) {
+        Prescription prescription = prescriptionMapper.toEntity(prescriptionDTO);
+        prescription = prescriptionRepository.save(prescription);
+        return prescriptionMapper.toDto(prescription);
     }
 
     @Override
@@ -47,17 +51,42 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     }
 
     @Override
-    public List<Prescription> findByPatientId(Long patientId) {
-        return prescriptionRepository.findByPatientId(patientId);
+    public List<PrescriptionDTO> findByDoctorId(Long doctorId) {
+        return prescriptionRepository.findByDoctor_Id(doctorId)
+                .stream()
+                .map(prescriptionMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Prescription> findByDoctorId(Long doctorId) {
-        return prescriptionRepository.findByDoctorId(doctorId);
+    public List<PrescriptionDTO> findByPatientId(Long patientId) {
+        return prescriptionRepository.findByPatient_Id(patientId)
+                .stream()
+                .map(prescriptionMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Prescription> findByMedicineId(Long medicineId) {
-        return prescriptionRepository.findByMedicineId(medicineId);
+    public List<PrescriptionDTO> findByMedicineId(Long medicineId) {
+        return prescriptionRepository.findByMedicine_Id(medicineId)
+                .stream()
+                .map(prescriptionMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PrescriptionDTO> findByPatientIdAndDoctorId(Long patientId, Long doctorId) {
+        return prescriptionRepository.findByPatient_IdAndDoctor_Id(patientId, doctorId)
+                .stream()
+                .map(prescriptionMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PrescriptionDTO> findByPatientIdAndMedicineId(Long patientId, Long medicineId) {
+        return prescriptionRepository.findByPatient_IdAndMedicine_Id(patientId, medicineId)
+                .stream()
+                .map(prescriptionMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

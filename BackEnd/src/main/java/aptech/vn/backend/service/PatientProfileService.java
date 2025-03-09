@@ -1,21 +1,19 @@
 package aptech.vn.backend.service;
 
-import aptech.vn.backend.entity.PatientProfile;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import aptech.vn.backend.dto.PatientProfileDTO;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 public interface PatientProfileService {
-    PatientProfile save(PatientProfile patientProfile);
-    Optional<PatientProfile> findById(Long id);
-    List<PatientProfile> findAll();
-    Page<PatientProfile> findAll(Pageable pageable);
+    List<PatientProfileDTO> findAll();
+    Optional<PatientProfileDTO> findById(Long id);
+    PatientProfileDTO save(PatientProfileDTO patientProfileDTO);
     void deleteById(Long id);
-    Optional<PatientProfile> findByUserId(Long userId);
-    List<PatientProfile> findByBloodType(String bloodType);
-    boolean updateAccountBalance(Long patientId, BigDecimal amount);
-    List<PatientProfile> findByMedicalHistoryContaining(String keyword);
+    Optional<PatientProfileDTO> findByUserId(Long userId);
+    List<PatientProfileDTO> findByBloodType(String bloodType);
+    List<PatientProfileDTO> findByMedicalHistoryContaining(String keyword);
+    List<PatientProfileDTO> findByAllergiesContaining(String keyword);
+    List<PatientProfileDTO> findByAccountBalanceGreaterThanEqual(BigDecimal amount);
 }

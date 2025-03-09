@@ -62,7 +62,6 @@ public class MessageController {
 
     @PostMapping
     public ResponseEntity<Message> createMessage(@RequestBody Message message) {
-        message.setCreatedAt(LocalDateTime.now());
         return new ResponseEntity<>(messageService.save(message), HttpStatus.CREATED);
     }
 
@@ -70,7 +69,6 @@ public class MessageController {
     public ResponseEntity<Message> updateMessage(@PathVariable Long id, @RequestBody Message message) {
         return messageService.findById(id)
                 .map(existingMessage -> {
-                    message.setId(id);
                     return ResponseEntity.ok(messageService.save(message));
                 })
                 .orElse(ResponseEntity.notFound().build());

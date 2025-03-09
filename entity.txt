@@ -1,0 +1,552 @@
+public class Appointment extends BaseEntity {
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "patient_id", nullable = false)
+    private PatientProfile patient;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "doctor_id", nullable = false)
+    private DoctorProfile doctor;
+
+    @NotNull
+    @Future
+    @Column(name = "appointment_date", nullable = false)
+    private LocalDateTime appointmentDate;
+
+    @NotNull
+    @Column(name = "appointment_time", nullable = false)
+    private LocalTime appointmentTime;
+}
+public class Attribute extends BaseEntity {
+    @NotBlank
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @NotNull
+    @DecimalMin(value = "0.0")
+    @Column(name = "price_in", nullable = false)
+    private BigDecimal priceIn;
+
+    @NotNull
+    @DecimalMin(value = "0.0")
+    @Column(name = "price_out", nullable = false)
+    private BigDecimal priceOut;
+
+    @NotNull
+    @Min(0)
+    @Column(name = "stock", nullable = false)
+    private Integer stock;
+
+    @Future
+    @Column(name = "expiry_date", nullable = true)
+    private LocalDate expiryDate;
+}
+public class Brand extends BaseEntity {
+    @NotBlank
+    @Column(name = "name", nullable = false, unique = true)
+    private String name;
+
+    @Column(name = "image", nullable = true)
+    private String image;
+}
+public class Category extends BaseEntity {
+    @NotBlank
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_id", nullable = true)
+    private Category parent;
+}
+public class Consultation extends BaseEntity {
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "patient_id", nullable = false)
+    private PatientProfile patient;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "doctor_id", nullable = false)
+    private DoctorProfile doctor;
+
+    @Column(name = "consultation_link", nullable = true)
+    private String consultationLink;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private ConsultationStatus status;
+}
+public class Discount extends BaseEntity {
+    @NotBlank
+    @Column(name = "code", nullable = false, unique = true)
+    private String code;
+
+    @NotBlank
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "medicine_id", nullable = true)
+    private Medicine medicine;
+
+    @NotNull
+    @Min(0)
+    @Column(name = "discount_percentage", nullable = false)
+    private Double discountPercentage;
+
+    @NotNull
+    @Column(name = "start_date", nullable = false)
+    private LocalDateTime startDate;
+
+    @Future
+    @Column(name = "end_date", nullable = true)
+    private LocalDateTime endDate;
+}
+public class DoctorProfile extends BaseEntity {
+    @NotNull
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @Column(name = "experience", nullable = true, columnDefinition = "TEXT")
+    private String experience;
+
+    @Column(name = "specialization", nullable = true)
+    private String specialization;
+
+    @Column(name = "workplace", nullable = true)
+    private String workplace;
+
+    @Column(name = "account_balance", nullable = true)
+    private BigDecimal accountBalance;
+}
+public class DoctorService extends BaseEntity {
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "service_id", nullable = false)
+    private Service service;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "doctor_id", nullable = false)
+    private DoctorProfile doctor;
+}
+public class Medicine extends BaseEntity {
+    @NotBlank
+    @Column(name = "code", nullable = false, unique = true)
+    private String code;
+
+    @NotBlank
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "brand_id", nullable = true)
+    private Brand brand;
+
+    @Column(name = "origin", nullable = true)
+    private String origin;
+
+    @Column(name = "manufacturer", nullable = true)
+    private String manufacturer;
+}
+public class MedicineBatch extends BaseEntity {
+    @NotBlank
+    @Column(name = "batch_name", nullable = false, unique = true)
+    private String batchName;
+
+    @NotBlank
+    @Column(name = "medicine_code", nullable = false)
+    private String medicineCode;
+
+    @NotNull
+    @Min(0)
+    @Column(name = "quantity", nullable = false)
+    private Integer quantity;
+
+    @NotNull
+    @Future
+    @Column(name = "expiry_date", nullable = false)
+    private LocalDate expiryDate;
+}
+public enum MediaType {
+    DOCX, HTML, IMAGE
+}
+public enum ConsultationStatus {
+    PENDING, IN_PROGRESS, COMPLETED, CANCELLED
+}
+public enum BookingStatus {
+    PENDING, CONFIRMED, COMPLETED, CANCELLED
+}
+public class MedicineCategory extends BaseEntity {
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "medicine_id", nullable = false)
+    private Medicine medicine;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+}
+public class MedicineMedia extends BaseEntity {
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "medicine_id", nullable = false)
+    private Medicine medicine;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "media_type", nullable = false)
+    private MediaType mediaType;
+
+    @NotNull
+    @Column(name = "media_url", nullable = false)
+    private String mediaUrl;
+
+    @NotNull
+    @Column(name = "main_image", nullable = false)
+    private Boolean mainImage;
+}
+public class Notification extends BaseEntity {
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @NotBlank
+    @Column(name = "message", nullable = false, columnDefinition = "TEXT")
+    private String message;
+}
+public class Order extends BaseEntity {
+    @NotBlank
+    @Column(name = "order_code", nullable = false, unique = true)
+    private String orderCode;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "patient_id", nullable = false)
+    private PatientProfile patient;
+
+    @NotNull
+    @DecimalMin(value = "0.0")
+    @Column(name = "total_price", nullable = false)
+    private BigDecimal totalPrice;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_method", nullable = false)
+    private PaymentMethod paymentMethod;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private OrderStatus status;
+
+    @Column(name = "voucher_code", nullable = true)
+    private String voucherCode;
+
+    @Column(name = "discount_amount", nullable = true)
+    private BigDecimal discountAmount;
+
+    @Column(name = "note", nullable = true, columnDefinition = "TEXT")
+    private String note;
+}public class OrderDetail extends BaseEntity {
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "medicine_id", nullable = false)
+    private Medicine medicine;
+
+    @NotNull
+    @Min(1)
+    @Column(name = "quantity", nullable = false)
+    private Integer quantity;
+
+    @NotNull
+    @DecimalMin(value = "0.0")
+    @Column(name = "unit_price", nullable = false)
+    private BigDecimal unitPrice;
+}
+public enum OrderStatus {
+    PENDING, PROCESSING, COMPLETED, CANCELLED
+}
+public class PatientProfile extends BaseEntity {
+    @NotNull
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @Column(name = "blood_type", nullable = true)
+    private String bloodType;
+
+    @Column(name = "medical_history", nullable = true, columnDefinition = "TEXT")
+    private String medicalHistory;
+
+    @Column(name = "allergies", nullable = true, columnDefinition = "TEXT")
+    private String allergies;
+
+    @Column(name = "account_balance", nullable = true)
+    private BigDecimal accountBalance;
+}public enum PaymentMethod {
+    PAYPAL, BANK_TRANSFER, CASH
+}
+public enum PaymentStatus {
+    PENDING, COMPLETED, FAILED
+}
+public class Prescription extends BaseEntity {
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "doctor_id", nullable = false)
+    private DoctorProfile doctor;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "patient_id", nullable = false)
+    private PatientProfile patient;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "medicine_id", nullable = false)
+    private Medicine medicine;
+
+    @NotBlank
+    @Column(name = "dosage", nullable = false)
+    private String dosage;
+}
+public class Review extends BaseEntity {
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @NotNull
+    @Min(1)
+    @Max(5)
+    @Column(name = "rating", nullable = false)
+    private Integer rating;
+
+    @Column(name = "comment", columnDefinition = "TEXT")
+    private String comment;
+
+    @ManyToOne
+    @JoinColumn(name = "doctor_id", nullable = true)
+    private DoctorProfile doctor;
+
+    @ManyToOne
+    @JoinColumn(name = "medicine_id", nullable = true)
+    private Medicine medicine;
+
+    @ManyToOne
+    @JoinColumn(name = "service_id", nullable = true)
+    private Service service;
+}
+public class Role extends BaseEntity {
+    @NotBlank
+    @Column(name = "name", nullable = false, unique = true)
+    private String name;
+
+    @OneToMany(mappedBy = "role")
+    private Set<UserRole> userRoles = new HashSet<>();
+}
+public class Salary extends BaseEntity {
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @NotBlank
+    @Column(name = "bank_code", nullable = false)
+    private String bankCode;
+
+    @NotBlank
+    @Column(name = "bank_name", nullable = false)
+    private String bankName;
+
+    @NotNull
+    @DecimalMin(value = "0.0")
+    @Column(name = "price", nullable = false)
+    private BigDecimal price;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private PaymentStatus status;
+}
+public class Service extends BaseEntity {
+    @NotBlank
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @NotNull
+    @DecimalMin(value = "0.0")
+    @Column(name = "price", nullable = false)
+    private BigDecimal price;
+
+    @Column(name = "description", nullable = true, columnDefinition = "TEXT")
+    private String description;
+}
+public class ServiceBooking extends BaseEntity {
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "service_id", nullable = false)
+    private Service service;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "patient_id", nullable = false)
+    private PatientProfile patient;
+
+    @NotNull
+    @DecimalMin(value = "0.0")
+    @Column(name = "total_price", nullable = false)
+    private BigDecimal totalPrice;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_method", nullable = false)
+    private PaymentMethod paymentMethod;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private BookingStatus status;
+}
+public class SocialAccount extends BaseEntity {
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "provider", nullable = false)
+    private SocialProvider provider;
+
+    @NotNull
+    @Column(name = "provider_id", nullable = false)
+    private String providerId;
+
+    @Column(name = "provider_email", nullable = true)
+    private String providerEmail;
+
+    @Column(name = "name", nullable = true)
+    private String name;
+
+    @Column(name = "avatar_url", nullable = true)
+    private String avatarUrl;
+
+    @Column(name = "access_token", nullable = true)
+    private String accessToken;
+
+    @Column(name = "refresh_token", nullable = true)
+    private String refreshToken;
+
+    @Column(name = "token_expires_at", nullable = true)
+    private LocalDateTime tokenExpiresAt;
+}
+public enum SocialProvider {
+    GOOGLE, FACEBOOK, GITHUB;
+}public class Tracking extends BaseEntity {
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
+
+    @Column(name = "location", nullable = false)
+    private String location;
+
+    @Column(name = "message", nullable = true)
+    private String message;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private TrackingStatus status;
+}public enum TrackingStatus {
+    PENDING, IN_TRANSIT, DELIVERED, CANCELLED
+}
+public class User extends BaseEntity {
+    @NotBlank
+    @Column(name = "full_name", nullable = false)
+    private String fullName;
+
+    @NotBlank
+    @Pattern(regexp = "^[0-9]{10,12}$", message = "Phone number must be between 10 and 12 digits")
+    @Column(name = "phone", nullable = true)
+    private String phone;
+
+    @Column(name = "address", nullable = true)
+    private String address;
+
+    @NotBlank
+    @Email
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
+
+    @Column(name = "last_login", nullable = true)
+    private LocalDateTime lastLogin;
+
+    @Column(name = "count_lock", nullable = false)
+    @Min(0)
+    @Max(5)
+    private Integer countLock = 0;
+
+    @NotBlank
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    @NotNull
+    @Column(name = "enabled", nullable = false)
+    private Boolean enabled = true;
+
+    @NotNull
+    @Column(name = "locked", nullable = false)
+    private Boolean locked = false;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<UserRole> userRoles = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<SocialAccount> socialAccounts = new HashSet<>();
+}public class UserRole extends BaseEntity {
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
+}
+public class Voucher extends BaseEntity {
+    @NotBlank
+    @Column(name = "code", nullable = false, unique = true)
+    private String code;
+    @NotNull
+    @Min(0)
+    @Column(name = "voucher_percentage", nullable = false)
+    private Double voucherPercentage;
+
+    @NotNull
+    @Min(0)
+    @Column(name = "stock", nullable = false)
+    private Integer stock;
+
+    @NotNull
+    @Column(name = "start_date", nullable = false)
+    private LocalDateTime startDate;
+
+    @Future
+    @Column(name = "end_date", nullable = true)
+    private LocalDateTime endDate;
+}
+

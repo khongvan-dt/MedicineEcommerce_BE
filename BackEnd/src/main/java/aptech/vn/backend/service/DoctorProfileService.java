@@ -1,16 +1,18 @@
 package aptech.vn.backend.service;
 
-import aptech.vn.backend.entity.DoctorProfile;
+import aptech.vn.backend.dto.DoctorProfileDTO;
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 public interface DoctorProfileService {
-    DoctorProfile save(DoctorProfile doctorProfile);
-    List<DoctorProfile> findAll();
-    Optional<DoctorProfile> findById(Long id);
+    List<DoctorProfileDTO> findAll();
+    Optional<DoctorProfileDTO> findById(Long id);
+    DoctorProfileDTO save(DoctorProfileDTO doctorProfileDTO);
     void deleteById(Long id);
-    Optional<DoctorProfile> findByUserId(Long userId);
-    List<DoctorProfile> findBySpecialization(String specialization);
-    List<DoctorProfile> findByWorkplace(String workplace);
-    List<DoctorProfile> findBySpecializationContaining(String specialization);
+    Optional<DoctorProfileDTO> findByUserId(Long userId);
+    List<DoctorProfileDTO> findBySpecializationContaining(String specialization);
+    List<DoctorProfileDTO> findByWorkplaceContaining(String workplace);
+    List<DoctorProfileDTO> findByAccountBalanceGreaterThanEqual(BigDecimal amount);
 }

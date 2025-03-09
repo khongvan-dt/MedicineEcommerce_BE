@@ -1,40 +1,48 @@
 package aptech.vn.backend.service.impl;
 
-import aptech.vn.backend.entity.Appointment;
-import aptech.vn.backend.repository.AppointmentRepository;
-import aptech.vn.backend.service.AppointmentService;
+import aptech.vn.backend.dto.*;
+import aptech.vn.backend.entity.*;
+import aptech.vn.backend.mapper.AppointmentMapper;
+import aptech.vn.backend.repository.*;
+import aptech.vn.backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class AppointmentServiceImpl implements AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
+    private final AppointmentMapper appointmentMapper;
 
     @Autowired
-    public AppointmentServiceImpl(AppointmentRepository appointmentRepository) {
+    public AppointmentServiceImpl(AppointmentRepository appointmentRepository, AppointmentMapper appointmentMapper) {
         this.appointmentRepository = appointmentRepository;
+        this.appointmentMapper = appointmentMapper;
     }
 
     @Override
-    public Appointment save(Appointment appointment) {
-        return appointmentRepository.save(appointment);
+    public List<AppointmentDTO> findAll() {
+        return appointmentRepository.findAll().stream()
+                .map(appointmentMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Appointment> findAll() {
-        return appointmentRepository.findAll();
+    public Optional<AppointmentDTO> findById(Long id) {
+        return appointmentRepository.findById(id)
+                .map(appointmentMapper::toDto);
     }
 
     @Override
-    public Optional<Appointment> findById(Long id) {
-        return appointmentRepository.findById(id);
+    public AppointmentDTO save(AppointmentDTO appointmentDTO) {
+        Appointment appointment = appointmentMapper.toEntity(appointmentDTO);
+        Appointment savedAppointment = appointmentRepository.save(appointment);
+        return appointmentMapper.toDto(savedAppointment);
     }
 
     @Override
@@ -43,22 +51,30 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<Appointment> findByPatientId(Long patientId) {
-        return appointmentRepository.findByPatientId(patientId);
+    public List<AppointmentDTO> findByPatientId(Long patientId) {
+        return appointmentRepository.findByPatient_Id(patientId).stream()
+                .map(appointmentMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Appointment> findByDoctorId(Long doctorId) {
-        return appointmentRepository.findByDoctorId(doctorId);
+    public List<AppointmentDTO> findByDoctorId(Long doctorId) {
+        return appointmentRepository.findByDoctor_Id(doctorId).stream()
+                .map(appointmentMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Appointment> findByAppointmentDateBetween(LocalDateTime start, LocalDateTime end) {
-        return appointmentRepository.findByAppointmentDateBetween(start, end);
+    public List<AppointmentDTO> findByAppointmentDateBetween(LocalDateTime start, LocalDateTime end) {
+        return appointmentRepository.findByAppointmentDateBetween(start, end).stream()
+                .map(appointmentMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Appointment> findByPatientIdAndDoctorId(Long patientId, Long doctorId) {
-        return appointmentRepository.findByPatientIdAndDoctorId(patientId, doctorId);
+    public List<AppointmentDTO> findByPatientIdAndDoctorId(Long patientId, Long doctorId) {
+        return appointmentRepository.findByPatient_IdAndDoctor_Id(patientId, doctorId).stream()
+                .map(appointmentMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

@@ -49,7 +49,6 @@ public class ServiceTypeController {
     public ResponseEntity<ServiceType> updateServiceType(@PathVariable Long id, @RequestBody ServiceType serviceType) {
         return serviceTypeService.findById(id)
                 .map(existingServiceType -> {
-                    serviceType.setId(id);
                     return ResponseEntity.ok(serviceTypeService.save(serviceType));
                 })
                 .orElse(ResponseEntity.notFound().build());

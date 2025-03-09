@@ -1,23 +1,23 @@
 package aptech.vn.backend.service;
 
-import aptech.vn.backend.entity.ServiceBooking;
+import aptech.vn.backend.dto.ServiceBookingDTO;
+import aptech.vn.backend.entity.PaymentMethod;
 import aptech.vn.backend.entity.BookingStatus;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 public interface ServiceBookingService {
-    ServiceBooking save(ServiceBooking serviceBooking);
-    Optional<ServiceBooking> findById(Long id);
-    List<ServiceBooking> findAll();
-    Page<ServiceBooking> findAll(Pageable pageable);
+    List<ServiceBookingDTO> findAll();
+    Optional<ServiceBookingDTO> findById(Long id);
+    ServiceBookingDTO save(ServiceBookingDTO serviceBookingDTO);
     void deleteById(Long id);
-    List<ServiceBooking> findByPatientId(Long patientId);
-    List<ServiceBooking> findByServiceId(Long serviceId);
-    List<ServiceBooking> findByStatus(BookingStatus status);
-    boolean updateStatus(Long bookingId, BookingStatus newStatus);
-    List<ServiceBooking> findByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
+    List<ServiceBookingDTO> findByServiceId(Long serviceId);
+    List<ServiceBookingDTO> findByPatientId(Long patientId);
+    List<ServiceBookingDTO> findByStatus(BookingStatus status);
+    List<ServiceBookingDTO> findByPaymentMethod(PaymentMethod paymentMethod);
+    List<ServiceBookingDTO> findByTotalPriceGreaterThanEqual(BigDecimal amount);
+    List<ServiceBookingDTO> findByCreatedBetween(LocalDateTime start, LocalDateTime end);
 }

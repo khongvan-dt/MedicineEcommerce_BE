@@ -1,22 +1,20 @@
 package aptech.vn.backend.service;
 
-import aptech.vn.backend.entity.Voucher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import aptech.vn.backend.dto.VoucherDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 public interface VoucherService {
-    Voucher save(Voucher voucher);
-    Optional<Voucher> findById(Long id);
-    List<Voucher> findAll();
-    Page<Voucher> findAll(Pageable pageable);
+    List<VoucherDTO> findAll();
+    Optional<VoucherDTO> findById(Long id);
+    VoucherDTO save(VoucherDTO voucherDTO);
     void deleteById(Long id);
-    Optional<Voucher> findByCode(String code);
-    List<Voucher> findByMedicineId(Long medicineId);
-    List<Voucher> findActiveVouchers(LocalDateTime currentTime);
-    boolean isVoucherValid(String code, Long medicineId);
-    boolean useVoucher(String code);
+    Optional<VoucherDTO> findByCode(String code);
+    List<VoucherDTO> findByStockGreaterThan(Integer minStock);
+    List<VoucherDTO> findByVoucherPercentageGreaterThanEqual(Double percentage);
+    List<VoucherDTO> findActive(LocalDateTime now);
+    List<VoucherDTO> findExpired(LocalDateTime date);
+    List<VoucherDTO> findNeverExpires();
 }

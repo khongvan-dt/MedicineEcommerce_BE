@@ -1,137 +1,107 @@
 package aptech.vn.backend.controller;
 
-import aptech.vn.backend.entity.Order;
+import aptech.vn.backend.dto.OrderDTO;
 import aptech.vn.backend.entity.OrderStatus;
+import aptech.vn.backend.entity.PaymentMethod;
 import aptech.vn.backend.service.OrderService;
-import aptech.vn.backend.service.impl.OrderServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/orders")
+@CrossOrigin("*")
 public class OrderController {
 
     private final OrderService orderService;
 
-    @Autowired
-    public OrderController(OrderServiceImpl orderService) {
+    public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
 
     @GetMapping
-    public ResponseEntity<List<Order>> getAllOrders() {
-        return ResponseEntity.ok(orderService.findAll());
+    public ResponseEntity<List<OrderDTO>> getAllOrders() {
+        List<OrderDTO> orders = orderService.findAll();
+        return ResponseEntity.ok(orders);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Order> getOrderById(@PathVariable Long id) {
-        return orderService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/code/{orderCode}")
-    public ResponseEntity<Order> getOrderByCode(@PathVariable String orderCode) {
-        return orderService.findByOrderCode(orderCode)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/patient/{patientId}")
-    public ResponseEntity<List<Order>> getOrdersByPatientId(@PathVariable Long patientId) {
-        return ResponseEntity.ok(orderService.findByPatientId(patientId));
-    }
-
-    @GetMapping("/status/{status}")
-    public ResponseEntity<List<Order>> getOrdersByStatus(@PathVariable OrderStatus status) {
-        return ResponseEntity.ok(orderService.findByStatus(status));
-    }
-
-    @GetMapping("/date-range")
-    public ResponseEntity<List<Order>> getOrdersByDateRange(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
-        return ResponseEntity.ok(orderService.findByCreatedAtBetween(start, end));
-    }
-
-    @GetMapping("/{id}/total")
-    public ResponseEntity<BigDecimal> getOrderTotal(@PathVariable Long id) {
-        return orderService.findById(id)
-                .map(order -> ResponseEntity.ok(orderService.calculateOrderTotal(id)))
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long id) {
+        Optional<OrderDTO> order = orderService.findById(id);
+        return order.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
-        return new ResponseEntity<>(orderService.save(order), HttpStatus.CREATED);
+    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
+        OrderDTO savedOrder = orderService.save(orderDTO);
+        return ResponseEntity.ok(savedOrder);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Order> updateOrder(@PathVariable Long id, @RequestBody Order order) {
-        return orderService.findById(id)
-                .map(existingOrder -> {
-                    order.setId(id);
-                    return ResponseEntity.ok(orderService.save(order));
-                })
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PatchMapping("/{id}/status")
-    public ResponseEntity<String> updateOrderStatus(
-            @PathVariable Long id,
-            @RequestBody Map<String, OrderStatus> statusMap) {
-
-        OrderStatus newStatus = statusMap.get("status");
-        if (newStatus == null) {
-            return ResponseEntity.badRequest().body("Status field is required");
+    public ResponseEntity<OrderDTO> updateOrder(@PathVariable Long id, @RequestBody OrderDTO orderDTO) {
+        if (!orderService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
         }
-
-        return orderService.findById(id)
-                .map(existingOrder -> {
-                    boolean updated = orderService.updateStatus(id, newStatus);
-                    if (updated) {
-                        return ResponseEntity.ok("Order status updated successfully");
-                    } else {
-                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                .body("Failed to update order status");
-                    }
-                })
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PatchMapping("/{id}/apply-voucher")
-    public ResponseEntity<String> applyVoucher(
-            @PathVariable Long id,
-            @RequestBody Map<String, String> voucherMap) {
-
-        String voucherCode = voucherMap.get("voucherCode");
-        if (voucherCode == null || voucherCode.trim().isEmpty()) {
-            return ResponseEntity.badRequest().body("Voucher code is required");
-        }
-
-        return orderService.findById(id)
-                .map(existingOrder -> {
-                    orderService.applyVoucher(id, voucherCode);
-                    return ResponseEntity.ok("Voucher applied successfully");
-                })
-                .orElse(ResponseEntity.notFound().build());
+        OrderDTO updatedOrder = orderService.save(orderDTO);
+        return ResponseEntity.ok(updatedOrder);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
-        return orderService.findById(id)
-                .map(order -> {
-                    orderService.deleteById(id);
-                    return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-                })
-                .orElse(ResponseEntity.notFound().build());
+        if (!orderService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        orderService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/by-order-code/{orderCode}")
+    public ResponseEntity<OrderDTO> getOrderByOrderCode(@PathVariable String orderCode) {
+        Optional<OrderDTO> order = orderService.findByOrderCode(orderCode);
+        return order.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/by-patient/{patientId}")
+    public ResponseEntity<List<OrderDTO>> getOrdersByPatientId(@PathVariable Long patientId) {
+        List<OrderDTO> orders = orderService.findByPatientId(patientId);
+        return ResponseEntity.ok(orders);
+    }
+
+    @GetMapping("/by-status/{status}")
+    public ResponseEntity<List<OrderDTO>> getOrdersByStatus(@PathVariable OrderStatus status) {
+        List<OrderDTO> orders = orderService.findByStatus(status);
+        return ResponseEntity.ok(orders);
+    }
+
+    @GetMapping("/by-payment-method/{paymentMethod}")
+    public ResponseEntity<List<OrderDTO>> getOrdersByPaymentMethod(@PathVariable PaymentMethod paymentMethod) {
+        List<OrderDTO> orders = orderService.findByPaymentMethod(paymentMethod);
+        return ResponseEntity.ok(orders);
+    }
+
+    @GetMapping("/by-voucher/{voucherCode}")
+    public ResponseEntity<List<OrderDTO>> getOrdersByVoucherCode(@PathVariable String voucherCode) {
+        List<OrderDTO> orders = orderService.findByVoucherCode(voucherCode);
+        return ResponseEntity.ok(orders);
+    }
+
+    @GetMapping("/by-total-price/{amount}")
+    public ResponseEntity<List<OrderDTO>> getOrdersByTotalPrice(@PathVariable BigDecimal amount) {
+        List<OrderDTO> orders = orderService.findByTotalPriceGreaterThanEqual(amount);
+        return ResponseEntity.ok(orders);
+    }
+
+    @GetMapping("/by-date-range")
+    public ResponseEntity<List<OrderDTO>> getOrdersByDateRange(
+            @RequestParam LocalDateTime start,
+            @RequestParam LocalDateTime end) {
+        List<OrderDTO> orders = orderService.findByCreatedBetween(start, end);
+        return ResponseEntity.ok(orders);
     }
 }

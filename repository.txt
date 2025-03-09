@@ -1,0 +1,246 @@
+package aptech.vn.backend.repository;
+
+import aptech.vn.backend.entity.*;
+import aptech.vn.backend.entity.Service;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
+    List<Appointment> findByPatient_Id(Long patientId);
+    List<Appointment> findByDoctor_Id(Long doctorId);
+    List<Appointment> findByAppointmentDateBetween(LocalDateTime start, LocalDateTime end);
+    List<Appointment> findByPatient_IdAndDoctor_Id(Long patientId, Long doctorId);
+}
+
+@Repository
+public interface AttributeRepository extends JpaRepository<Attribute, Long> {
+    List<Attribute> findByName(String name);
+    List<Attribute> findByPriceInLessThanEqual(BigDecimal price);
+    List<Attribute> findByPriceOutLessThanEqual(BigDecimal price);
+    List<Attribute> findByStockGreaterThan(Integer stock);
+    List<Attribute> findByExpiryDateBefore(LocalDate date);
+}
+
+@Repository
+public interface BrandRepository extends JpaRepository<Brand, Long> {
+    Optional<Brand> findByName(String name);
+    List<Brand> findByNameContaining(String namePattern);
+}
+
+@Repository
+public interface CategoryRepository extends JpaRepository<Category, Long> {
+    List<Category> findByName(String name);
+    List<Category> findByParent_Id(Long parentId);
+    List<Category> findByParentIsNull();
+}
+
+@Repository
+public interface ConsultationRepository extends JpaRepository<Consultation, Long> {
+    List<Consultation> findByPatient_Id(Long patientId);
+    List<Consultation> findByDoctor_Id(Long doctorId);
+    List<Consultation> findByStatus(ConsultationStatus status);
+    List<Consultation> findByPatient_IdAndDoctor_Id(Long patientId, Long doctorId);
+    List<Consultation> findByDoctor_IdAndStatus(Long doctorId, ConsultationStatus status);
+    List<Consultation> findByPatient_IdAndStatus(Long patientId, ConsultationStatus status);
+}
+
+@Repository
+public interface DiscountRepository extends JpaRepository<Discount, Long> {
+    Optional<Discount> findByCode(String code);
+    List<Discount> findByMedicine_Id(Long medicineId);
+    List<Discount> findByStartDateBeforeAndEndDateAfter(LocalDateTime now, LocalDateTime now2);
+    List<Discount> findByDiscountPercentageGreaterThanEqual(Double percentage);
+    List<Discount> findByEndDateBefore(LocalDateTime date);
+    List<Discount> findByEndDateIsNull();
+}
+
+@Repository
+public interface DoctorProfileRepository extends JpaRepository<DoctorProfile, Long> {
+    Optional<DoctorProfile> findByUser_Id(Long userId);
+    List<DoctorProfile> findBySpecializationContaining(String specialization);
+    List<DoctorProfile> findByWorkplaceContaining(String workplace);
+    List<DoctorProfile> findByAccountBalanceGreaterThanEqual(BigDecimal amount);
+}
+
+@Repository
+public interface DoctorServiceRepository extends JpaRepository<DoctorService, Long> {
+    List<DoctorService> findByDoctor_Id(Long doctorId);
+    List<DoctorService> findByService_Id(Long serviceId);
+    Optional<DoctorService> findByDoctor_IdAndService_Id(Long doctorId, Long serviceId);
+}
+
+@Repository
+public interface MedicineRepository extends JpaRepository<Medicine, Long> {
+    Optional<Medicine> findByCode(String code);
+    List<Medicine> findByName(String name);
+    List<Medicine> findByNameContaining(String namePattern);
+    List<Medicine> findByBrand_Id(Long brandId);
+    List<Medicine> findByOrigin(String origin);
+    List<Medicine> findByManufacturer(String manufacturer);
+}
+
+@Repository
+public interface MedicineBatchRepository extends JpaRepository<MedicineBatch, Long> {
+    Optional<MedicineBatch> findByBatchName(String batchName);
+    List<MedicineBatch> findByMedicineCode(String medicineCode);
+    List<MedicineBatch> findByQuantityGreaterThan(Integer quantity);
+    List<MedicineBatch> findByExpiryDateBefore(LocalDate date);
+}
+
+@Repository
+public interface MedicineCategoryRepository extends JpaRepository<MedicineCategory, Long> {
+    List<MedicineCategory> findByMedicine_Id(Long medicineId);
+    List<MedicineCategory> findByCategory_Id(Long categoryId);
+    Optional<MedicineCategory> findByMedicine_IdAndCategory_Id(Long medicineId, Long categoryId);
+}
+
+@Repository
+public interface MedicineMediaRepository extends JpaRepository<MedicineMedia, Long> {
+    List<MedicineMedia> findByMedicine_Id(Long medicineId);
+    List<MedicineMedia> findByMediaType(MediaType mediaType);
+    List<MedicineMedia> findByMedicine_IdAndMediaType(Long medicineId, MediaType mediaType);
+    Optional<MedicineMedia> findByMedicine_IdAndMainImageTrue(Long medicineId);
+}
+
+@Repository
+public interface NotificationRepository extends JpaRepository<Notification, Long> {
+    List<Notification> findByUser_Id(Long userId);
+    List<Notification> findByUser_IdAndCreatedAtAfter(Long userId, LocalDateTime date);
+}
+
+@Repository
+public interface OrderRepository extends JpaRepository<Order, Long> {
+    Optional<Order> findByOrderCode(String orderCode);
+    List<Order> findByPatient_Id(Long patientId);
+    List<Order> findByStatus(OrderStatus status);
+    List<Order> findByPaymentMethod(PaymentMethod paymentMethod);
+    List<Order> findByVoucherCode(String voucherCode);
+    List<Order> findByTotalPriceGreaterThanEqual(BigDecimal amount);
+    List<Order> findByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
+}
+
+@Repository
+public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> {
+    List<OrderDetail> findByOrder_Id(Long orderId);
+    List<OrderDetail> findByMedicine_Id(Long medicineId);
+    List<OrderDetail> findByOrder_IdAndMedicine_Id(Long orderId, Long medicineId);
+    List<OrderDetail> findByQuantityGreaterThan(Integer quantity);
+}
+
+@Repository
+public interface PatientProfileRepository extends JpaRepository<PatientProfile, Long> {
+    Optional<PatientProfile> findByUser_Id(Long userId);
+    List<PatientProfile> findByBloodType(String bloodType);
+    List<PatientProfile> findByMedicalHistoryContaining(String keyword);
+    List<PatientProfile> findByAllergiesContaining(String keyword);
+    List<PatientProfile> findByAccountBalanceGreaterThanEqual(BigDecimal amount);
+}
+
+@Repository
+public interface PrescriptionRepository extends JpaRepository<Prescription, Long> {
+    List<Prescription> findByDoctor_Id(Long doctorId);
+    List<Prescription> findByPatient_Id(Long patientId);
+    List<Prescription> findByMedicine_Id(Long medicineId);
+    List<Prescription> findByPatient_IdAndDoctor_Id(Long patientId, Long doctorId);
+    List<Prescription> findByPatient_IdAndMedicine_Id(Long patientId, Long medicineId);
+}
+
+@Repository
+public interface ReviewRepository extends JpaRepository<Review, Long> {
+    List<Review> findByUser_Id(Long userId);
+    List<Review> findByRating(Integer rating);
+    List<Review> findByRatingGreaterThanEqual(Integer minRating);
+    List<Review> findByDoctor_Id(Long doctorId);
+    List<Review> findByMedicine_Id(Long medicineId);
+    List<Review> findByService_Id(Long serviceId);
+    List<Review> findByDoctor_IdAndRatingGreaterThanEqual(Long doctorId, Integer minRating);
+    List<Review> findByMedicine_IdAndRatingGreaterThanEqual(Long medicineId, Integer minRating);
+    List<Review> findByService_IdAndRatingGreaterThanEqual(Long serviceId, Integer minRating);
+}
+
+@Repository
+public interface RoleRepository extends JpaRepository<Role, Long> {
+    Optional<Role> findByName(String name);
+}
+
+@Repository
+public interface SalaryRepository extends JpaRepository<Salary, Long> {
+    List<Salary> findByUser_Id(Long userId);
+    List<Salary> findByBankCode(String bankCode);
+    List<Salary> findByBankName(String bankName);
+    List<Salary> findByStatus(PaymentStatus status);
+    List<Salary> findByPriceGreaterThanEqual(BigDecimal amount);
+    List<Salary> findByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
+}
+
+@Repository
+public interface ServiceRepository extends JpaRepository<Service, Long> {
+    List<Service> findByName(String name);
+    List<Service> findByNameContaining(String namePattern);
+    List<Service> findByPriceLessThanEqual(BigDecimal maxPrice);
+    List<Service> findByPriceGreaterThanEqual(BigDecimal minPrice);
+    List<Service> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice);
+}
+
+@Repository
+public interface ServiceBookingRepository extends JpaRepository<ServiceBooking, Long> {
+    List<ServiceBooking> findByService_Id(Long serviceId);
+    List<ServiceBooking> findByPatient_Id(Long patientId);
+    List<ServiceBooking> findByStatus(BookingStatus status);
+    List<ServiceBooking> findByPaymentMethod(PaymentMethod paymentMethod);
+    List<ServiceBooking> findByTotalPriceGreaterThanEqual(BigDecimal amount);
+    List<ServiceBooking> findByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
+}
+
+@Repository
+public interface SocialAccountRepository extends JpaRepository<SocialAccount, Long> {
+    List<SocialAccount> findByUser_Id(Long userId);
+    Optional<SocialAccount> findByProviderAndProviderId(SocialProvider provider, String providerId);
+    List<SocialAccount> findByProvider(SocialProvider provider);
+    Optional<SocialAccount> findByUser_IdAndProvider(Long userId, SocialProvider provider);
+    Optional<SocialAccount> findByProviderEmail(String email);
+}
+
+@Repository
+public interface TrackingRepository extends JpaRepository<Tracking, Long> {
+    List<Tracking> findByOrder_Id(Long orderId);
+    List<Tracking> findByStatus(TrackingStatus status);
+    List<Tracking> findByLocationContaining(String location);
+    Optional<Tracking> findFirstByOrder_IdOrderByCreatedAtDesc(Long orderId);
+}
+
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByEmail(String email);
+    List<User> findByFullNameContaining(String fullName);
+    List<User> findByPhone(String phone);
+    List<User> findByAddressContaining(String address);
+    List<User> findByEnabled(Boolean enabled);
+    List<User> findByLocked(Boolean locked);
+    List<User> findByLastLoginAfter(LocalDateTime date);
+    List<User> findByCountLockGreaterThanEqual(Integer count);
+}
+
+@Repository
+public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
+    List<UserRole> findByUser_Id(Long userId);
+    List<UserRole> findByRole_Id(Long roleId);
+    Optional<UserRole> findByUser_IdAndRole_Id(Long userId, Long roleId);
+}
+
+@Repository
+public interface VoucherRepository extends JpaRepository<Voucher, Long> {
+    Optional<Voucher> findByCode(String code);
+    List<Voucher> findByStockGreaterThan(Integer minStock);
+    List<Voucher> findByVoucherPercentageGreaterThanEqual(Double percentage);
+    List<Voucher> findByStartDateBeforeAndEndDateAfter(LocalDateTime now, LocalDateTime now2);
+    List<Voucher> findByEndDateBefore(LocalDateTime date);
+    List<Voucher> findByEndDateIsNull();
+}

@@ -1,78 +1,77 @@
 package aptech.vn.backend.controller;
 
-import aptech.vn.backend.entity.MedicineCategory;
+import aptech.vn.backend.dto.MedicineCategoryDTO;
 import aptech.vn.backend.service.MedicineCategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/medicine-categories")
+@CrossOrigin("*")
 public class MedicineCategoryController {
 
-    @Autowired
-    private MedicineCategoryService medicineCategoryService;
+    private final MedicineCategoryService medicineCategoryService;
+
+    public MedicineCategoryController(MedicineCategoryService medicineCategoryService) {
+        this.medicineCategoryService = medicineCategoryService;
+    }
 
     @GetMapping
-    public ResponseEntity<List<MedicineCategory>> getAllMedicineCategories() {
-        List<MedicineCategory> medicineCategories = medicineCategoryService.findAll();
-        return new ResponseEntity<>(medicineCategories, HttpStatus.OK);
+    public ResponseEntity<List<MedicineCategoryDTO>> getAllMedicineCategories() {
+        List<MedicineCategoryDTO> categories = medicineCategoryService.findAll();
+        return ResponseEntity.ok(categories);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MedicineCategory> getMedicineCategoryById(@PathVariable Long id) {
-        return medicineCategoryService.findById(id)
-                .map(medicineCategory -> new ResponseEntity<>(medicineCategory, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<MedicineCategoryDTO> getMedicineCategoryById(@PathVariable Long id) {
+        Optional<MedicineCategoryDTO> category = medicineCategoryService.findById(id);
+        return category.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<MedicineCategory> createMedicineCategory(@RequestBody MedicineCategory medicineCategory) {
-        MedicineCategory savedMedicineCategory = medicineCategoryService.save(medicineCategory);
-        return new ResponseEntity<>(savedMedicineCategory, HttpStatus.CREATED);
+    public ResponseEntity<MedicineCategoryDTO> createMedicineCategory(@RequestBody MedicineCategoryDTO medicineCategoryDTO) {
+        MedicineCategoryDTO savedCategory = medicineCategoryService.save(medicineCategoryDTO);
+        return ResponseEntity.ok(savedCategory);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MedicineCategory> updateMedicineCategory(@PathVariable Long id, @RequestBody MedicineCategory medicineCategory) {
-        return medicineCategoryService.findById(id)
-                .map(existingMedicineCategory -> {
-                    medicineCategory.setId(id);
-                    MedicineCategory updatedMedicineCategory = medicineCategoryService.save(medicineCategory);
-                    return new ResponseEntity<>(updatedMedicineCategory, HttpStatus.OK);
-                })
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<MedicineCategoryDTO> updateMedicineCategory(@PathVariable Long id, @RequestBody MedicineCategoryDTO medicineCategoryDTO) {
+        if (!medicineCategoryService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        MedicineCategoryDTO updatedCategory = medicineCategoryService.save(medicineCategoryDTO);
+        return ResponseEntity.ok(updatedCategory);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMedicineCategory(@PathVariable Long id) {
-        return medicineCategoryService.findById(id)
-                .map(medicineCategory -> {
-                    medicineCategoryService.deleteById(id);
-                    return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-                })
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        if (!medicineCategoryService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        medicineCategoryService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/medicine/{medicineId}")
-    public ResponseEntity<List<MedicineCategory>> getMedicineCategoriesByMedicineId(@PathVariable Long medicineId) {
-        List<MedicineCategory> medicineCategories = medicineCategoryService.findByMedicineId(medicineId);
-        return new ResponseEntity<>(medicineCategories, HttpStatus.OK);
+    @GetMapping("/by-medicine/{medicineId}")
+    public ResponseEntity<List<MedicineCategoryDTO>> getByMedicineId(@PathVariable Long medicineId) {
+        List<MedicineCategoryDTO> categories = medicineCategoryService.findByMedicineId(medicineId);
+        return ResponseEntity.ok(categories);
     }
 
-    @GetMapping("/category/{categoryId}")
-    public ResponseEntity<List<MedicineCategory>> getMedicineCategoriesByCategoryId(@PathVariable Long categoryId) {
-        List<MedicineCategory> medicineCategories = medicineCategoryService.findByCategoryId(categoryId);
-        return new ResponseEntity<>(medicineCategories, HttpStatus.OK);
+    @GetMapping("/by-category/{categoryId}")
+    public ResponseEntity<List<MedicineCategoryDTO>> getByCategoryId(@PathVariable Long categoryId) {
+        List<MedicineCategoryDTO> categories = medicineCategoryService.findByCategoryId(categoryId);
+        return ResponseEntity.ok(categories);
     }
 
-    @GetMapping("/medicine/{medicineId}/category/{categoryId}")
-    public ResponseEntity<MedicineCategory> getMedicineCategoryByMedicineIdAndCategoryId(
-            @PathVariable Long medicineId, @PathVariable Long categoryId) {
-        return medicineCategoryService.findByMedicineIdAndCategoryId(medicineId, categoryId)
-                .map(medicineCategory -> new ResponseEntity<>(medicineCategory, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    @GetMapping("/by-medicine-and-category")
+    public ResponseEntity<MedicineCategoryDTO> getByMedicineAndCategory(@RequestParam Long medicineId, @RequestParam Long categoryId) {
+        Optional<MedicineCategoryDTO> category = medicineCategoryService.findByMedicineIdAndCategoryId(medicineId, categoryId);
+        return category.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

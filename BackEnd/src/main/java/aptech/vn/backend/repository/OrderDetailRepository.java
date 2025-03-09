@@ -8,7 +8,8 @@ import java.util.List;
 
 @Repository
 public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> {
-    List<OrderDetail> findByOrderId(Long orderId);
-    List<OrderDetail> findByMedicineId(Long medicineId);
-    List<OrderDetail> findByOrderIdAndMedicineId(Long orderId, Long medicineId);
+    List<OrderDetail> findByOrder_Id(Long orderId);
+    List<OrderDetail> findByMedicine_Id(Long medicineId);
+    List<OrderDetail> findByOrder_IdAndMedicine_Id(Long orderId, Long medicineId);
+    List<OrderDetail> findByQuantityGreaterThan(Integer quantity);
 }

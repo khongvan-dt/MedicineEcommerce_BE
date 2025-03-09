@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface DoctorServiceRepository extends JpaRepository<DoctorService, Long> {
-    List<DoctorService> findByDoctorId(Long doctorId);
-    List<DoctorService> findByServiceId(Long serviceId);
-    Optional<DoctorService> findByDoctorIdAndServiceId(Long doctorId, Long serviceId);
+    List<DoctorService> findByDoctor_Id(Long doctorId);
+    List<DoctorService> findByService_Id(Long serviceId);
+    Optional<DoctorService> findByDoctor_IdAndService_Id(Long doctorId, Long serviceId);
 }

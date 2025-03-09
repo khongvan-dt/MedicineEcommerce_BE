@@ -1,93 +1,83 @@
 package aptech.vn.backend.controller;
 
-import aptech.vn.backend.entity.MedicineMedia;
+import aptech.vn.backend.dto.MedicineMediaDTO;
 import aptech.vn.backend.entity.MediaType;
 import aptech.vn.backend.service.MedicineMediaService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/medicine-media")
 public class MedicineMediaController {
 
-    @Autowired
-    private MedicineMediaService medicineMediaService;
+    private final MedicineMediaService medicineMediaService;
 
-    @GetMapping
-    public ResponseEntity<List<MedicineMedia>> getAllMedicineMedia() {
-        List<MedicineMedia> medicineMediaList = medicineMediaService.findAll();
-        return new ResponseEntity<>(medicineMediaList, HttpStatus.OK);
+    public MedicineMediaController(MedicineMediaService medicineMediaService) {
+        this.medicineMediaService = medicineMediaService;
     }
 
-    @GetMapping("/paged")
-    public ResponseEntity<Page<MedicineMedia>> getAllMedicineMediaPaged(Pageable pageable) {
-        Page<MedicineMedia> medicineMediaPage = medicineMediaService.findAll(pageable);
-        return new ResponseEntity<>(medicineMediaPage, HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<List<MedicineMediaDTO>> getAllMedicineMedia() {
+        List<MedicineMediaDTO> mediaList = medicineMediaService.findAll();
+        return ResponseEntity.ok(mediaList);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MedicineMedia> getMedicineMediaById(@PathVariable Long id) {
-        return medicineMediaService.findById(id)
-                .map(medicineMedia -> new ResponseEntity<>(medicineMedia, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<MedicineMediaDTO> getMedicineMediaById(@PathVariable Long id) {
+        Optional<MedicineMediaDTO> media = medicineMediaService.findById(id);
+        return media.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<MedicineMedia> createMedicineMedia(@RequestBody MedicineMedia medicineMedia) {
-        MedicineMedia savedMedicineMedia = medicineMediaService.save(medicineMedia);
-        return new ResponseEntity<>(savedMedicineMedia, HttpStatus.CREATED);
+    public ResponseEntity<MedicineMediaDTO> createMedicineMedia(@RequestBody MedicineMediaDTO medicineMediaDTO) {
+        MedicineMediaDTO savedMedia = medicineMediaService.save(medicineMediaDTO);
+        return ResponseEntity.ok(savedMedia);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MedicineMedia> updateMedicineMedia(@PathVariable Long id, @RequestBody MedicineMedia medicineMedia) {
-        return medicineMediaService.findById(id)
-                .map(existingMedicineMedia -> {
-                    medicineMedia.setId(id);
-                    MedicineMedia updatedMedicineMedia = medicineMediaService.save(medicineMedia);
-                    return new ResponseEntity<>(updatedMedicineMedia, HttpStatus.OK);
-                })
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<MedicineMediaDTO> updateMedicineMedia(@PathVariable Long id, @RequestBody MedicineMediaDTO medicineMediaDTO) {
+        if (!medicineMediaService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        MedicineMediaDTO updatedMedia = medicineMediaService.save(medicineMediaDTO);
+        return ResponseEntity.ok(updatedMedia);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMedicineMedia(@PathVariable Long id) {
-        return medicineMediaService.findById(id)
-                .map(medicineMedia -> {
-                    medicineMediaService.deleteById(id);
-                    return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-                })
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        if (!medicineMediaService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        medicineMediaService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/medicine/{medicineId}")
-    public ResponseEntity<List<MedicineMedia>> getMedicineMediaByMedicineId(@PathVariable Long medicineId) {
-        List<MedicineMedia> medicineMediaList = medicineMediaService.findByMedicineId(medicineId);
-        return new ResponseEntity<>(medicineMediaList, HttpStatus.OK);
+    @GetMapping("/by-medicine/{medicineId}")
+    public ResponseEntity<List<MedicineMediaDTO>> getMediaByMedicineId(@PathVariable Long medicineId) {
+        List<MedicineMediaDTO> mediaList = medicineMediaService.findByMedicineId(medicineId);
+        return ResponseEntity.ok(mediaList);
     }
 
-    @GetMapping("/medicine/{medicineId}/type/{mediaType}")
-    public ResponseEntity<List<MedicineMedia>> getMedicineMediaByMedicineIdAndMediaType(
-            @PathVariable Long medicineId, @PathVariable MediaType mediaType) {
-        List<MedicineMedia> medicineMediaList = medicineMediaService.findByMedicineIdAndMediaType(medicineId, mediaType);
-        return new ResponseEntity<>(medicineMediaList, HttpStatus.OK);
+    @GetMapping("/by-media-type/{mediaType}")
+    public ResponseEntity<List<MedicineMediaDTO>> getMediaByType(@PathVariable MediaType mediaType) {
+        List<MedicineMediaDTO> mediaList = medicineMediaService.findByMediaType(mediaType);
+        return ResponseEntity.ok(mediaList);
     }
 
-    @GetMapping("/medicine/{medicineId}/main-image")
-    public ResponseEntity<MedicineMedia> getMainImageByMedicineId(@PathVariable Long medicineId) {
-        return medicineMediaService.findMainImageByMedicineId(medicineId)
-                .map(medicineMedia -> new ResponseEntity<>(medicineMedia, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    @GetMapping("/by-medicine-and-media-type")
+    public ResponseEntity<List<MedicineMediaDTO>> getMediaByMedicineAndType(@RequestParam Long medicineId, @RequestParam MediaType mediaType) {
+        List<MedicineMediaDTO> mediaList = medicineMediaService.findByMedicineIdAndMediaType(medicineId, mediaType);
+        return ResponseEntity.ok(mediaList);
     }
 
-    @PutMapping("/medicine/{medicineId}/main-image/{mediaId}")
-    public ResponseEntity<Void> setMainImage(@PathVariable Long medicineId, @PathVariable Long mediaId) {
-        medicineMediaService.setMainImage(medicineId, mediaId);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @GetMapping("/main-image/{medicineId}")
+    public ResponseEntity<MedicineMediaDTO> getMainImageByMedicineId(@PathVariable Long medicineId) {
+        Optional<MedicineMediaDTO> mainImage = medicineMediaService.findMainImageByMedicineId(medicineId);
+        return mainImage.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

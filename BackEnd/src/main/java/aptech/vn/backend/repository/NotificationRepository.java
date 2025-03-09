@@ -7,9 +7,9 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
-    List<Notification> findByUserId(Long userId);
-    List<Notification> findByUserIdAndCreatedAtBetween(Long userId, LocalDateTime start, LocalDateTime end);
-    List<Notification> findByCreatedAtAfter(LocalDateTime since);
+    List<Notification> findByUser_Id(Long userId);
+    List<Notification> findByUser_IdAndCreatedAtAfter(Long userId, LocalDateTime date);
 }

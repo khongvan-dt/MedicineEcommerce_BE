@@ -1,9 +1,8 @@
 package aptech.vn.backend.service;
 
-import aptech.vn.backend.entity.Order;
+import aptech.vn.backend.dto.OrderDTO;
 import aptech.vn.backend.entity.OrderStatus;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import aptech.vn.backend.entity.PaymentMethod;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -11,16 +10,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OrderService {
-    Order save(Order order);
-    Optional<Order> findById(Long id);
-    List<Order> findAll();
-    Page<Order> findAll(Pageable pageable);
+    List<OrderDTO> findAll();
+    Optional<OrderDTO> findById(Long id);
+    OrderDTO save(OrderDTO orderDTO);
     void deleteById(Long id);
-    Optional<Order> findByOrderCode(String orderCode);
-    List<Order> findByPatientId(Long patientId);
-    List<Order> findByStatus(OrderStatus status);
-    boolean updateStatus(Long orderId, OrderStatus newStatus);
-    BigDecimal calculateOrderTotal(Long orderId);
-    List<Order> findByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
-    void applyVoucher(Long orderId, String voucherCode);
+    Optional<OrderDTO> findByOrderCode(String orderCode);
+    List<OrderDTO> findByPatientId(Long patientId);
+    List<OrderDTO> findByStatus(OrderStatus status);
+    List<OrderDTO> findByPaymentMethod(PaymentMethod paymentMethod);
+    List<OrderDTO> findByVoucherCode(String voucherCode);
+    List<OrderDTO> findByTotalPriceGreaterThanEqual(BigDecimal amount);
+    List<OrderDTO> findByCreatedBetween(LocalDateTime start, LocalDateTime end);
 }

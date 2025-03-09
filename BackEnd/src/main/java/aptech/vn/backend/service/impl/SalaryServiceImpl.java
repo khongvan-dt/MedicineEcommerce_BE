@@ -1,7 +1,9 @@
 package aptech.vn.backend.service.impl;
 
+import aptech.vn.backend.dto.SalaryDTO;
 import aptech.vn.backend.entity.PaymentStatus;
 import aptech.vn.backend.entity.Salary;
+import aptech.vn.backend.mapper.SalaryMapper;
 import aptech.vn.backend.repository.SalaryRepository;
 import aptech.vn.backend.service.SalaryService;
 import org.springframework.data.domain.Page;
@@ -13,35 +15,36 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class SalaryServiceImpl implements SalaryService {
-
+    private final SalaryMapper salaryMapper;
     private final SalaryRepository salaryRepository;
 
-    public SalaryServiceImpl(SalaryRepository salaryRepository) {
+    public SalaryServiceImpl(SalaryRepository salaryRepository, SalaryMapper salaryMapper) {
         this.salaryRepository = salaryRepository;
+        this.salaryMapper = salaryMapper;
     }
 
     @Override
-    public Salary save(Salary salary) {
-        return salaryRepository.save(salary);
+    public List<SalaryDTO> findAll() {
+        return salaryRepository.findAll()
+                .stream()
+                .map(salaryMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<Salary> findById(Long id) {
-        return salaryRepository.findById(id);
+    public Optional<SalaryDTO> findById(Long id) {
+        return salaryRepository.findById(id).map(salaryMapper::toDto);
     }
 
     @Override
-    public List<Salary> findAll() {
-        return salaryRepository.findAll();
-    }
-
-    @Override
-    public Page<Salary> findAll(Pageable pageable) {
-        return salaryRepository.findAll(pageable);
+    public SalaryDTO save(SalaryDTO salaryDTO) {
+        Salary salary = salaryMapper.toEntity(salaryDTO);
+        salary = salaryRepository.save(salary);
+        return salaryMapper.toDto(salary);
     }
 
     @Override
@@ -50,27 +53,50 @@ public class SalaryServiceImpl implements SalaryService {
     }
 
     @Override
-    public List<Salary> findByUserId(Long userId) {
-        return salaryRepository.findByUserId(userId);
+    public List<SalaryDTO> findByUserId(Long userId) {
+        return salaryRepository.findByUser_Id(userId)
+                .stream()
+                .map(salaryMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Salary> findByStatus(PaymentStatus status) {
-        return salaryRepository.findByStatus(status);
+    public List<SalaryDTO> findByBankCode(String bankCode) {
+        return salaryRepository.findByBankCode(bankCode)
+                .stream()
+                .map(salaryMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Salary> findByCreatedAtBetween(LocalDateTime start, LocalDateTime end) {
-        return salaryRepository.findByCreatedAtBetween(start, end);
+    public List<SalaryDTO> findByBankName(String bankName) {
+        return salaryRepository.findByBankName(bankName)
+                .stream()
+                .map(salaryMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public BigDecimal getTotalSalaryByUserIdAndPeriod(Long userId, LocalDateTime start, LocalDateTime end) {
-        return null;
+    public List<SalaryDTO> findByStatus(PaymentStatus status) {
+        return salaryRepository.findByStatus(status)
+                .stream()
+                .map(salaryMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public boolean updateStatus(Long salaryId, PaymentStatus newStatus) {
-        return false;
+    public List<SalaryDTO> findByPriceGreaterThanEqual(BigDecimal amount) {
+        return salaryRepository.findByPriceGreaterThanEqual(amount)
+                .stream()
+                .map(salaryMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<SalaryDTO> findByCreatedBetween(LocalDateTime start, LocalDateTime end) {
+        return salaryRepository.findByCreatedAtBetween(start, end)
+                .stream()
+                .map(salaryMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

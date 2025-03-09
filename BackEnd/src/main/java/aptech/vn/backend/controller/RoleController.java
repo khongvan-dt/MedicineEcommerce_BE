@@ -1,14 +1,12 @@
 package aptech.vn.backend.controller;
 
-import aptech.vn.backend.entity.Role;
+import aptech.vn.backend.dto.RoleDTO;
 import aptech.vn.backend.service.RoleService;
-import aptech.vn.backend.service.impl.RoleServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/roles")
@@ -16,52 +14,51 @@ public class RoleController {
 
     private final RoleService roleService;
 
-    @Autowired
-    public RoleController(RoleServiceImpl roleService) {
+    public RoleController(RoleService roleService) {
         this.roleService = roleService;
     }
 
     @GetMapping
-    public ResponseEntity<List<Role>> getAllRoles() {
-        return ResponseEntity.ok(roleService.findAll());
+    public ResponseEntity<List<RoleDTO>> getAllRoles() {
+        List<RoleDTO> roles = roleService.findAll();
+        return ResponseEntity.ok(roles);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Role> getRoleById(@PathVariable Long id) {
-        return roleService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/name/{name}")
-    public ResponseEntity<Role> getRoleByName(@PathVariable String name) {
-        return roleService.findByName(name)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<RoleDTO> getRoleById(@PathVariable Long id) {
+        Optional<RoleDTO> role = roleService.findById(id);
+        return role.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Role> createRole(@RequestBody Role role) {
-        return new ResponseEntity<>(roleService.save(role), HttpStatus.CREATED);
+    public ResponseEntity<RoleDTO> createRole(@RequestBody RoleDTO roleDTO) {
+        RoleDTO savedRole = roleService.save(roleDTO);
+        return ResponseEntity.ok(savedRole);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Role> updateRole(@PathVariable Long id, @RequestBody Role role) {
-        return roleService.findById(id)
-                .map(existingRole -> {
-                    role.setId(id);
-                    return ResponseEntity.ok(roleService.save(role));
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<RoleDTO> updateRole(@PathVariable Long id, @RequestBody RoleDTO roleDTO) {
+        if (!roleService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        RoleDTO updatedRole = roleService.save(roleDTO);
+        return ResponseEntity.ok(updatedRole);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRole(@PathVariable Long id) {
-        return roleService.findById(id)
-                .map(role -> {
-                    roleService.deleteById(id);
-                    return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-                })
-                .orElse(ResponseEntity.notFound().build());
+        if (!roleService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        roleService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/by-name/{name}")
+    public ResponseEntity<RoleDTO> getRoleByName(@PathVariable String name) {
+        Optional<RoleDTO> role = roleService.findByName(name);
+        return role.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

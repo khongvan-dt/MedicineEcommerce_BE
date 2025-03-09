@@ -1,15 +1,15 @@
 package aptech.vn.backend.service;
 
-import aptech.vn.backend.entity.MedicineCategory;
+import aptech.vn.backend.dto.MedicineCategoryDTO;
 import java.util.List;
 import java.util.Optional;
 
 public interface MedicineCategoryService {
-    MedicineCategory save(MedicineCategory medicineCategory);
-    List<MedicineCategory> findAll();
-    Optional<MedicineCategory> findById(Long id);
+    List<MedicineCategoryDTO> findAll();
+    Optional<MedicineCategoryDTO> findById(Long id);
+    MedicineCategoryDTO save(MedicineCategoryDTO medicineCategoryDTO);
     void deleteById(Long id);
-    List<MedicineCategory> findByMedicineId(Long medicineId);
-    List<MedicineCategory> findByCategoryId(Long categoryId);
-    Optional<MedicineCategory> findByMedicineIdAndCategoryId(Long medicineId, Long categoryId);
+    List<MedicineCategoryDTO> findByMedicineId(Long medicineId);
+    List<MedicineCategoryDTO> findByCategoryId(Long categoryId);
+    Optional<MedicineCategoryDTO> findByMedicineIdAndCategoryId(Long medicineId, Long categoryId);
 }

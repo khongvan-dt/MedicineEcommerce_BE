@@ -1,18 +1,16 @@
 package aptech.vn.backend.controller;
 
+import aptech.vn.backend.dto.ServiceBookingDTO;
 import aptech.vn.backend.entity.BookingStatus;
-import aptech.vn.backend.entity.ServiceBooking;
+import aptech.vn.backend.entity.PaymentMethod;
 import aptech.vn.backend.service.ServiceBookingService;
-import aptech.vn.backend.service.impl.ServiceBookingServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/service-bookings")
@@ -20,90 +18,82 @@ public class ServiceBookingController {
 
     private final ServiceBookingService serviceBookingService;
 
-    @Autowired
-    public ServiceBookingController(ServiceBookingServiceImpl serviceBookingService) {
+    public ServiceBookingController(ServiceBookingService serviceBookingService) {
         this.serviceBookingService = serviceBookingService;
     }
 
     @GetMapping
-    public ResponseEntity<List<ServiceBooking>> getAllServiceBookings() {
-        return ResponseEntity.ok(serviceBookingService.findAll());
+    public ResponseEntity<List<ServiceBookingDTO>> getAllServiceBookings() {
+        List<ServiceBookingDTO> bookings = serviceBookingService.findAll();
+        return ResponseEntity.ok(bookings);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ServiceBooking> getServiceBookingById(@PathVariable Long id) {
-        return serviceBookingService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/patient/{patientId}")
-    public ResponseEntity<List<ServiceBooking>> getServiceBookingsByPatientId(@PathVariable Long patientId) {
-        return ResponseEntity.ok(serviceBookingService.findByPatientId(patientId));
-    }
-
-    @GetMapping("/service/{serviceId}")
-    public ResponseEntity<List<ServiceBooking>> getServiceBookingsByServiceId(@PathVariable Long serviceId) {
-        return ResponseEntity.ok(serviceBookingService.findByServiceId(serviceId));
-    }
-
-    @GetMapping("/status/{status}")
-    public ResponseEntity<List<ServiceBooking>> getServiceBookingsByStatus(@PathVariable BookingStatus status) {
-        return ResponseEntity.ok(serviceBookingService.findByStatus(status));
-    }
-
-    @GetMapping("/date-range")
-    public ResponseEntity<List<ServiceBooking>> getServiceBookingsByDateRange(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
-        return ResponseEntity.ok(serviceBookingService.findByCreatedAtBetween(start, end));
+    public ResponseEntity<ServiceBookingDTO> getServiceBookingById(@PathVariable Long id) {
+        Optional<ServiceBookingDTO> booking = serviceBookingService.findById(id);
+        return booking.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<ServiceBooking> createServiceBooking(@RequestBody ServiceBooking serviceBooking) {
-        return new ResponseEntity<>(serviceBookingService.save(serviceBooking), HttpStatus.CREATED);
+    public ResponseEntity<ServiceBookingDTO> createServiceBooking(@RequestBody ServiceBookingDTO serviceBookingDTO) {
+        ServiceBookingDTO savedBooking = serviceBookingService.save(serviceBookingDTO);
+        return ResponseEntity.ok(savedBooking);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ServiceBooking> updateServiceBooking(@PathVariable Long id, @RequestBody ServiceBooking serviceBooking) {
-        return serviceBookingService.findById(id)
-                .map(existingBooking -> {
-                    serviceBooking.setId(id);
-                    return ResponseEntity.ok(serviceBookingService.save(serviceBooking));
-                })
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PatchMapping("/{id}/status")
-    public ResponseEntity<String> updateServiceBookingStatus(
-            @PathVariable Long id,
-            @RequestBody Map<String, BookingStatus> statusMap) {
-
-        BookingStatus newStatus = statusMap.get("status");
-        if (newStatus == null) {
-            return ResponseEntity.badRequest().body("Status field is required");
+    public ResponseEntity<ServiceBookingDTO> updateServiceBooking(@PathVariable Long id, @RequestBody ServiceBookingDTO serviceBookingDTO) {
+        if (!serviceBookingService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
         }
-
-        return serviceBookingService.findById(id)
-                .map(existingBooking -> {
-                    boolean updated = serviceBookingService.updateStatus(id, newStatus);
-                    if (updated) {
-                        return ResponseEntity.ok("Service booking status updated successfully");
-                    } else {
-                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                .body("Failed to update service booking status");
-                    }
-                })
-                .orElse(ResponseEntity.notFound().build());
+        ServiceBookingDTO updatedBooking = serviceBookingService.save(serviceBookingDTO);
+        return ResponseEntity.ok(updatedBooking);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteServiceBooking(@PathVariable Long id) {
-        return serviceBookingService.findById(id)
-                .map(serviceBooking -> {
-                    serviceBookingService.deleteById(id);
-                    return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-                })
-                .orElse(ResponseEntity.notFound().build());
+        if (!serviceBookingService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        serviceBookingService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/by-service/{serviceId}")
+    public ResponseEntity<List<ServiceBookingDTO>> getServiceBookingsByServiceId(@PathVariable Long serviceId) {
+        List<ServiceBookingDTO> bookings = serviceBookingService.findByServiceId(serviceId);
+        return ResponseEntity.ok(bookings);
+    }
+
+    @GetMapping("/by-patient/{patientId}")
+    public ResponseEntity<List<ServiceBookingDTO>> getServiceBookingsByPatientId(@PathVariable Long patientId) {
+        List<ServiceBookingDTO> bookings = serviceBookingService.findByPatientId(patientId);
+        return ResponseEntity.ok(bookings);
+    }
+
+    @GetMapping("/by-status/{status}")
+    public ResponseEntity<List<ServiceBookingDTO>> getServiceBookingsByStatus(@PathVariable BookingStatus status) {
+        List<ServiceBookingDTO> bookings = serviceBookingService.findByStatus(status);
+        return ResponseEntity.ok(bookings);
+    }
+
+    @GetMapping("/by-payment-method/{paymentMethod}")
+    public ResponseEntity<List<ServiceBookingDTO>> getServiceBookingsByPaymentMethod(@PathVariable PaymentMethod paymentMethod) {
+        List<ServiceBookingDTO> bookings = serviceBookingService.findByPaymentMethod(paymentMethod);
+        return ResponseEntity.ok(bookings);
+    }
+
+    @GetMapping("/by-min-price/{amount}")
+    public ResponseEntity<List<ServiceBookingDTO>> getServiceBookingsByMinPrice(@PathVariable BigDecimal amount) {
+        List<ServiceBookingDTO> bookings = serviceBookingService.findByTotalPriceGreaterThanEqual(amount);
+        return ResponseEntity.ok(bookings);
+    }
+
+    @GetMapping("/by-date-range")
+    public ResponseEntity<List<ServiceBookingDTO>> getServiceBookingsByDateRange(
+            @RequestParam("start") LocalDateTime start,
+            @RequestParam("end") LocalDateTime end) {
+        List<ServiceBookingDTO> bookings = serviceBookingService.findByCreatedBetween(start, end);
+        return ResponseEntity.ok(bookings);
     }
 }

@@ -1,7 +1,10 @@
 package aptech.vn.backend.service.impl;
 
+import aptech.vn.backend.dto.OrderDTO;
 import aptech.vn.backend.entity.Order;
 import aptech.vn.backend.entity.OrderStatus;
+import aptech.vn.backend.entity.PaymentMethod;
+import aptech.vn.backend.mapper.OrderMapper;
 import aptech.vn.backend.repository.OrderRepository;
 import aptech.vn.backend.service.OrderService;
 import org.springframework.data.domain.Page;
@@ -13,35 +16,39 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
+    private final OrderMapper orderMapper;
 
-    public OrderServiceImpl(OrderRepository orderRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository, OrderMapper orderMapper) {
+        this.orderMapper = orderMapper;
         this.orderRepository = orderRepository;
     }
 
     @Override
-    public Order save(Order order) {
-        return orderRepository.save(order);
+    public List<OrderDTO> findAll() {
+        return orderRepository.findAll()
+                .stream()
+                .map(orderMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<Order> findById(Long id) {
-        return orderRepository.findById(id);
+    public Optional<OrderDTO> findById(Long id) {
+        return orderRepository.findById(id)
+                .map(orderMapper::toDto);
     }
 
     @Override
-    public List<Order> findAll() {
-        return orderRepository.findAll();
-    }
-
-    @Override
-    public Page<Order> findAll(Pageable pageable) {
-        return orderRepository.findAll(pageable);
+    public OrderDTO save(OrderDTO orderDTO) {
+        Order order = orderMapper.toEntity(orderDTO);
+        order = orderRepository.save(order);
+        return orderMapper.toDto(order);
     }
 
     @Override
@@ -50,37 +57,56 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Optional<Order> findByOrderCode(String orderCode) {
-        return orderRepository.findByOrderCode(orderCode);
+    public Optional<OrderDTO> findByOrderCode(String orderCode) {
+        return orderRepository.findByOrderCode(orderCode)
+                .map(orderMapper::toDto);
     }
 
     @Override
-    public List<Order> findByPatientId(Long patientId) {
-        return orderRepository.findByPatientId(patientId);
+    public List<OrderDTO> findByPatientId(Long patientId) {
+        return orderRepository.findByPatient_Id(patientId)
+                .stream()
+                .map(orderMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Order> findByStatus(OrderStatus status) {
-        return orderRepository.findByStatus(status);
+    public List<OrderDTO> findByStatus(OrderStatus status) {
+        return orderRepository.findByStatus(status)
+                .stream()
+                .map(orderMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public boolean updateStatus(Long orderId, OrderStatus newStatus) {
-        return true;
+    public List<OrderDTO> findByPaymentMethod(PaymentMethod paymentMethod) {
+        return orderRepository.findByPaymentMethod(paymentMethod)
+                .stream()
+                .map(orderMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public BigDecimal calculateOrderTotal(Long orderId) {
-        return null;
+    public List<OrderDTO> findByVoucherCode(String voucherCode) {
+        return orderRepository.findByVoucherCode(voucherCode)
+                .stream()
+                .map(orderMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Order> findByCreatedAtBetween(LocalDateTime start, LocalDateTime end) {
-        return orderRepository.findByCreatedAtBetween(start, end);
+    public List<OrderDTO> findByTotalPriceGreaterThanEqual(BigDecimal amount) {
+        return orderRepository.findByTotalPriceGreaterThanEqual(amount)
+                .stream()
+                .map(orderMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public void applyVoucher(Long orderId, String voucherCode) {
-
+    public List<OrderDTO> findByCreatedBetween(LocalDateTime start, LocalDateTime end) {
+        return orderRepository.findByCreatedAtBetween(start, end)
+                .stream()
+                .map(orderMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

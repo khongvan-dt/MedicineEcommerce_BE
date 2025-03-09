@@ -1,0 +1,393 @@
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
+// Appointment DTO
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class AppointmentDTO {
+    private Long id;
+    private Long patientId;
+    private Long doctorId;
+    private LocalDateTime appointmentDate;
+    private LocalTime appointmentTime;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+
+// Attribute DTO
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class AttributeDTO {
+    private Long id;
+    private String name;
+    private BigDecimal priceIn;
+    private BigDecimal priceOut;
+    private Integer stock;
+    private LocalDate expiryDate;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+
+// Brand DTO
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class BrandDTO {
+    private Long id;
+    private String name;
+    private String image;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+
+// Category DTO
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class CategoryDTO {
+    private Long id;
+    private String name;
+    private Long parentId;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+
+// Consultation DTO
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ConsultationDTO {
+    private Long id;
+    private Long patientId;
+    private Long doctorId;
+    private String consultationLink;
+    private ConsultationStatus status;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+
+// Discount DTO
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class DiscountDTO {
+    private Long id;
+    private String code;
+    private String name;
+    private Long medicineId;
+    private Double discountPercentage;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+
+// DoctorProfile DTO
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class DoctorProfileDTO {
+    private Long id;
+    private Long userId;
+    private String experience;
+    private String specialization;
+    private String workplace;
+    private BigDecimal accountBalance;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+
+// DoctorService DTO
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class DoctorServiceDTO {
+    private Long id;
+    private Long serviceId;
+    private Long doctorId;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+
+// Medicine DTO
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class MedicineDTO {
+    private Long id;
+    private String code;
+    private String name;
+    private Long brandId;
+    private String origin;
+    private String manufacturer;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+
+// MedicineBatch DTO
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class MedicineBatchDTO {
+    private Long id;
+    private String batchName;
+    private String medicineCode;
+    private Integer quantity;
+    private LocalDate expiryDate;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+
+// MedicineCategory DTO
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class MedicineCategoryDTO {
+    private Long id;
+    private Long medicineId;
+    private Long categoryId;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+
+// MedicineMedia DTO
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class MedicineMediaDTO {
+    private Long id;
+    private Long medicineId;
+    private MediaType mediaType;
+    private String mediaUrl;
+    private Boolean mainImage;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+
+// Notification DTO
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class NotificationDTO {
+    private Long id;
+    private Long userId;
+    private String message;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+
+// Order DTO
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class OrderDTO {
+    private Long id;
+    private String orderCode;
+    private Long patientId;
+    private BigDecimal totalPrice;
+    private PaymentMethod paymentMethod;
+    private OrderStatus status;
+    private String voucherCode;
+    private BigDecimal discountAmount;
+    private String note;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+
+// OrderDetail DTO
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class OrderDetailDTO {
+    private Long id;
+    private Long orderId;
+    private Long medicineId;
+    private Integer quantity;
+    private BigDecimal unitPrice;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+
+// PatientProfile DTO
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class PatientProfileDTO {
+    private Long id;
+    private Long userId;
+    private String bloodType;
+    private String medicalHistory;
+    private String allergies;
+    private BigDecimal accountBalance;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+
+// Prescription DTO
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class PrescriptionDTO {
+    private Long id;
+    private Long doctorId;
+    private Long patientId;
+    private Long medicineId;
+    private String dosage;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+
+// Review DTO
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ReviewDTO {
+    private Long id;
+    private Long userId;
+    private Integer rating;
+    private String comment;
+    private Long doctorId;
+    private Long medicineId;
+    private Long serviceId;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+
+// Role DTO
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class RoleDTO {
+    private Long id;
+    private String name;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+
+// Salary DTO
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class SalaryDTO {
+    private Long id;
+    private Long userId;
+    private String bankCode;
+    private String bankName;
+    private BigDecimal price;
+    private PaymentStatus status;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+
+// Service DTO
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ServiceDTO {
+    private Long id;
+    private String name;
+    private BigDecimal price;
+    private String description;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+
+// ServiceBooking DTO
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ServiceBookingDTO {
+    private Long id;
+    private Long serviceId;
+    private Long patientId;
+    private BigDecimal totalPrice;
+    private PaymentMethod paymentMethod;
+    private BookingStatus status;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+
+// SocialAccount DTO
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class SocialAccountDTO {
+    private Long id;
+    private Long userId;
+    private SocialProvider provider;
+    private String providerId;
+    private String providerEmail;
+    private String name;
+    private String avatarUrl;
+    private String accessToken;
+    private String refreshToken;
+    private LocalDateTime tokenExpiresAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+
+// Tracking DTO
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class TrackingDTO {
+    private Long id;
+    private Long orderId;
+    private String location;
+    private String message;
+    private TrackingStatus status;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+
+// User DTO
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserDTO {
+    private Long id;
+    private String fullName;
+    private String phone;
+    private String address;
+    private String email;
+    private LocalDateTime lastLogin;
+    private Integer countLock;
+    private Boolean enabled;
+    private Boolean locked;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+
+// UserRole DTO
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserRoleDTO {
+    private Long id;
+    private Long userId;
+    private Long roleId;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+
+// Voucher DTO
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class VoucherDTO {
+    private Long id;
+    private String code;
+    private Double voucherPercentage;
+    private Integer stock;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}

@@ -1,83 +1,75 @@
 package aptech.vn.backend.controller;
 
-import aptech.vn.backend.entity.Category;
+import aptech.vn.backend.dto.CategoryDTO;
 import aptech.vn.backend.service.CategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/categories")
 public class CategoryController {
 
-    @Autowired
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
+
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @GetMapping
-    public ResponseEntity<List<Category>> getAllCategories() {
-        List<Category> categories = categoryService.findAll();
-        return new ResponseEntity<>(categories, HttpStatus.OK);
+    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
+        List<CategoryDTO> categories = categoryService.findAll();
+        return ResponseEntity.ok(categories);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Category> getCategoryById(@PathVariable Long id) {
-        return categoryService.findById(id)
-                .map(category -> new ResponseEntity<>(category, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long id) {
+        Optional<CategoryDTO> category = categoryService.findById(id);
+        return category.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
-        Category savedCategory = categoryService.save(category);
-        return new ResponseEntity<>(savedCategory, HttpStatus.CREATED);
+    public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO categoryDTO) {
+        CategoryDTO savedCategory = categoryService.save(categoryDTO);
+        return ResponseEntity.ok(savedCategory);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Category category) {
-        return categoryService.findById(id)
-                .map(existingCategory -> {
-                    category.setId(id);
-                    Category updatedCategory = categoryService.save(category);
-                    return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
-                })
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO) {
+        if (!categoryService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        CategoryDTO updatedCategory = categoryService.save(categoryDTO);
+        return ResponseEntity.ok(updatedCategory);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
-        return categoryService.findById(id)
-                .map(category -> {
-                    categoryService.deleteById(id);
-                    return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-                })
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        if (!categoryService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        categoryService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/name/{name}")
-    public ResponseEntity<Category> getCategoryByName(@PathVariable String name) {
-        return categoryService.findByName(name)
-                .map(category -> new ResponseEntity<>(category, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    @GetMapping("/search/name")
+    public ResponseEntity<List<CategoryDTO>> findByName(@RequestParam String name) {
+        List<CategoryDTO> categories = categoryService.findByName(name);
+        return ResponseEntity.ok(categories);
     }
 
-    @GetMapping("/parent/{parentId}")
-    public ResponseEntity<List<Category>> getCategoriesByParentId(@PathVariable Long parentId) {
-        List<Category> categories = categoryService.findByParentId(parentId);
-        return new ResponseEntity<>(categories, HttpStatus.OK);
+    @GetMapping("/search/parent")
+    public ResponseEntity<List<CategoryDTO>> findByParentId(@RequestParam Long parentId) {
+        List<CategoryDTO> categories = categoryService.findByParentId(parentId);
+        return ResponseEntity.ok(categories);
     }
 
-    @GetMapping("/root")
-    public ResponseEntity<List<Category>> getRootCategories() {
-        List<Category> categories = categoryService.findByParentIsNull();
-        return new ResponseEntity<>(categories, HttpStatus.OK);
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<List<Category>> getCategoriesContainingName(@RequestParam String name) {
-        List<Category> categories = categoryService.findByNameContaining(name);
-        return new ResponseEntity<>(categories, HttpStatus.OK);
+    @GetMapping("/roots")
+    public ResponseEntity<List<CategoryDTO>> findRootCategories() {
+        List<CategoryDTO> categories = categoryService.findRootCategories();
+        return ResponseEntity.ok(categories);
     }
 }

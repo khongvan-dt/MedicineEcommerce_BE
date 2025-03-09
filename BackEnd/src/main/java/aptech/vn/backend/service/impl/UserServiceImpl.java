@@ -1,47 +1,45 @@
 package aptech.vn.backend.service.impl;
 
+import aptech.vn.backend.dto.UserDTO;
 import aptech.vn.backend.entity.User;
+import aptech.vn.backend.mapper.UserMapper;
 import aptech.vn.backend.repository.UserRepository;
 import aptech.vn.backend.service.UserService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class UserServiceImpl implements UserService {
-
+    private final UserMapper userMapper;
     private final UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+        this.userMapper = userMapper;
         this.userRepository = userRepository;
     }
 
     @Override
-    public User save(User user) {
-        return userRepository.save(user);
+    public List<UserDTO> findAll() {
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<User> findById(Long id) {
-        return userRepository.findById(id);
+    public Optional<UserDTO> findById(Long id) {
+        return userRepository.findById(id).map(userMapper::toDto);
     }
 
     @Override
-    public List<User> findAll() {
-        return userRepository.findAll();
-    }
-
-    @Override
-    public Page<User> findAll(Pageable pageable) {
-        return userRepository.findAll(pageable);
+    public UserDTO save(UserDTO userDTO) {
+        User user = userMapper.toEntity(userDTO);
+        user = userRepository.save(user);
+        return userMapper.toDto(user);
     }
 
     @Override
@@ -50,47 +48,63 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public Optional<UserDTO> findByEmail(String email) {
+        return userRepository.findByEmail(email).map(userMapper::toDto);
     }
 
     @Override
-    public Optional<User> findByPhone(String phone) {
-        return userRepository.findByPhone(phone);
+    public List<UserDTO> findByFullNameContaining(String fullName) {
+        return userRepository.findByFullNameContaining(fullName)
+                .stream()
+                .map(userMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<User> findByEnabled(Boolean enabled) {
-        return userRepository.findByEnabled(enabled);
+    public List<UserDTO> findByPhone(String phone) {
+        return userRepository.findByPhone(phone)
+                .stream()
+                .map(userMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<User> findByLastLoginBetween(LocalDateTime start, LocalDateTime end) {
-        return userRepository.findByLastLoginBetween(start, end);
+    public List<UserDTO> findByAddressContaining(String address) {
+        return userRepository.findByAddressContaining(address)
+                .stream()
+                .map(userMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public boolean lockUser(Long userId) {
-        return false;
+    public List<UserDTO> findByEnabled(Boolean enabled) {
+        return userRepository.findByEnabled(enabled)
+                .stream()
+                .map(userMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public boolean unlockUser(Long userId) {
-        return false;
+    public List<UserDTO> findByLocked(Boolean locked) {
+        return userRepository.findByLocked(locked)
+                .stream()
+                .map(userMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public boolean resetPassword(Long userId, String newPassword) {
-        return false;
+    public List<UserDTO> findByLastLoginAfter(LocalDateTime date) {
+        return userRepository.findByLastLoginAfter(date)
+                .stream()
+                .map(userMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public boolean incrementLockCount(Long userId) {
-        return false;
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
+    public List<UserDTO> findByCountLockGreaterThanEqual(Integer count) {
+        return userRepository.findByCountLockGreaterThanEqual(count)
+                .stream()
+                .map(userMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

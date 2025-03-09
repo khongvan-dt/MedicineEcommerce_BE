@@ -1,102 +1,83 @@
 package aptech.vn.backend.controller;
 
-import aptech.vn.backend.entity.Tracking;
+import aptech.vn.backend.dto.TrackingDTO;
 import aptech.vn.backend.entity.TrackingStatus;
 import aptech.vn.backend.service.TrackingService;
-import aptech.vn.backend.service.impl.TrackingServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/trackings")
+@RequestMapping("/api/tracking")
 public class TrackingController {
 
     private final TrackingService trackingService;
 
-    @Autowired
-    public TrackingController(TrackingServiceImpl trackingService) {
+    public TrackingController(TrackingService trackingService) {
         this.trackingService = trackingService;
     }
 
     @GetMapping
-    public ResponseEntity<List<Tracking>> getAllTrackings() {
-        return ResponseEntity.ok(trackingService.findAll());
+    public ResponseEntity<List<TrackingDTO>> getAllTrackings() {
+        List<TrackingDTO> trackings = trackingService.findAll();
+        return ResponseEntity.ok(trackings);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Tracking> getTrackingById(@PathVariable Long id) {
-        return trackingService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/order/{orderId}")
-    public ResponseEntity<List<Tracking>> getTrackingsByOrderId(@PathVariable Long orderId) {
-        return ResponseEntity.ok(trackingService.findByOrderId(orderId));
-    }
-
-    @GetMapping("/order/{orderId}/latest")
-    public ResponseEntity<Tracking> getLatestTrackingByOrderId(@PathVariable Long orderId) {
-        return trackingService.findLatestTrackingByOrderId(orderId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/status/{status}")
-    public ResponseEntity<List<Tracking>> getTrackingsByStatus(@PathVariable TrackingStatus status) {
-        return ResponseEntity.ok(trackingService.findByStatus(status));
+    public ResponseEntity<TrackingDTO> getTrackingById(@PathVariable Long id) {
+        Optional<TrackingDTO> tracking = trackingService.findById(id);
+        return tracking.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Tracking> createTracking(@RequestBody Tracking tracking) {
-        return new ResponseEntity<>(trackingService.save(tracking), HttpStatus.CREATED);
+    public ResponseEntity<TrackingDTO> createTracking(@RequestBody TrackingDTO trackingDTO) {
+        TrackingDTO savedTracking = trackingService.save(trackingDTO);
+        return ResponseEntity.ok(savedTracking);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Tracking> updateTracking(@PathVariable Long id, @RequestBody Tracking tracking) {
-        return trackingService.findById(id)
-                .map(existingTracking -> {
-                    tracking.setId(id);
-                    return ResponseEntity.ok(trackingService.save(tracking));
-                })
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PatchMapping("/{id}/status")
-    public ResponseEntity<String> updateTrackingStatus(
-            @PathVariable Long id,
-            @RequestBody Map<String, TrackingStatus> statusMap) {
-
-        TrackingStatus newStatus = statusMap.get("status");
-        if (newStatus == null) {
-            return ResponseEntity.badRequest().body("Status field is required");
+    public ResponseEntity<TrackingDTO> updateTracking(@PathVariable Long id, @RequestBody TrackingDTO trackingDTO) {
+        if (!trackingService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
         }
-
-        return trackingService.findById(id)
-                .map(existingTracking -> {
-                    boolean updated = trackingService.updateStatus(id, newStatus);
-                    if (updated) {
-                        return ResponseEntity.ok("Tracking status updated successfully");
-                    } else {
-                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                .body("Failed to update tracking status");
-                    }
-                })
-                .orElse(ResponseEntity.notFound().build());
+        TrackingDTO updatedTracking = trackingService.save(trackingDTO);
+        return ResponseEntity.ok(updatedTracking);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTracking(@PathVariable Long id) {
-        return trackingService.findById(id)
-                .map(tracking -> {
-                    trackingService.deleteById(id);
-                    return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-                })
-                .orElse(ResponseEntity.notFound().build());
+        if (!trackingService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        trackingService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/by-order/{orderId}")
+    public ResponseEntity<List<TrackingDTO>> getTrackingsByOrderId(@PathVariable Long orderId) {
+        List<TrackingDTO> trackings = trackingService.findByOrderId(orderId);
+        return ResponseEntity.ok(trackings);
+    }
+
+    @GetMapping("/by-status/{status}")
+    public ResponseEntity<List<TrackingDTO>> getTrackingsByStatus(@PathVariable TrackingStatus status) {
+        List<TrackingDTO> trackings = trackingService.findByStatus(status);
+        return ResponseEntity.ok(trackings);
+    }
+
+    @GetMapping("/by-location")
+    public ResponseEntity<List<TrackingDTO>> getTrackingsByLocation(@RequestParam String location) {
+        List<TrackingDTO> trackings = trackingService.findByLocationContaining(location);
+        return ResponseEntity.ok(trackings);
+    }
+
+    @GetMapping("/latest-by-order/{orderId}")
+    public ResponseEntity<TrackingDTO> getLatestTrackingByOrderId(@PathVariable Long orderId) {
+        Optional<TrackingDTO> tracking = trackingService.findLatestByOrderId(orderId);
+        return tracking.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

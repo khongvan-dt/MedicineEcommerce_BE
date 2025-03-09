@@ -11,8 +11,9 @@ import java.util.Optional;
 @Repository
 public interface VoucherRepository extends JpaRepository<Voucher, Long> {
     Optional<Voucher> findByCode(String code);
-    List<Voucher> findByMedicineId(Long medicineId);
-    List<Voucher> findByStartDateBeforeAndEndDateAfter(LocalDateTime now, LocalDateTime now2);
     List<Voucher> findByStockGreaterThan(Integer minStock);
-    List<Voucher> findByEndDateBefore(LocalDateTime now);
+    List<Voucher> findByVoucherPercentageGreaterThanEqual(Double percentage);
+    List<Voucher> findByStartDateBeforeAndEndDateAfter(LocalDateTime now, LocalDateTime now2);
+    List<Voucher> findByEndDateBefore(LocalDateTime date);
+    List<Voucher> findByEndDateIsNull();
 }

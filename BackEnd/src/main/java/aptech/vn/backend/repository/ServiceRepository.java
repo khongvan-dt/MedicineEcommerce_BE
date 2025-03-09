@@ -10,9 +10,9 @@ import java.util.Optional;
 
 @Repository
 public interface ServiceRepository extends JpaRepository<Service, Long> {
-    Optional<Service> findByName(String name);
+    List<Service> findByName(String name);
+    List<Service> findByNameContaining(String namePattern);
     List<Service> findByPriceLessThanEqual(BigDecimal maxPrice);
     List<Service> findByPriceGreaterThanEqual(BigDecimal minPrice);
-    List<Service> findByNameContaining(String keyword);
-    List<Service> findByDescriptionContaining(String keyword);
+    List<Service> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice);
 }

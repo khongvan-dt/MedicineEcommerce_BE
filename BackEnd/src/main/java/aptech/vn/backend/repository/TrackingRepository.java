@@ -6,11 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TrackingRepository extends JpaRepository<Tracking, Long> {
-    List<Tracking> findByOrderId(Long orderId);
+    List<Tracking> findByOrder_Id(Long orderId);
     List<Tracking> findByStatus(TrackingStatus status);
-    List<Tracking> findByOrderIdAndStatus(Long orderId, TrackingStatus status);
-    List<Tracking> findByLocationContaining(String keyword);
+    List<Tracking> findByLocationContaining(String location);
+    Optional<Tracking> findFirstByOrder_IdOrderByCreatedAtDesc(Long orderId);
 }

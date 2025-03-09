@@ -1,19 +1,15 @@
 package aptech.vn.backend.controller;
 
+import aptech.vn.backend.dto.SalaryDTO;
 import aptech.vn.backend.entity.PaymentStatus;
-import aptech.vn.backend.entity.Salary;
 import aptech.vn.backend.service.SalaryService;
-import aptech.vn.backend.service.impl.SalaryServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/salaries")
@@ -21,93 +17,82 @@ public class SalaryController {
 
     private final SalaryService salaryService;
 
-    @Autowired
-    public SalaryController(SalaryServiceImpl salaryService) {
+    public SalaryController(SalaryService salaryService) {
         this.salaryService = salaryService;
     }
 
     @GetMapping
-    public ResponseEntity<List<Salary>> getAllSalaries() {
-        return ResponseEntity.ok(salaryService.findAll());
+    public ResponseEntity<List<SalaryDTO>> getAllSalaries() {
+        List<SalaryDTO> salaries = salaryService.findAll();
+        return ResponseEntity.ok(salaries);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Salary> getSalaryById(@PathVariable Long id) {
-        return salaryService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Salary>> getSalariesByUserId(@PathVariable Long userId) {
-        return ResponseEntity.ok(salaryService.findByUserId(userId));
-    }
-
-    @GetMapping("/status/{status}")
-    public ResponseEntity<List<Salary>> getSalariesByStatus(@PathVariable PaymentStatus status) {
-        return ResponseEntity.ok(salaryService.findByStatus(status));
-    }
-
-    @GetMapping("/date-range")
-    public ResponseEntity<List<Salary>> getSalariesByDateRange(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
-        return ResponseEntity.ok(salaryService.findByCreatedAtBetween(start, end));
-    }
-
-    @GetMapping("/user/{userId}/total")
-    public ResponseEntity<BigDecimal> getTotalSalaryByUserIdAndPeriod(
-            @PathVariable Long userId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
-        return ResponseEntity.ok(salaryService.getTotalSalaryByUserIdAndPeriod(userId, start, end));
+    public ResponseEntity<SalaryDTO> getSalaryById(@PathVariable Long id) {
+        Optional<SalaryDTO> salary = salaryService.findById(id);
+        return salary.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Salary> createSalary(@RequestBody Salary salary) {
-        return new ResponseEntity<>(salaryService.save(salary), HttpStatus.CREATED);
+    public ResponseEntity<SalaryDTO> createSalary(@RequestBody SalaryDTO salaryDTO) {
+        SalaryDTO savedSalary = salaryService.save(salaryDTO);
+        return ResponseEntity.ok(savedSalary);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Salary> updateSalary(@PathVariable Long id, @RequestBody Salary salary) {
-        return salaryService.findById(id)
-                .map(existingSalary -> {
-                    salary.setId(id);
-                    return ResponseEntity.ok(salaryService.save(salary));
-                })
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PatchMapping("/{id}/status")
-    public ResponseEntity<String> updateSalaryStatus(
-            @PathVariable Long id,
-            @RequestBody Map<String, PaymentStatus> statusMap) {
-
-        PaymentStatus newStatus = statusMap.get("status");
-        if (newStatus == null) {
-            return ResponseEntity.badRequest().body("Status field is required");
+    public ResponseEntity<SalaryDTO> updateSalary(@PathVariable Long id, @RequestBody SalaryDTO salaryDTO) {
+        if (!salaryService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
         }
-
-        return salaryService.findById(id)
-                .map(existingSalary -> {
-                    boolean updated = salaryService.updateStatus(id, newStatus);
-                    if (updated) {
-                        return ResponseEntity.ok("Salary status updated successfully");
-                    } else {
-                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                .body("Failed to update salary status");
-                    }
-                })
-                .orElse(ResponseEntity.notFound().build());
+        SalaryDTO updatedSalary = salaryService.save(salaryDTO);
+        return ResponseEntity.ok(updatedSalary);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSalary(@PathVariable Long id) {
-        return salaryService.findById(id)
-                .map(salary -> {
-                    salaryService.deleteById(id);
-                    return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-                })
-                .orElse(ResponseEntity.notFound().build());
+        if (!salaryService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        salaryService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/by-user/{userId}")
+    public ResponseEntity<List<SalaryDTO>> getSalariesByUserId(@PathVariable Long userId) {
+        List<SalaryDTO> salaries = salaryService.findByUserId(userId);
+        return ResponseEntity.ok(salaries);
+    }
+
+    @GetMapping("/by-bank-code/{bankCode}")
+    public ResponseEntity<List<SalaryDTO>> getSalariesByBankCode(@PathVariable String bankCode) {
+        List<SalaryDTO> salaries = salaryService.findByBankCode(bankCode);
+        return ResponseEntity.ok(salaries);
+    }
+
+    @GetMapping("/by-bank-name/{bankName}")
+    public ResponseEntity<List<SalaryDTO>> getSalariesByBankName(@PathVariable String bankName) {
+        List<SalaryDTO> salaries = salaryService.findByBankName(bankName);
+        return ResponseEntity.ok(salaries);
+    }
+
+    @GetMapping("/by-status/{status}")
+    public ResponseEntity<List<SalaryDTO>> getSalariesByStatus(@PathVariable PaymentStatus status) {
+        List<SalaryDTO> salaries = salaryService.findByStatus(status);
+        return ResponseEntity.ok(salaries);
+    }
+
+    @GetMapping("/by-min-price/{amount}")
+    public ResponseEntity<List<SalaryDTO>> getSalariesByMinPrice(@PathVariable BigDecimal amount) {
+        List<SalaryDTO> salaries = salaryService.findByPriceGreaterThanEqual(amount);
+        return ResponseEntity.ok(salaries);
+    }
+
+    @GetMapping("/by-date-range")
+    public ResponseEntity<List<SalaryDTO>> getSalariesByDateRange(
+            @RequestParam("start") LocalDateTime start,
+            @RequestParam("end") LocalDateTime end) {
+        List<SalaryDTO> salaries = salaryService.findByCreatedBetween(start, end);
+        return ResponseEntity.ok(salaries);
     }
 }

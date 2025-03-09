@@ -11,7 +11,9 @@ import java.util.Optional;
 @Repository
 public interface DiscountRepository extends JpaRepository<Discount, Long> {
     Optional<Discount> findByCode(String code);
-    List<Discount> findByMedicineId(Long medicineId);
+    List<Discount> findByMedicine_Id(Long medicineId);
     List<Discount> findByStartDateBeforeAndEndDateAfter(LocalDateTime now, LocalDateTime now2);
-    List<Discount> findByEndDateBefore(LocalDateTime now);
+    List<Discount> findByDiscountPercentageGreaterThanEqual(Double percentage);
+    List<Discount> findByEndDateBefore(LocalDateTime date);
+    List<Discount> findByEndDateIsNull();
 }

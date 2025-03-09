@@ -1,39 +1,47 @@
 package aptech.vn.backend.service.impl;
 
+import aptech.vn.backend.dto.BrandDTO;
 import aptech.vn.backend.entity.Brand;
+import aptech.vn.backend.mapper.BrandMapper;
 import aptech.vn.backend.repository.BrandRepository;
 import aptech.vn.backend.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class BrandServiceImpl implements BrandService {
 
     private final BrandRepository brandRepository;
+    private final BrandMapper brandMapper;
 
     @Autowired
-    public BrandServiceImpl(BrandRepository brandRepository) {
+    public BrandServiceImpl(BrandRepository brandRepository, BrandMapper brandMapper) {
         this.brandRepository = brandRepository;
+        this.brandMapper = brandMapper;
     }
 
     @Override
-    public Brand save(Brand brand) {
-        return brandRepository.save(brand);
+    public List<BrandDTO> findAll() {
+        return brandRepository.findAll().stream()
+                .map(brandMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Brand> findAll() {
-        return brandRepository.findAll();
+    public Optional<BrandDTO> findById(Long id) {
+        return brandRepository.findById(id)
+                .map(brandMapper::toDto);
     }
 
     @Override
-    public Optional<Brand> findById(Long id) {
-        return brandRepository.findById(id);
+    public BrandDTO save(BrandDTO brandDTO) {
+        Brand brand = brandMapper.toEntity(brandDTO);
+        Brand savedBrand = brandRepository.save(brand);
+        return brandMapper.toDto(savedBrand);
     }
 
     @Override
@@ -42,12 +50,15 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public Optional<Brand> findByName(String name) {
-        return brandRepository.findByName(name);
+    public Optional<BrandDTO> findByName(String name) {
+        return brandRepository.findByName(name)
+                .map(brandMapper::toDto);
     }
 
     @Override
-    public List<Brand> findByNameContaining(String name) {
-        return brandRepository.findByNameContaining(name);
+    public List<BrandDTO> findByNameContaining(String namePattern) {
+        return brandRepository.findByNameContaining(namePattern).stream()
+                .map(brandMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

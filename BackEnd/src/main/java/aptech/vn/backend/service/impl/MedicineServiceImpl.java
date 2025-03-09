@@ -1,6 +1,8 @@
 package aptech.vn.backend.service.impl;
 
+import aptech.vn.backend.dto.MedicineDTO;
 import aptech.vn.backend.entity.Medicine;
+import aptech.vn.backend.mapper.MedicineMapper;
 import aptech.vn.backend.repository.MedicineRepository;
 import aptech.vn.backend.service.MedicineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,65 +11,73 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class MedicineServiceImpl implements MedicineService {
 
     private final MedicineRepository medicineRepository;
+    private final MedicineMapper medicineMapper;
 
     @Autowired
-    public MedicineServiceImpl(MedicineRepository medicineRepository) {
+    public MedicineServiceImpl(MedicineRepository medicineRepository, MedicineMapper medicineMapper) {
         this.medicineRepository = medicineRepository;
+        this.medicineMapper = medicineMapper;
     }
 
-    @Override
-    public Medicine save(Medicine medicine) {
-        return medicineRepository.save(medicine);
+    public List<MedicineDTO> findAll() {
+        return medicineRepository.findAll().stream()
+                .map(medicineMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    @Override
-    public List<Medicine> findAll() {
-        return medicineRepository.findAll();
+    public Optional<MedicineDTO> findById(Long id) {
+        return medicineRepository.findById(id)
+                .map(medicineMapper::toDto);
     }
 
-    @Override
-    public Optional<Medicine> findById(Long id) {
-        return medicineRepository.findById(id);
+    public MedicineDTO save(MedicineDTO medicineDTO) {
+        Medicine medicine = medicineMapper.toEntity(medicineDTO);
+        Medicine savedMedicine = medicineRepository.save(medicine);
+        return medicineMapper.toDto(savedMedicine);
     }
 
-    @Override
     public void deleteById(Long id) {
         medicineRepository.deleteById(id);
     }
 
-    @Override
-    public Optional<Medicine> findByCode(String code) {
-        return medicineRepository.findByCode(code);
+    public Optional<MedicineDTO> findByCode(String code) {
+        return medicineRepository.findByCode(code)
+                .map(medicineMapper::toDto);
     }
 
-    @Override
-    public List<Medicine> findByName(String name) {
-        return medicineRepository.findByName(name);
+    public List<MedicineDTO> findByName(String name) {
+        return medicineRepository.findByName(name).stream()
+                .map(medicineMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    @Override
-    public List<Medicine> findByBrandId(Long brandId) {
-        return medicineRepository.findByBrandId(brandId);
+    public List<MedicineDTO> findByNameContaining(String namePattern) {
+        return medicineRepository.findByNameContaining(namePattern).stream()
+                .map(medicineMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    @Override
-    public List<Medicine> findByOrigin(String origin) {
-        return medicineRepository.findByOrigin(origin);
+    public List<MedicineDTO> findByBrandId(Long brandId) {
+        return medicineRepository.findByBrand_Id(brandId).stream()
+                .map(medicineMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    @Override
-    public List<Medicine> findByManufacturer(String manufacturer) {
-        return medicineRepository.findByManufacturer(manufacturer);
+    public List<MedicineDTO> findByOrigin(String origin) {
+        return medicineRepository.findByOrigin(origin).stream()
+                .map(medicineMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    @Override
-    public List<Medicine> findByNameContaining(String name) {
-        return medicineRepository.findByNameContaining(name);
+    public List<MedicineDTO> findByManufacturer(String manufacturer) {
+        return medicineRepository.findByManufacturer(manufacturer).stream()
+                .map(medicineMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

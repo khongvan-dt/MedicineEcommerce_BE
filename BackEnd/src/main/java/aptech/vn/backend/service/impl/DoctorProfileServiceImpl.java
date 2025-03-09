@@ -1,39 +1,47 @@
 package aptech.vn.backend.service.impl;
 
+import aptech.vn.backend.dto.DoctorProfileDTO;
 import aptech.vn.backend.entity.DoctorProfile;
+import aptech.vn.backend.mapper.DoctorProfileMapper;
 import aptech.vn.backend.repository.DoctorProfileRepository;
 import aptech.vn.backend.service.DoctorProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-
+import java.util.stream.Collectors;
 @Service
-@Transactional
 public class DoctorProfileServiceImpl implements DoctorProfileService {
 
     private final DoctorProfileRepository doctorProfileRepository;
+    private final DoctorProfileMapper doctorProfileMapper;
 
     @Autowired
-    public DoctorProfileServiceImpl(DoctorProfileRepository doctorProfileRepository) {
+    public DoctorProfileServiceImpl(DoctorProfileRepository doctorProfileRepository, DoctorProfileMapper doctorProfileMapper) {
         this.doctorProfileRepository = doctorProfileRepository;
+        this.doctorProfileMapper = doctorProfileMapper;
     }
 
     @Override
-    public DoctorProfile save(DoctorProfile doctorProfile) {
-        return doctorProfileRepository.save(doctorProfile);
+    public List<DoctorProfileDTO> findAll() {
+        return doctorProfileRepository.findAll().stream()
+                .map(doctorProfileMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<DoctorProfile> findAll() {
-        return doctorProfileRepository.findAll();
+    public Optional<DoctorProfileDTO> findById(Long id) {
+        return doctorProfileRepository.findById(id)
+                .map(doctorProfileMapper::toDto);
     }
 
     @Override
-    public Optional<DoctorProfile> findById(Long id) {
-        return doctorProfileRepository.findById(id);
+    public DoctorProfileDTO save(DoctorProfileDTO doctorProfileDTO) {
+        DoctorProfile doctorProfile = doctorProfileMapper.toEntity(doctorProfileDTO);
+        DoctorProfile savedDoctorProfile = doctorProfileRepository.save(doctorProfile);
+        return doctorProfileMapper.toDto(savedDoctorProfile);
     }
 
     @Override
@@ -42,22 +50,29 @@ public class DoctorProfileServiceImpl implements DoctorProfileService {
     }
 
     @Override
-    public Optional<DoctorProfile> findByUserId(Long userId) {
-        return doctorProfileRepository.findByUserId(userId);
+    public Optional<DoctorProfileDTO> findByUserId(Long userId) {
+        return doctorProfileRepository.findByUser_Id(userId)
+                .map(doctorProfileMapper::toDto);
     }
 
     @Override
-    public List<DoctorProfile> findBySpecialization(String specialization) {
-        return doctorProfileRepository.findBySpecialization(specialization);
+    public List<DoctorProfileDTO> findBySpecializationContaining(String specialization) {
+        return doctorProfileRepository.findBySpecializationContaining(specialization).stream()
+                .map(doctorProfileMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<DoctorProfile> findByWorkplace(String workplace) {
-        return doctorProfileRepository.findByWorkplace(workplace);
+    public List<DoctorProfileDTO> findByWorkplaceContaining(String workplace) {
+        return doctorProfileRepository.findByWorkplaceContaining(workplace).stream()
+                .map(doctorProfileMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<DoctorProfile> findBySpecializationContaining(String specialization) {
-        return doctorProfileRepository.findBySpecializationContaining(specialization);
+    public List<DoctorProfileDTO> findByAccountBalanceGreaterThanEqual(BigDecimal amount) {
+        return doctorProfileRepository.findByAccountBalanceGreaterThanEqual(amount).stream()
+                .map(doctorProfileMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

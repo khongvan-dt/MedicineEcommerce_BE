@@ -1,8 +1,7 @@
 package aptech.vn.backend.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Entity
@@ -13,7 +12,11 @@ import lombok.*;
 @Builder
 @EqualsAndHashCode(callSuper = true)
 public class Category extends BaseEntity {
+    @NotBlank
+    @Column(name = "name", nullable = false)
     private String name;
+
     @ManyToOne
+    @JoinColumn(name = "parent_id", nullable = true)
     private Category parent;
 }

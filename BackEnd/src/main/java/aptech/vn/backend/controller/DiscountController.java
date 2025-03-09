@@ -1,100 +1,94 @@
 package aptech.vn.backend.controller;
 
-import aptech.vn.backend.entity.Discount;
+import aptech.vn.backend.dto.DiscountDTO;
 import aptech.vn.backend.service.DiscountService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/discounts")
 public class DiscountController {
 
-    @Autowired
-    private DiscountService discountService;
+    private final DiscountService discountService;
+
+    public DiscountController(DiscountService discountService) {
+        this.discountService = discountService;
+    }
 
     @GetMapping
-    public ResponseEntity<List<Discount>> getAllDiscounts() {
-        List<Discount> discounts = discountService.findAll();
-        return new ResponseEntity<>(discounts, HttpStatus.OK);
+    public ResponseEntity<List<DiscountDTO>> getAllDiscounts() {
+        List<DiscountDTO> discounts = discountService.findAll();
+        return ResponseEntity.ok(discounts);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Discount> getDiscountById(@PathVariable Long id) {
-        return discountService.findById(id)
-                .map(discount -> new ResponseEntity<>(discount, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<DiscountDTO> getDiscountById(@PathVariable Long id) {
+        Optional<DiscountDTO> discount = discountService.findById(id);
+        return discount.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Discount> createDiscount(@RequestBody Discount discount) {
-        Discount savedDiscount = discountService.save(discount);
-        return new ResponseEntity<>(savedDiscount, HttpStatus.CREATED);
+    public ResponseEntity<DiscountDTO> createDiscount(@RequestBody DiscountDTO discountDTO) {
+        DiscountDTO savedDiscount = discountService.save(discountDTO);
+        return ResponseEntity.ok(savedDiscount);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Discount> updateDiscount(@PathVariable Long id, @RequestBody Discount discount) {
-        return discountService.findById(id)
-                .map(existingDiscount -> {
-                    discount.setId(id);
-                    Discount updatedDiscount = discountService.save(discount);
-                    return new ResponseEntity<>(updatedDiscount, HttpStatus.OK);
-                })
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<DiscountDTO> updateDiscount(@PathVariable Long id, @RequestBody DiscountDTO discountDTO) {
+        if (!discountService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        DiscountDTO updatedDiscount = discountService.save(discountDTO);
+        return ResponseEntity.ok(updatedDiscount);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDiscount(@PathVariable Long id) {
-        return discountService.findById(id)
-                .map(discount -> {
-                    discountService.deleteById(id);
-                    return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-                })
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        if (!discountService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        discountService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/code/{code}")
-    public ResponseEntity<Discount> getDiscountByCode(@PathVariable String code) {
-        return discountService.findByCode(code)
-                .map(discount -> new ResponseEntity<>(discount, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    @GetMapping("/search/code/{code}")
+    public ResponseEntity<Optional<DiscountDTO>> findByCode(@PathVariable String code) {
+        Optional<DiscountDTO> discount = discountService.findByCode(code);
+        return ResponseEntity.ok(discount);
     }
 
-    @GetMapping("/medicine/{medicineId}")
-    public ResponseEntity<List<Discount>> getDiscountsByMedicineId(@PathVariable Long medicineId) {
-        List<Discount> discounts = discountService.findByMedicineId(medicineId);
-        return new ResponseEntity<>(discounts, HttpStatus.OK);
+    @GetMapping("/search/medicine/{medicineId}")
+    public ResponseEntity<List<DiscountDTO>> findByMedicineId(@PathVariable Long medicineId) {
+        List<DiscountDTO> discounts = discountService.findByMedicineId(medicineId);
+        return ResponseEntity.ok(discounts);
     }
 
-    @GetMapping("/active")
-    public ResponseEntity<List<Discount>> getActiveDiscounts() {
-        List<Discount> discounts = discountService.findActiveDiscounts();
-        return new ResponseEntity<>(discounts, HttpStatus.OK);
+    @GetMapping("/search/active")
+    public ResponseEntity<List<DiscountDTO>> findByActive() {
+        List<DiscountDTO> discounts = discountService.findByActive(LocalDateTime.now());
+        return ResponseEntity.ok(discounts);
     }
 
-    @GetMapping("/expired")
-    public ResponseEntity<List<Discount>> getExpiredDiscounts() {
-        List<Discount> discounts = discountService.findExpiredDiscounts();
-        return new ResponseEntity<>(discounts, HttpStatus.OK);
+    @GetMapping("/search/percentage")
+    public ResponseEntity<List<DiscountDTO>> findByDiscountPercentageGreaterThanEqual(@RequestParam Double percentage) {
+        List<DiscountDTO> discounts = discountService.findByDiscountPercentageGreaterThanEqual(percentage);
+        return ResponseEntity.ok(discounts);
     }
 
-    @GetMapping("/time-range")
-    public ResponseEntity<List<Discount>> getDiscountsByTimeRange(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
-        List<Discount> discounts = discountService.findByStartDateBeforeAndEndDateAfter(end, start);
-        return new ResponseEntity<>(discounts, HttpStatus.OK);
+    @GetMapping("/search/expired")
+    public ResponseEntity<List<DiscountDTO>> findByExpired() {
+        List<DiscountDTO> discounts = discountService.findByExpired(LocalDateTime.now());
+        return ResponseEntity.ok(discounts);
     }
 
-    @GetMapping("/expired-before")
-    public ResponseEntity<List<Discount>> getDiscountsExpiredBefore(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime date) {
-        List<Discount> discounts = discountService.findByEndDateBefore(date);
-        return new ResponseEntity<>(discounts, HttpStatus.OK);
+    @GetMapping("/search/no-expiration")
+    public ResponseEntity<List<DiscountDTO>> findByNoExpiration() {
+        List<DiscountDTO> discounts = discountService.findByNoExpiration();
+        return ResponseEntity.ok(discounts);
     }
 }

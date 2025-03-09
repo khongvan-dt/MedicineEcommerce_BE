@@ -1,102 +1,90 @@
 package aptech.vn.backend.controller;
 
-import aptech.vn.backend.entity.PatientProfile;
+import aptech.vn.backend.dto.PatientProfileDTO;
 import aptech.vn.backend.service.PatientProfileService;
-import aptech.vn.backend.service.impl.PatientProfileServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/patient-profiles")
+@CrossOrigin("*")
 public class PatientProfileController {
 
     private final PatientProfileService patientProfileService;
 
-    @Autowired
-    public PatientProfileController(PatientProfileServiceImpl patientProfileService) {
+    public PatientProfileController(PatientProfileService patientProfileService) {
         this.patientProfileService = patientProfileService;
     }
 
     @GetMapping
-    public ResponseEntity<List<PatientProfile>> getAllPatientProfiles() {
-        return ResponseEntity.ok(patientProfileService.findAll());
+    public ResponseEntity<List<PatientProfileDTO>> getAllProfiles() {
+        List<PatientProfileDTO> profiles = patientProfileService.findAll();
+        return ResponseEntity.ok(profiles);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PatientProfile> getPatientProfileById(@PathVariable Long id) {
-        return patientProfileService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<PatientProfile> getPatientProfileByUserId(@PathVariable Long userId) {
-        return patientProfileService.findByUserId(userId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/blood-type/{bloodType}")
-    public ResponseEntity<List<PatientProfile>> getPatientProfilesByBloodType(@PathVariable String bloodType) {
-        return ResponseEntity.ok(patientProfileService.findByBloodType(bloodType));
-    }
-
-    @GetMapping("/medical-history")
-    public ResponseEntity<List<PatientProfile>> searchMedicalHistory(@RequestParam String keyword) {
-        return ResponseEntity.ok(patientProfileService.findByMedicalHistoryContaining(keyword));
+    public ResponseEntity<PatientProfileDTO> getProfileById(@PathVariable Long id) {
+        Optional<PatientProfileDTO> profile = patientProfileService.findById(id);
+        return profile.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<PatientProfile> createPatientProfile(@RequestBody PatientProfile patientProfile) {
-        return new ResponseEntity<>(patientProfileService.save(patientProfile), HttpStatus.CREATED);
+    public ResponseEntity<PatientProfileDTO> createProfile(@RequestBody PatientProfileDTO patientProfileDTO) {
+        PatientProfileDTO savedProfile = patientProfileService.save(patientProfileDTO);
+        return ResponseEntity.ok(savedProfile);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PatientProfile> updatePatientProfile(@PathVariable Long id, @RequestBody PatientProfile patientProfile) {
-        return patientProfileService.findById(id)
-                .map(existingProfile -> {
-                    patientProfile.setId(id);
-                    return ResponseEntity.ok(patientProfileService.save(patientProfile));
-                })
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PatchMapping("/{id}/balance")
-    public ResponseEntity<String> updateAccountBalance(
-            @PathVariable Long id,
-            @RequestBody Map<String, BigDecimal> balanceMap) {
-
-        BigDecimal amount = balanceMap.get("amount");
-        if (amount == null) {
-            return ResponseEntity.badRequest().body("Amount is required");
+    public ResponseEntity<PatientProfileDTO> updateProfile(@PathVariable Long id, @RequestBody PatientProfileDTO patientProfileDTO) {
+        if (!patientProfileService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
         }
-
-        return patientProfileService.findById(id)
-                .map(profile -> {
-                    boolean updated = patientProfileService.updateAccountBalance(id, amount);
-                    if (updated) {
-                        return ResponseEntity.ok("Account balance updated successfully");
-                    } else {
-                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                .body("Failed to update account balance");
-                    }
-                })
-                .orElse(ResponseEntity.notFound().build());
+        PatientProfileDTO updatedProfile = patientProfileService.save(patientProfileDTO);
+        return ResponseEntity.ok(updatedProfile);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePatientProfile(@PathVariable Long id) {
-        return patientProfileService.findById(id)
-                .map(profile -> {
-                    patientProfileService.deleteById(id);
-                    return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Void> deleteProfile(@PathVariable Long id) {
+        if (!patientProfileService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        patientProfileService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/by-user/{userId}")
+    public ResponseEntity<PatientProfileDTO> getProfileByUserId(@PathVariable Long userId) {
+        Optional<PatientProfileDTO> profile = patientProfileService.findByUserId(userId);
+        return profile.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/by-blood-type/{bloodType}")
+    public ResponseEntity<List<PatientProfileDTO>> getProfilesByBloodType(@PathVariable String bloodType) {
+        List<PatientProfileDTO> profiles = patientProfileService.findByBloodType(bloodType);
+        return ResponseEntity.ok(profiles);
+    }
+
+    @GetMapping("/by-medical-history")
+    public ResponseEntity<List<PatientProfileDTO>> getProfilesByMedicalHistory(@RequestParam String keyword) {
+        List<PatientProfileDTO> profiles = patientProfileService.findByMedicalHistoryContaining(keyword);
+        return ResponseEntity.ok(profiles);
+    }
+
+    @GetMapping("/by-allergies")
+    public ResponseEntity<List<PatientProfileDTO>> getProfilesByAllergies(@RequestParam String keyword) {
+        List<PatientProfileDTO> profiles = patientProfileService.findByAllergiesContaining(keyword);
+        return ResponseEntity.ok(profiles);
+    }
+
+    @GetMapping("/by-account-balance/{amount}")
+    public ResponseEntity<List<PatientProfileDTO>> getProfilesByAccountBalance(@PathVariable BigDecimal amount) {
+        List<PatientProfileDTO> profiles = patientProfileService.findByAccountBalanceGreaterThanEqual(amount);
+        return ResponseEntity.ok(profiles);
     }
 }

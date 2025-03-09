@@ -1,6 +1,8 @@
 package aptech.vn.backend.service.impl;
 
+import aptech.vn.backend.dto.UserRoleDTO;
 import aptech.vn.backend.entity.UserRole;
+import aptech.vn.backend.mapper.UserRoleMapper;
 import aptech.vn.backend.repository.UserRoleRepository;
 import aptech.vn.backend.service.UserRoleService;
 import org.springframework.data.domain.Page;
@@ -11,35 +13,36 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class UserRoleServiceImpl implements UserRoleService {
-
+    private final UserRoleMapper userRoleMapper;
     private final UserRoleRepository userRoleRepository;
 
-    public UserRoleServiceImpl(UserRoleRepository userRoleRepository) {
+    public UserRoleServiceImpl(UserRoleRepository userRoleRepository, UserRoleMapper userRoleMapper) {
         this.userRoleRepository = userRoleRepository;
+        this.userRoleMapper = userRoleMapper;
     }
 
     @Override
-    public UserRole save(UserRole userRole) {
-        return userRoleRepository.save(userRole);
+    public List<UserRoleDTO> findAll() {
+        return userRoleRepository.findAll()
+                .stream()
+                .map(userRoleMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<UserRole> findById(Long id) {
-        return userRoleRepository.findById(id);
+    public Optional<UserRoleDTO> findById(Long id) {
+        return userRoleRepository.findById(id).map(userRoleMapper::toDto);
     }
 
     @Override
-    public List<UserRole> findAll() {
-        return userRoleRepository.findAll();
-    }
-
-    @Override
-    public Page<UserRole> findAll(Pageable pageable) {
-        return userRoleRepository.findAll(pageable);
+    public UserRoleDTO save(UserRoleDTO userRoleDTO) {
+        UserRole userRole = userRoleMapper.toEntity(userRoleDTO);
+        userRoleRepository.save(userRole);
+        return userRoleMapper.toDto(userRole);
     }
 
     @Override
@@ -48,27 +51,23 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
-    public List<UserRole> findByUserId(Long userId) {
-        return userRoleRepository.findByUserId(userId);
+    public List<UserRoleDTO> findByUserId(Long userId) {
+        return userRoleRepository.findByUser_Id(userId)
+                .stream()
+                .map(userRoleMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<UserRole> findByRoleId(Long roleId) {
-        return userRoleRepository.findByRoleId(roleId);
+    public List<UserRoleDTO> findByRoleId(Long roleId) {
+        return userRoleRepository.findByRole_Id(roleId)
+                .stream()
+                .map(userRoleMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public boolean assignRoleToUser(Long userId, Long roleId) {
-        return false;
-    }
-
-    @Override
-    public boolean removeRoleFromUser(Long userId, Long roleId) {
-        return false;
-    }
-
-    @Override
-    public Set<String> findRoleNamesByUserId(Long userId) {
-        return Set.of();
+    public Optional<UserRoleDTO> findByUserIdAndRoleId(Long userId, Long roleId) {
+        return userRoleRepository.findByUser_IdAndRole_Id(userId, roleId).map(userRoleMapper::toDto);
     }
 }

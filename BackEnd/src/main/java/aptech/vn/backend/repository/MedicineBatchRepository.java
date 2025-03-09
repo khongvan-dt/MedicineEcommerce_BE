@@ -12,6 +12,6 @@ import java.util.Optional;
 public interface MedicineBatchRepository extends JpaRepository<MedicineBatch, Long> {
     Optional<MedicineBatch> findByBatchName(String batchName);
     List<MedicineBatch> findByMedicineCode(String medicineCode);
+    List<MedicineBatch> findByQuantityGreaterThan(Integer quantity);
     List<MedicineBatch> findByExpiryDateBefore(LocalDate date);
-    List<MedicineBatch> findByQuantityLessThan(Integer minQuantity);
 }

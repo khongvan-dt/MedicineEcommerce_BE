@@ -10,8 +10,8 @@ import java.util.Optional;
 
 @Repository
 public interface MedicineMediaRepository extends JpaRepository<MedicineMedia, Long> {
-    List<MedicineMedia> findByMedicineId(Long medicineId);
+    List<MedicineMedia> findByMedicine_Id(Long medicineId);
     List<MedicineMedia> findByMediaType(MediaType mediaType);
-    List<MedicineMedia> findByMedicineIdAndMediaType(Long medicineId, MediaType mediaType);
-    Optional<MedicineMedia> findByMedicineIdAndMainImageTrue(Long medicineId);
+    List<MedicineMedia> findByMedicine_IdAndMediaType(Long medicineId, MediaType mediaType);
+    Optional<MedicineMedia> findByMedicine_IdAndMainImageTrue(Long medicineId);
 }

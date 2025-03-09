@@ -1,7 +1,9 @@
 package aptech.vn.backend.service.impl;
 
+import aptech.vn.backend.dto.MedicineMediaDTO;
 import aptech.vn.backend.entity.MedicineMedia;
 import aptech.vn.backend.entity.MediaType;
+import aptech.vn.backend.mapper.MedicineMediaMapper;
 import aptech.vn.backend.repository.MedicineMediaRepository;
 import aptech.vn.backend.service.MedicineMediaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,60 +14,61 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class MedicineMediaServiceImpl implements MedicineMediaService {
 
     private final MedicineMediaRepository medicineMediaRepository;
+    private final MedicineMediaMapper medicineMediaMapper;
 
     @Autowired
-    public MedicineMediaServiceImpl(MedicineMediaRepository medicineMediaRepository) {
+    public MedicineMediaServiceImpl(MedicineMediaRepository medicineMediaRepository, MedicineMediaMapper medicineMediaMapper) {
         this.medicineMediaRepository = medicineMediaRepository;
+        this.medicineMediaMapper = medicineMediaMapper;
     }
 
-    @Override
-    public MedicineMedia save(MedicineMedia medicineMedia) {
-        return medicineMediaRepository.save(medicineMedia);
+    public List<MedicineMediaDTO> findAll() {
+        return medicineMediaRepository.findAll().stream()
+                .map(medicineMediaMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    @Override
-    public Optional<MedicineMedia> findById(Long id) {
-        return medicineMediaRepository.findById(id);
+    public Optional<MedicineMediaDTO> findById(Long id) {
+        return medicineMediaRepository.findById(id)
+                .map(medicineMediaMapper::toDto);
     }
 
-    @Override
-    public List<MedicineMedia> findAll() {
-        return medicineMediaRepository.findAll();
+    public MedicineMediaDTO save(MedicineMediaDTO medicineMediaDTO) {
+        MedicineMedia medicineMedia = medicineMediaMapper.toEntity(medicineMediaDTO);
+        MedicineMedia savedMedicineMedia = medicineMediaRepository.save(medicineMedia);
+        return medicineMediaMapper.toDto(savedMedicineMedia);
     }
 
-    @Override
-    public Page<MedicineMedia> findAll(Pageable pageable) {
-        return medicineMediaRepository.findAll(pageable);
-    }
-
-    @Override
     public void deleteById(Long id) {
         medicineMediaRepository.deleteById(id);
     }
 
-    @Override
-    public List<MedicineMedia> findByMedicineId(Long medicineId) {
-        return medicineMediaRepository.findByMedicineId(medicineId);
+    public List<MedicineMediaDTO> findByMedicineId(Long medicineId) {
+        return medicineMediaRepository.findByMedicine_Id(medicineId).stream()
+                .map(medicineMediaMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    @Override
-    public List<MedicineMedia> findByMedicineIdAndMediaType(Long medicineId, MediaType mediaType) {
-        return medicineMediaRepository.findByMedicineIdAndMediaType(medicineId, mediaType);
+    public List<MedicineMediaDTO> findByMediaType(MediaType mediaType) {
+        return medicineMediaRepository.findByMediaType(mediaType).stream()
+                .map(medicineMediaMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    @Override
-    public Optional<MedicineMedia> findMainImageByMedicineId(Long medicineId) {
-        return medicineMediaRepository.findByMedicineIdAndMainImageTrue(medicineId);
+    public List<MedicineMediaDTO> findByMedicineIdAndMediaType(Long medicineId, MediaType mediaType) {
+        return medicineMediaRepository.findByMedicine_IdAndMediaType(medicineId, mediaType).stream()
+                .map(medicineMediaMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    @Override
-    public void setMainImage(Long medicineId, Long mediaId) {
-        return;
+    public Optional<MedicineMediaDTO> findMainImageByMedicineId(Long medicineId) {
+        return medicineMediaRepository.findByMedicine_IdAndMainImageTrue(medicineId)
+                .map(medicineMediaMapper::toDto);
     }
 }

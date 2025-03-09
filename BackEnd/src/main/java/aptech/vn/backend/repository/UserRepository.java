@@ -11,11 +11,11 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
-    Optional<User> findByPhone(String phone);
     List<User> findByFullNameContaining(String fullName);
+    List<User> findByPhone(String phone);
+    List<User> findByAddressContaining(String address);
     List<User> findByEnabled(Boolean enabled);
     List<User> findByLocked(Boolean locked);
-    List<User> findByLastLoginBetween(LocalDateTime start, LocalDateTime end);
-    List<User> findByCountLockGreaterThan(Integer threshold);
-    List<User> findByAddressContaining(String address);
+    List<User> findByLastLoginAfter(LocalDateTime date);
+    List<User> findByCountLockGreaterThanEqual(Integer count);
 }

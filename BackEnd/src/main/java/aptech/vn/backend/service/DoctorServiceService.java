@@ -1,15 +1,15 @@
 package aptech.vn.backend.service;
 
-import aptech.vn.backend.entity.DoctorService;
+import aptech.vn.backend.dto.DoctorServiceDTO;
 import java.util.List;
 import java.util.Optional;
 
 public interface DoctorServiceService {
-    DoctorService save(DoctorService doctorService);
-    List<DoctorService> findAll();
-    Optional<DoctorService> findById(Long id);
+    List<DoctorServiceDTO> findAll();
+    Optional<DoctorServiceDTO> findById(Long id);
+    DoctorServiceDTO save(DoctorServiceDTO doctorServiceDTO);
     void deleteById(Long id);
-    List<DoctorService> findByDoctorId(Long doctorId);
-    List<DoctorService> findByServiceId(Long serviceId);
-    Optional<DoctorService> findByDoctorIdAndServiceId(Long doctorId, Long serviceId);
+    List<DoctorServiceDTO> findByDoctorId(Long doctorId);
+    List<DoctorServiceDTO> findByServiceId(Long serviceId);
+    Optional<DoctorServiceDTO> findByDoctorIdAndServiceId(Long doctorId, Long serviceId);
 }

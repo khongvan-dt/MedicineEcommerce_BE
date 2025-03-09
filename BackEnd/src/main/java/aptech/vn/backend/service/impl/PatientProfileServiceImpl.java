@@ -1,6 +1,8 @@
 package aptech.vn.backend.service.impl;
 
+import aptech.vn.backend.dto.PatientProfileDTO;
 import aptech.vn.backend.entity.PatientProfile;
+import aptech.vn.backend.mapper.PatientProfileMapper;
 import aptech.vn.backend.repository.PatientProfileRepository;
 import aptech.vn.backend.service.PatientProfileService;
 import org.springframework.data.domain.Page;
@@ -11,34 +13,36 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class PatientProfileServiceImpl implements PatientProfileService {
     private final PatientProfileRepository patientProfileRepository;
+    private final PatientProfileMapper patientProfileMapper;
 
-    public PatientProfileServiceImpl(PatientProfileRepository patientProfileRepository) {
+    public PatientProfileServiceImpl(PatientProfileRepository patientProfileRepository, PatientProfileMapper patientProfileMapper) {
         this.patientProfileRepository = patientProfileRepository;
+        this.patientProfileMapper = patientProfileMapper;
     }
 
     @Override
-    public PatientProfile save(PatientProfile patientProfile) {
-        return patientProfileRepository.save(patientProfile);
+    public List<PatientProfileDTO> findAll() {
+        return patientProfileRepository.findAll()
+                .stream()
+                .map(patientProfileMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<PatientProfile> findById(Long id) {
-        return patientProfileRepository.findById(id);
+    public Optional<PatientProfileDTO> findById(Long id) {
+        return patientProfileRepository.findById(id).map(patientProfileMapper::toDto);
     }
 
     @Override
-    public List<PatientProfile> findAll() {
-        return patientProfileRepository.findAll();
-    }
-
-    @Override
-    public Page<PatientProfile> findAll(Pageable pageable) {
-        return patientProfileRepository.findAll(pageable);
+    public PatientProfileDTO save(PatientProfileDTO patientProfileDTO) {
+        PatientProfile patientProfile = patientProfileMapper.toEntity(patientProfileDTO);
+        patientProfileRepository.save(patientProfile);
+        return patientProfileMapper.toDto(patientProfile);
     }
 
     @Override
@@ -47,22 +51,39 @@ public class PatientProfileServiceImpl implements PatientProfileService {
     }
 
     @Override
-    public Optional<PatientProfile> findByUserId(Long userId) {
-        return patientProfileRepository.findByUserId(userId);
+    public Optional<PatientProfileDTO> findByUserId(Long userId) {
+        return patientProfileRepository.findById(userId).map(patientProfileMapper::toDto);
     }
 
     @Override
-    public List<PatientProfile> findByBloodType(String bloodType) {
-        return patientProfileRepository.findByBloodType(bloodType);
+    public List<PatientProfileDTO> findByBloodType(String bloodType) {
+        return patientProfileRepository.findByBloodType(bloodType)
+                .stream()
+                .map(patientProfileMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public boolean updateAccountBalance(Long patientId, BigDecimal amount) {
-        return false;
+    public List<PatientProfileDTO> findByMedicalHistoryContaining(String keyword) {
+        return patientProfileRepository.findByMedicalHistoryContaining(keyword)
+                .stream()
+                .map(patientProfileMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<PatientProfile> findByMedicalHistoryContaining(String keyword) {
-        return patientProfileRepository.findByMedicalHistoryContaining(keyword);
+    public List<PatientProfileDTO> findByAllergiesContaining(String keyword) {
+        return patientProfileRepository.findByAllergiesContaining(keyword)
+                .stream()
+                .map(patientProfileMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PatientProfileDTO> findByAccountBalanceGreaterThanEqual(BigDecimal amount) {
+        return patientProfileRepository.findByAccountBalanceGreaterThanEqual(amount)
+                .stream()
+                .map(patientProfileMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

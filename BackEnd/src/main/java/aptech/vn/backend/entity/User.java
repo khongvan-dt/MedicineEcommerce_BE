@@ -1,6 +1,7 @@
 package aptech.vn.backend.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -15,14 +16,41 @@ import java.util.Set;
 @Builder
 @EqualsAndHashCode(callSuper = true)
 public class User extends BaseEntity {
+    @NotBlank
+    @Column(name = "full_name", nullable = false)
     private String fullName;
+
+    @NotBlank
+    @Pattern(regexp = "^[0-9]{10,12}$", message = "Phone number must be between 10 and 12 digits")
+    @Column(name = "phone", nullable = true)
     private String phone;
+
+    @Column(name = "address", nullable = true)
     private String address;
+
+    @NotBlank
+    @Email
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
+
+    @Column(name = "last_login", nullable = true)
     private LocalDateTime lastLogin;
-    private Integer countLock;
+
+    @Column(name = "count_lock", nullable = false)
+    @Min(0)
+    @Max(5)
+    private Integer countLock = 0;
+
+    @NotBlank
+    @Column(name = "password", nullable = false)
     private String password;
+
+    @NotNull
+    @Column(name = "enabled", nullable = false)
     private Boolean enabled = true;
+
+    @NotNull
+    @Column(name = "locked", nullable = false)
     private Boolean locked = false;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

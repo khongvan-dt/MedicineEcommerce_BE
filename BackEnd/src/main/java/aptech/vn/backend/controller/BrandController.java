@@ -1,71 +1,70 @@
 package aptech.vn.backend.controller;
 
-import aptech.vn.backend.entity.Brand;
+import aptech.vn.backend.dto.BrandDTO;
 import aptech.vn.backend.service.BrandService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/brands")
 public class BrandController {
 
-    @Autowired
-    private BrandService brandService;
+    private final BrandService brandService;
+
+    public BrandController(BrandService brandService) {
+        this.brandService = brandService;
+    }
 
     @GetMapping
-    public ResponseEntity<List<Brand>> getAllBrands() {
-        List<Brand> brands = brandService.findAll();
-        return new ResponseEntity<>(brands, HttpStatus.OK);
+    public ResponseEntity<List<BrandDTO>> getAllBrands() {
+        List<BrandDTO> brands = brandService.findAll();
+        return ResponseEntity.ok(brands);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Brand> getBrandById(@PathVariable Long id) {
-        return brandService.findById(id)
-                .map(brand -> new ResponseEntity<>(brand, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<BrandDTO> getBrandById(@PathVariable Long id) {
+        Optional<BrandDTO> brand = brandService.findById(id);
+        return brand.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Brand> createBrand(@RequestBody Brand brand) {
-        Brand savedBrand = brandService.save(brand);
-        return new ResponseEntity<>(savedBrand, HttpStatus.CREATED);
+    public ResponseEntity<BrandDTO> createBrand(@RequestBody BrandDTO brandDTO) {
+        BrandDTO savedBrand = brandService.save(brandDTO);
+        return ResponseEntity.ok(savedBrand);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Brand> updateBrand(@PathVariable Long id, @RequestBody Brand brand) {
-        return brandService.findById(id)
-                .map(existingBrand -> {
-                    brand.setId(id);
-                    Brand updatedBrand = brandService.save(brand);
-                    return new ResponseEntity<>(updatedBrand, HttpStatus.OK);
-                })
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<BrandDTO> updateBrand(@PathVariable Long id, @RequestBody BrandDTO brandDTO) {
+        if (!brandService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        BrandDTO updatedBrand = brandService.save(brandDTO);
+        return ResponseEntity.ok(updatedBrand);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBrand(@PathVariable Long id) {
-        return brandService.findById(id)
-                .map(brand -> {
-                    brandService.deleteById(id);
-                    return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-                })
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        if (!brandService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        brandService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/name/{name}")
-    public ResponseEntity<Brand> getBrandByName(@PathVariable String name) {
-        return brandService.findByName(name)
-                .map(brand -> new ResponseEntity<>(brand, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    @GetMapping("/search/name")
+    public ResponseEntity<BrandDTO> findByName(@RequestParam String name) {
+        Optional<BrandDTO> brand = brandService.findByName(name);
+        return brand.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<Brand>> getBrandsContainingName(@RequestParam String name) {
-        List<Brand> brands = brandService.findByNameContaining(name);
-        return new ResponseEntity<>(brands, HttpStatus.OK);
+    @GetMapping("/search/name-containing")
+    public ResponseEntity<List<BrandDTO>> findByNameContaining(@RequestParam String namePattern) {
+        List<BrandDTO> brands = brandService.findByNameContaining(namePattern);
+        return ResponseEntity.ok(brands);
     }
 }

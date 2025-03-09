@@ -1,0 +1,68 @@
+public interface AppointmentService {
+    List<AppointmentDTO> findAll();
+    Optional<AppointmentDTO> findById(Long id);
+    AppointmentDTO save(AppointmentDTO appointmentDTO);
+    void deleteById(Long id);
+    List<AppointmentDTO> findByPatientId(Long patientId);
+    List<AppointmentDTO> findByDoctorId(Long doctorId);
+    List<AppointmentDTO> findByAppointmentDateBetween(LocalDateTime start, LocalDateTime end);
+    List<AppointmentDTO> findByPatientIdAndDoctorId(Long patientId, Long doctorId);
+}
+public interface AttributeService {
+    List<AttributeDTO> findAll();
+    Optional<AttributeDTO> findById(Long id);
+    AttributeDTO save(AttributeDTO attributeDTO);
+    void deleteById(Long id);
+    List<AttributeDTO> findByName(String name);
+    List<AttributeDTO> findByPriceInLessThanEqual(BigDecimal price);
+    List<AttributeDTO> findByPriceOutLessThanEqual(BigDecimal price);
+    List<AttributeDTO> findByStockGreaterThan(Integer stock);
+    List<AttributeDTO> findByExpiryDateBefore(LocalDate date);
+}
+public interface BrandService {
+    List<BrandDTO> findAll();
+    Optional<BrandDTO> findById(Long id);
+    BrandDTO save(BrandDTO brandDTO);
+    void deleteById(Long id);
+    Optional<BrandDTO> findByName(String name);
+    List<BrandDTO> findByNameContaining(String namePattern);
+}public interface CategoryService {
+    List<CategoryDTO> findAll();
+    Optional<CategoryDTO> findById(Long id);
+    CategoryDTO save(CategoryDTO categoryDTO);
+    void deleteById(Long id);
+    List<CategoryDTO> findByName(String name);
+    List<CategoryDTO> findByParentId(Long parentId);
+    List<CategoryDTO> findRootCategories();
+}public interface ConsultationService {
+    List<ConsultationDTO> findAll();
+    Optional<ConsultationDTO> findById(Long id);
+    ConsultationDTO save(ConsultationDTO consultationDTO);
+    void deleteById(Long id);
+    List<ConsultationDTO> findByPatientId(Long patientId);
+    List<ConsultationDTO> findByDoctorId(Long doctorId);
+    List<ConsultationDTO> findByStatus(ConsultationStatus status);
+    List<ConsultationDTO> findByPatientIdAndDoctorId(Long patientId, Long doctorId);
+    List<ConsultationDTO> findByDoctorIdAndStatus(Long doctorId, ConsultationStatus status);
+    List<ConsultationDTO> findByPatientIdAndStatus(Long patientId, ConsultationStatus status);
+}public interface DiscountService {
+    List<DiscountDTO> findAll();
+    Optional<DiscountDTO> findById(Long id);
+    DiscountDTO save(DiscountDTO discountDTO);
+    void deleteById(Long id);
+    Optional<DiscountDTO> findByCode(String code);
+    List<DiscountDTO> findByMedicineId(Long medicineId);
+    List<DiscountDTO> findByActive(LocalDateTime now);
+    List<DiscountDTO> findByDiscountPercentageGreaterThanEqual(Double percentage);
+    List<DiscountDTO> findByExpired(LocalDateTime date);
+    List<DiscountDTO> findByNoExpiration();
+}public interface DoctorProfileService {
+    List<DoctorProfileDTO> findAll();
+    Optional<DoctorProfileDTO> findById(Long id);
+    DoctorProfileDTO save(DoctorProfileDTO doctorProfileDTO);
+    void deleteById(Long id);
+    Optional<DoctorProfileDTO> findByUserId(Long userId);
+    List<DoctorProfileDTO> findBySpecializationContaining(String specialization);
+    List<DoctorProfileDTO> findByWorkplaceContaining(String workplace);
+    List<DoctorProfileDTO> findByAccountBalanceGreaterThanEqual(BigDecimal amount);
+}

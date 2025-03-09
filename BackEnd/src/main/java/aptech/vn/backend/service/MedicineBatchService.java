@@ -1,19 +1,17 @@
 package aptech.vn.backend.service;
 
-import aptech.vn.backend.entity.MedicineBatch;
+import aptech.vn.backend.dto.MedicineBatchDTO;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 public interface MedicineBatchService {
-    MedicineBatch save(MedicineBatch medicineBatch);
-    List<MedicineBatch> findAll();
-    Optional<MedicineBatch> findById(Long id);
+    List<MedicineBatchDTO> findAll();
+    Optional<MedicineBatchDTO> findById(Long id);
+    MedicineBatchDTO save(MedicineBatchDTO medicineBatchDTO);
     void deleteById(Long id);
-    Optional<MedicineBatch> findByBatchName(String batchName);
-    List<MedicineBatch> findByMedicineCode(String medicineCode);
-    List<MedicineBatch> findByExpiryDateBefore(LocalDate date);
-    List<MedicineBatch> findByQuantityLessThan(Integer minQuantity);
-    List<MedicineBatch> findExpiredBatches();
-    List<MedicineBatch> findLowStockBatches(Integer threshold);
+    Optional<MedicineBatchDTO> findByBatchName(String batchName);
+    List<MedicineBatchDTO> findByMedicineCode(String medicineCode);
+    List<MedicineBatchDTO> findByQuantityGreaterThan(Integer quantity);
+    List<MedicineBatchDTO> findByExpiryDateBefore(LocalDate date);
 }

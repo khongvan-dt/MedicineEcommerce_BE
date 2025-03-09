@@ -1,79 +1,90 @@
 package aptech.vn.backend.controller;
 
-import aptech.vn.backend.entity.Attribute;
+import aptech.vn.backend.dto.AttributeDTO;
 import aptech.vn.backend.service.AttributeService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/attributes")
 public class AttributeController {
 
-    @Autowired
-    private AttributeService attributeService;
+    private final AttributeService attributeService;
+
+    public AttributeController(AttributeService attributeService) {
+        this.attributeService = attributeService;
+    }
 
     @GetMapping
-    public ResponseEntity<List<Attribute>> getAllAttributes() {
-        List<Attribute> attributes = attributeService.findAll();
-        return new ResponseEntity<>(attributes, HttpStatus.OK);
+    public ResponseEntity<List<AttributeDTO>> getAllAttributes() {
+        List<AttributeDTO> attributes = attributeService.findAll();
+        return ResponseEntity.ok(attributes);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Attribute> getAttributeById(@PathVariable Long id) {
-        return attributeService.findById(id)
-                .map(attribute -> new ResponseEntity<>(attribute, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<AttributeDTO> getAttributeById(@PathVariable Long id) {
+        Optional<AttributeDTO> attribute = attributeService.findById(id);
+        return attribute.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Attribute> createAttribute(@RequestBody Attribute attribute) {
-        Attribute savedAttribute = attributeService.save(attribute);
-        return new ResponseEntity<>(savedAttribute, HttpStatus.CREATED);
+    public ResponseEntity<AttributeDTO> createAttribute(@RequestBody AttributeDTO attributeDTO) {
+        AttributeDTO savedAttribute = attributeService.save(attributeDTO);
+        return ResponseEntity.ok(savedAttribute);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Attribute> updateAttribute(@PathVariable Long id, @RequestBody Attribute attribute) {
-        return attributeService.findById(id)
-                .map(existingAttribute -> {
-                    attribute.setId(id);
-                    Attribute updatedAttribute = attributeService.save(attribute);
-                    return new ResponseEntity<>(updatedAttribute, HttpStatus.OK);
-                })
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<AttributeDTO> updateAttribute(@PathVariable Long id, @RequestBody AttributeDTO attributeDTO) {
+        if (!attributeService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        AttributeDTO updatedAttribute = attributeService.save(attributeDTO);
+        return ResponseEntity.ok(updatedAttribute);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAttribute(@PathVariable Long id) {
-        return attributeService.findById(id)
-                .map(attribute -> {
-                    attributeService.deleteById(id);
-                    return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-                })
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        if (!attributeService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        attributeService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/name/{name}")
-    public ResponseEntity<List<Attribute>> getAttributesByName(@PathVariable String name) {
-        List<Attribute> attributes = attributeService.findByName(name);
-        return new ResponseEntity<>(attributes, HttpStatus.OK);
+    @GetMapping("/search/name")
+    public ResponseEntity<List<AttributeDTO>> findByName(@RequestParam String name) {
+        List<AttributeDTO> attributes = attributeService.findByName(name);
+        return ResponseEntity.ok(attributes);
     }
 
-    @GetMapping("/expiry-before")
-    public ResponseEntity<List<Attribute>> getAttributesExpiringBefore(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        List<Attribute> attributes = attributeService.findByExpiryDateBefore(date);
-        return new ResponseEntity<>(attributes, HttpStatus.OK);
+    @GetMapping("/search/price-in")
+    public ResponseEntity<List<AttributeDTO>> findByPriceInLessThanEqual(@RequestParam BigDecimal price) {
+        List<AttributeDTO> attributes = attributeService.findByPriceInLessThanEqual(price);
+        return ResponseEntity.ok(attributes);
     }
 
-    @GetMapping("/low-stock")
-    public ResponseEntity<List<Attribute>> getAttributesWithLowStock(@RequestParam Integer threshold) {
-        List<Attribute> attributes = attributeService.findByStockLessThan(threshold);
-        return new ResponseEntity<>(attributes, HttpStatus.OK);
+    @GetMapping("/search/price-out")
+    public ResponseEntity<List<AttributeDTO>> findByPriceOutLessThanEqual(@RequestParam BigDecimal price) {
+        List<AttributeDTO> attributes = attributeService.findByPriceOutLessThanEqual(price);
+        return ResponseEntity.ok(attributes);
+    }
+
+    @GetMapping("/search/stock")
+    public ResponseEntity<List<AttributeDTO>> findByStockGreaterThan(@RequestParam Integer stock) {
+        List<AttributeDTO> attributes = attributeService.findByStockGreaterThan(stock);
+        return ResponseEntity.ok(attributes);
+    }
+
+    @GetMapping("/search/expiry")
+    public ResponseEntity<List<AttributeDTO>> findByExpiryDateBefore(@RequestParam String date) {
+        LocalDate expiryDate = LocalDate.parse(date);
+        List<AttributeDTO> attributes = attributeService.findByExpiryDateBefore(expiryDate);
+        return ResponseEntity.ok(attributes);
     }
 }

@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface MedicineCategoryRepository extends JpaRepository<MedicineCategory, Long> {
-    List<MedicineCategory> findByMedicineId(Long medicineId);
-    List<MedicineCategory> findByCategoryId(Long categoryId);
-    Optional<MedicineCategory> findByMedicineIdAndCategoryId(Long medicineId, Long categoryId);
+    List<MedicineCategory> findByMedicine_Id(Long medicineId);
+    List<MedicineCategory> findByCategory_Id(Long categoryId);
+    Optional<MedicineCategory> findByMedicine_IdAndCategory_Id(Long medicineId, Long categoryId);
 }

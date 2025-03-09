@@ -1,83 +1,82 @@
 package aptech.vn.backend.controller;
 
-import aptech.vn.backend.entity.DoctorProfile;
+import aptech.vn.backend.dto.DoctorProfileDTO;
 import aptech.vn.backend.service.DoctorProfileService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/doctor-profiles")
 public class DoctorProfileController {
 
-    @Autowired
-    private DoctorProfileService doctorProfileService;
+    private final DoctorProfileService doctorProfileService;
+
+    public DoctorProfileController(DoctorProfileService doctorProfileService) {
+        this.doctorProfileService = doctorProfileService;
+    }
 
     @GetMapping
-    public ResponseEntity<List<DoctorProfile>> getAllDoctorProfiles() {
-        List<DoctorProfile> doctorProfiles = doctorProfileService.findAll();
-        return new ResponseEntity<>(doctorProfiles, HttpStatus.OK);
+    public ResponseEntity<List<DoctorProfileDTO>> getAllDoctorProfiles() {
+        List<DoctorProfileDTO> doctorProfiles = doctorProfileService.findAll();
+        return ResponseEntity.ok(doctorProfiles);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DoctorProfile> getDoctorProfileById(@PathVariable Long id) {
-        return doctorProfileService.findById(id)
-                .map(doctorProfile -> new ResponseEntity<>(doctorProfile, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<DoctorProfileDTO> getDoctorProfileById(@PathVariable Long id) {
+        Optional<DoctorProfileDTO> doctorProfile = doctorProfileService.findById(id);
+        return doctorProfile.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<DoctorProfile> createDoctorProfile(@RequestBody DoctorProfile doctorProfile) {
-        DoctorProfile savedDoctorProfile = doctorProfileService.save(doctorProfile);
-        return new ResponseEntity<>(savedDoctorProfile, HttpStatus.CREATED);
+    public ResponseEntity<DoctorProfileDTO> createDoctorProfile(@RequestBody DoctorProfileDTO doctorProfileDTO) {
+        DoctorProfileDTO savedDoctorProfile = doctorProfileService.save(doctorProfileDTO);
+        return ResponseEntity.ok(savedDoctorProfile);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DoctorProfile> updateDoctorProfile(@PathVariable Long id, @RequestBody DoctorProfile doctorProfile) {
-        return doctorProfileService.findById(id)
-                .map(existingDoctorProfile -> {
-                    doctorProfile.setId(id);
-                    DoctorProfile updatedDoctorProfile = doctorProfileService.save(doctorProfile);
-                    return new ResponseEntity<>(updatedDoctorProfile, HttpStatus.OK);
-                })
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<DoctorProfileDTO> updateDoctorProfile(@PathVariable Long id, @RequestBody DoctorProfileDTO doctorProfileDTO) {
+        if (!doctorProfileService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        DoctorProfileDTO updatedDoctorProfile = doctorProfileService.save(doctorProfileDTO);
+        return ResponseEntity.ok(updatedDoctorProfile);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDoctorProfile(@PathVariable Long id) {
-        return doctorProfileService.findById(id)
-                .map(doctorProfile -> {
-                    doctorProfileService.deleteById(id);
-                    return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-                })
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        if (!doctorProfileService.findById(id).isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        doctorProfileService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<DoctorProfile> getDoctorProfileByUserId(@PathVariable Long userId) {
-        return doctorProfileService.findByUserId(userId)
-                .map(doctorProfile -> new ResponseEntity<>(doctorProfile, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-
-    @GetMapping("/specialization/{specialization}")
-    public ResponseEntity<List<DoctorProfile>> getDoctorProfilesBySpecialization(@PathVariable String specialization) {
-        List<DoctorProfile> doctorProfiles = doctorProfileService.findBySpecialization(specialization);
-        return new ResponseEntity<>(doctorProfiles, HttpStatus.OK);
-    }
-
-    @GetMapping("/workplace/{workplace}")
-    public ResponseEntity<List<DoctorProfile>> getDoctorProfilesByWorkplace(@PathVariable String workplace) {
-        List<DoctorProfile> doctorProfiles = doctorProfileService.findByWorkplace(workplace);
-        return new ResponseEntity<>(doctorProfiles, HttpStatus.OK);
+    @GetMapping("/search/user/{userId}")
+    public ResponseEntity<Optional<DoctorProfileDTO>> findByUserId(@PathVariable Long userId) {
+        Optional<DoctorProfileDTO> doctorProfile = doctorProfileService.findByUserId(userId);
+        return ResponseEntity.ok(doctorProfile);
     }
 
     @GetMapping("/search/specialization")
-    public ResponseEntity<List<DoctorProfile>> getDoctorProfilesBySpecializationContaining(@RequestParam String specialization) {
-        List<DoctorProfile> doctorProfiles = doctorProfileService.findBySpecializationContaining(specialization);
-        return new ResponseEntity<>(doctorProfiles, HttpStatus.OK);
+    public ResponseEntity<List<DoctorProfileDTO>> findBySpecialization(@RequestParam String specialization) {
+        List<DoctorProfileDTO> doctorProfiles = doctorProfileService.findBySpecializationContaining(specialization);
+        return ResponseEntity.ok(doctorProfiles);
+    }
+
+    @GetMapping("/search/workplace")
+    public ResponseEntity<List<DoctorProfileDTO>> findByWorkplace(@RequestParam String workplace) {
+        List<DoctorProfileDTO> doctorProfiles = doctorProfileService.findByWorkplaceContaining(workplace);
+        return ResponseEntity.ok(doctorProfiles);
+    }
+
+    @GetMapping("/search/account-balance")
+    public ResponseEntity<List<DoctorProfileDTO>> findByAccountBalanceGreaterThanEqual(@RequestParam BigDecimal amount) {
+        List<DoctorProfileDTO> doctorProfiles = doctorProfileService.findByAccountBalanceGreaterThanEqual(amount);
+        return ResponseEntity.ok(doctorProfiles);
     }
 }
