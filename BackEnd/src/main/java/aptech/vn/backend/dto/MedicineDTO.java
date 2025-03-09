@@ -17,14 +17,13 @@ public class MedicineDTO {
         private Long brandId;
         private String origin;
         private String manufacturer;
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
     }
 
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GetDto {
+        public long id;
         private String code;
         private String name;
         private String origin;
