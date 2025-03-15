@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PrescriptionService {
-    List<PrescriptionDTO> findAll();
-    Optional<PrescriptionDTO> findById(Long id);
-    PrescriptionDTO save(PrescriptionDTO prescriptionDTO);
+    List<PrescriptionDTO.GetDto> findAll();
+    Optional<PrescriptionDTO.GetDto> findById(Long id);
+    PrescriptionDTO.GetDto saveOrUpdate(PrescriptionDTO.SaveDto prescriptionDTO);
     void deleteById(Long id);
-    List<PrescriptionDTO> findByDoctorId(Long doctorId);
-    List<PrescriptionDTO> findByPatientId(Long patientId);
-    List<PrescriptionDTO> findByMedicineId(Long medicineId);
-    List<PrescriptionDTO> findByPatientIdAndDoctorId(Long patientId, Long doctorId);
-    List<PrescriptionDTO> findByPatientIdAndMedicineId(Long patientId, Long medicineId);
+    List<PrescriptionDTO.GetDto> findByDoctorId(Long doctorId);
+    List<PrescriptionDTO.GetDto> findByPatientId(Long patientId);
+    List<PrescriptionDTO.GetDto> findByMedicineId(Long medicineId);
+    List<PrescriptionDTO.GetDto> findByPatientIdAndDoctorId(Long patientId, Long doctorId);
+    List<PrescriptionDTO.GetDto> findByPatientIdAndMedicineId(Long patientId, Long medicineId);
 }

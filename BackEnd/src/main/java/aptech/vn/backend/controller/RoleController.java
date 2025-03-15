@@ -6,10 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/roles")
+@CrossOrigin("*")
 public class RoleController {
 
     private final RoleService roleService;
@@ -19,31 +19,22 @@ public class RoleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RoleDTO>> getAllRoles() {
-        List<RoleDTO> roles = roleService.findAll();
+    public ResponseEntity<List<RoleDTO.GetDto>> getAllRoles() {
+        List<RoleDTO.GetDto> roles = roleService.findAll();
         return ResponseEntity.ok(roles);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RoleDTO> getRoleById(@PathVariable Long id) {
-        Optional<RoleDTO> role = roleService.findById(id);
-        return role.map(ResponseEntity::ok)
+    public ResponseEntity<RoleDTO.GetDto> getRoleById(@PathVariable Long id) {
+        return roleService.findById(id)
+                .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public ResponseEntity<RoleDTO> createRole(@RequestBody RoleDTO roleDTO) {
-        RoleDTO savedRole = roleService.save(roleDTO);
+    @PostMapping("/save")
+    public ResponseEntity<RoleDTO.GetDto> saveOrUpdateRole(@RequestBody RoleDTO.SaveDto roleDTO) {
+        RoleDTO.GetDto savedRole = roleService.saveOrUpdate(roleDTO);
         return ResponseEntity.ok(savedRole);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<RoleDTO> updateRole(@PathVariable Long id, @RequestBody RoleDTO roleDTO) {
-        if (!roleService.findById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        RoleDTO updatedRole = roleService.save(roleDTO);
-        return ResponseEntity.ok(updatedRole);
     }
 
     @DeleteMapping("/{id}")
@@ -56,9 +47,9 @@ public class RoleController {
     }
 
     @GetMapping("/by-name/{name}")
-    public ResponseEntity<RoleDTO> getRoleByName(@PathVariable String name) {
-        Optional<RoleDTO> role = roleService.findByName(name);
-        return role.map(ResponseEntity::ok)
+    public ResponseEntity<RoleDTO.GetDto> getRoleByName(@PathVariable String name) {
+        return roleService.findByName(name)
+                .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

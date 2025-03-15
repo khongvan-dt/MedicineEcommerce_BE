@@ -8,15 +8,31 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class DoctorProfileDTO {
-    private Long id;
-    private Long userId;
-    private String experience;
-    private String specialization;
-    private String workplace;
-    private BigDecimal accountBalance;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetDto {
+        private Long id;
+        private Long userId;
+        private String experience;
+        private String specialization;
+        private String workplace;
+        private BigDecimal accountBalance;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SaveDto {
+        private Long id;
+        private Long userId;
+        private String experience;
+        private String specialization;
+        private String workplace;
+        private BigDecimal accountBalance;
+    }
 }

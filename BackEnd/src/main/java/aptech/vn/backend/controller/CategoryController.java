@@ -6,10 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/categories")
+@CrossOrigin("*")
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -19,31 +19,22 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
-        List<CategoryDTO> categories = categoryService.findAll();
+    public ResponseEntity<List<CategoryDTO.GetDto>> getAllCategories() {
+        List<CategoryDTO.GetDto> categories = categoryService.findAll();
         return ResponseEntity.ok(categories);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long id) {
-        Optional<CategoryDTO> category = categoryService.findById(id);
-        return category.map(ResponseEntity::ok)
+    public ResponseEntity<CategoryDTO.GetDto> getCategoryById(@PathVariable Long id) {
+        return categoryService.findById(id)
+                .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO categoryDTO) {
-        CategoryDTO savedCategory = categoryService.save(categoryDTO);
+    @PostMapping("/save")
+    public ResponseEntity<CategoryDTO.GetDto> saveOrUpdateCategory(@RequestBody CategoryDTO.SaveDto categoryDTO) {
+        CategoryDTO.GetDto savedCategory = categoryService.saveOrUpdate(categoryDTO);
         return ResponseEntity.ok(savedCategory);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO) {
-        if (!categoryService.findById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        CategoryDTO updatedCategory = categoryService.save(categoryDTO);
-        return ResponseEntity.ok(updatedCategory);
     }
 
     @DeleteMapping("/{id}")
@@ -56,20 +47,20 @@ public class CategoryController {
     }
 
     @GetMapping("/search/name")
-    public ResponseEntity<List<CategoryDTO>> findByName(@RequestParam String name) {
-        List<CategoryDTO> categories = categoryService.findByName(name);
+    public ResponseEntity<List<CategoryDTO.GetDto>> findByName(@RequestParam String name) {
+        List<CategoryDTO.GetDto> categories = categoryService.findByName(name);
         return ResponseEntity.ok(categories);
     }
 
     @GetMapping("/search/parent")
-    public ResponseEntity<List<CategoryDTO>> findByParentId(@RequestParam Long parentId) {
-        List<CategoryDTO> categories = categoryService.findByParentId(parentId);
+    public ResponseEntity<List<CategoryDTO.GetDto>> findByParentId(@RequestParam Long parentId) {
+        List<CategoryDTO.GetDto> categories = categoryService.findByParentId(parentId);
         return ResponseEntity.ok(categories);
     }
 
     @GetMapping("/roots")
-    public ResponseEntity<List<CategoryDTO>> findRootCategories() {
-        List<CategoryDTO> categories = categoryService.findRootCategories();
+    public ResponseEntity<List<CategoryDTO.GetDto>> findRootCategories() {
+        List<CategoryDTO.GetDto> categories = categoryService.findRootCategories();
         return ResponseEntity.ok(categories);
     }
 }

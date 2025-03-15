@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -24,31 +23,22 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderDTO>> getAllOrders() {
-        List<OrderDTO> orders = orderService.findAll();
+    public ResponseEntity<List<OrderDTO.GetDto>> getAllOrders() {
+        List<OrderDTO.GetDto> orders = orderService.findAll();
         return ResponseEntity.ok(orders);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long id) {
-        Optional<OrderDTO> order = orderService.findById(id);
-        return order.map(ResponseEntity::ok)
+    public ResponseEntity<OrderDTO.GetDto> getOrderById(@PathVariable Long id) {
+        return orderService.findById(id)
+                .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
-        OrderDTO savedOrder = orderService.save(orderDTO);
+    @PostMapping("/save")
+    public ResponseEntity<OrderDTO.GetDto> saveOrUpdateOrder(@RequestBody OrderDTO.SaveDto orderDTO) {
+        OrderDTO.GetDto savedOrder = orderService.saveOrUpdate(orderDTO);
         return ResponseEntity.ok(savedOrder);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<OrderDTO> updateOrder(@PathVariable Long id, @RequestBody OrderDTO orderDTO) {
-        if (!orderService.findById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        OrderDTO updatedOrder = orderService.save(orderDTO);
-        return ResponseEntity.ok(updatedOrder);
     }
 
     @DeleteMapping("/{id}")
@@ -61,47 +51,47 @@ public class OrderController {
     }
 
     @GetMapping("/by-order-code/{orderCode}")
-    public ResponseEntity<OrderDTO> getOrderByOrderCode(@PathVariable String orderCode) {
-        Optional<OrderDTO> order = orderService.findByOrderCode(orderCode);
-        return order.map(ResponseEntity::ok)
+    public ResponseEntity<OrderDTO.GetDto> getOrderByOrderCode(@PathVariable String orderCode) {
+        return orderService.findByOrderCode(orderCode)
+                .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/by-patient/{patientId}")
-    public ResponseEntity<List<OrderDTO>> getOrdersByPatientId(@PathVariable Long patientId) {
-        List<OrderDTO> orders = orderService.findByPatientId(patientId);
+    public ResponseEntity<List<OrderDTO.GetDto>> getOrdersByPatientId(@PathVariable Long patientId) {
+        List<OrderDTO.GetDto> orders = orderService.findByPatientId(patientId);
         return ResponseEntity.ok(orders);
     }
 
     @GetMapping("/by-status/{status}")
-    public ResponseEntity<List<OrderDTO>> getOrdersByStatus(@PathVariable OrderStatus status) {
-        List<OrderDTO> orders = orderService.findByStatus(status);
+    public ResponseEntity<List<OrderDTO.GetDto>> getOrdersByStatus(@PathVariable OrderStatus status) {
+        List<OrderDTO.GetDto> orders = orderService.findByStatus(status);
         return ResponseEntity.ok(orders);
     }
 
     @GetMapping("/by-payment-method/{paymentMethod}")
-    public ResponseEntity<List<OrderDTO>> getOrdersByPaymentMethod(@PathVariable PaymentMethod paymentMethod) {
-        List<OrderDTO> orders = orderService.findByPaymentMethod(paymentMethod);
+    public ResponseEntity<List<OrderDTO.GetDto>> getOrdersByPaymentMethod(@PathVariable PaymentMethod paymentMethod) {
+        List<OrderDTO.GetDto> orders = orderService.findByPaymentMethod(paymentMethod);
         return ResponseEntity.ok(orders);
     }
 
     @GetMapping("/by-voucher/{voucherCode}")
-    public ResponseEntity<List<OrderDTO>> getOrdersByVoucherCode(@PathVariable String voucherCode) {
-        List<OrderDTO> orders = orderService.findByVoucherCode(voucherCode);
+    public ResponseEntity<List<OrderDTO.GetDto>> getOrdersByVoucherCode(@PathVariable String voucherCode) {
+        List<OrderDTO.GetDto> orders = orderService.findByVoucherCode(voucherCode);
         return ResponseEntity.ok(orders);
     }
 
     @GetMapping("/by-total-price/{amount}")
-    public ResponseEntity<List<OrderDTO>> getOrdersByTotalPrice(@PathVariable BigDecimal amount) {
-        List<OrderDTO> orders = orderService.findByTotalPriceGreaterThanEqual(amount);
+    public ResponseEntity<List<OrderDTO.GetDto>> getOrdersByTotalPrice(@PathVariable BigDecimal amount) {
+        List<OrderDTO.GetDto> orders = orderService.findByTotalPriceGreaterThanEqual(amount);
         return ResponseEntity.ok(orders);
     }
 
     @GetMapping("/by-date-range")
-    public ResponseEntity<List<OrderDTO>> getOrdersByDateRange(
+    public ResponseEntity<List<OrderDTO.GetDto>> getOrdersByDateRange(
             @RequestParam LocalDateTime start,
             @RequestParam LocalDateTime end) {
-        List<OrderDTO> orders = orderService.findByCreatedBetween(start, end);
+        List<OrderDTO.GetDto> orders = orderService.findByCreatedBetween(start, end);
         return ResponseEntity.ok(orders);
     }
 }

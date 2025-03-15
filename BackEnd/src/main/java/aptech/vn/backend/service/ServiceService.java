@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ServiceService {
-    List<ServiceDTO> findAll();
-    Optional<ServiceDTO> findById(Long id);
-    ServiceDTO save(ServiceDTO serviceDTO);
+    List<ServiceDTO.GetDto> findAll();
+    Optional<ServiceDTO.GetDto> findById(Long id);
+    ServiceDTO.GetDto saveOrUpdate(ServiceDTO.SaveDto serviceDTO);
     void deleteById(Long id);
-    List<ServiceDTO> findByName(String name);
-    List<ServiceDTO> findByNameContaining(String namePattern);
-    List<ServiceDTO> findByPriceLessThanEqual(BigDecimal maxPrice);
-    List<ServiceDTO> findByPriceGreaterThanEqual(BigDecimal minPrice);
-    List<ServiceDTO> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice);
+    List<ServiceDTO.GetDto> findByName(String name);
+    List<ServiceDTO.GetDto> findByNameContaining(String namePattern);
+    List<ServiceDTO.GetDto> findByPriceLessThanEqual(BigDecimal maxPrice);
+    List<ServiceDTO.GetDto> findByPriceGreaterThanEqual(BigDecimal minPrice);
+    List<ServiceDTO.GetDto> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice);
 }

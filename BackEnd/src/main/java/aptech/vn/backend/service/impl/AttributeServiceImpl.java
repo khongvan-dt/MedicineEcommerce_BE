@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,23 +28,44 @@ public class AttributeServiceImpl implements AttributeService {
     }
 
     @Override
-    public List<AttributeDTO> findAll() {
+    public List<AttributeDTO.GetDto> findAll() {
         return attributeRepository.findAll().stream()
-                .map(attributeMapper::toDto)
+                .map(attributeMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<AttributeDTO> findById(Long id) {
+    public Optional<AttributeDTO.GetDto> findById(Long id) {
         return attributeRepository.findById(id)
-                .map(attributeMapper::toDto);
+                .map(attributeMapper::toGetDto);
     }
 
     @Override
-    public AttributeDTO save(AttributeDTO attributeDTO) {
-        Attribute attribute = attributeMapper.toEntity(attributeDTO);
+    public AttributeDTO.GetDto saveOrUpdate(AttributeDTO.SaveDto attributeDTO) {
+        Attribute attribute;
+
+        if (attributeDTO.getId() == null || attributeDTO.getId() == 0) {
+            // INSERT case
+            attribute = attributeMapper.toEntity(attributeDTO);
+            attribute.setCreatedAt(LocalDateTime.now());
+            attribute.setUpdatedAt(LocalDateTime.now());
+        } else {
+            // UPDATE case
+            Optional<Attribute> existingAttribute = attributeRepository.findById(attributeDTO.getId());
+            if (existingAttribute.isEmpty()) {
+                throw new RuntimeException("Attribute not found with ID: " + attributeDTO.getId());
+            }
+            attribute = existingAttribute.get();
+            attribute.setName(attributeDTO.getName());
+            attribute.setPriceIn(attributeDTO.getPriceIn());
+            attribute.setPriceOut(attributeDTO.getPriceOut());
+            attribute.setStock(attributeDTO.getStock());
+            attribute.setExpiryDate(attributeDTO.getExpiryDate());
+            attribute.setUpdatedAt(LocalDateTime.now());
+        }
+
         Attribute savedAttribute = attributeRepository.save(attribute);
-        return attributeMapper.toDto(savedAttribute);
+        return attributeMapper.toGetDto(savedAttribute);
     }
 
     @Override
@@ -52,37 +74,37 @@ public class AttributeServiceImpl implements AttributeService {
     }
 
     @Override
-    public List<AttributeDTO> findByName(String name) {
+    public List<AttributeDTO.GetDto> findByName(String name) {
         return attributeRepository.findByName(name).stream()
-                .map(attributeMapper::toDto)
+                .map(attributeMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<AttributeDTO> findByPriceInLessThanEqual(BigDecimal price) {
+    public List<AttributeDTO.GetDto> findByPriceInLessThanEqual(BigDecimal price) {
         return attributeRepository.findByPriceInLessThanEqual(price).stream()
-                .map(attributeMapper::toDto)
+                .map(attributeMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<AttributeDTO> findByPriceOutLessThanEqual(BigDecimal price) {
+    public List<AttributeDTO.GetDto> findByPriceOutLessThanEqual(BigDecimal price) {
         return attributeRepository.findByPriceOutLessThanEqual(price).stream()
-                .map(attributeMapper::toDto)
+                .map(attributeMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<AttributeDTO> findByStockGreaterThan(Integer stock) {
+    public List<AttributeDTO.GetDto> findByStockGreaterThan(Integer stock) {
         return attributeRepository.findByStockGreaterThan(stock).stream()
-                .map(attributeMapper::toDto)
+                .map(attributeMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<AttributeDTO> findByExpiryDateBefore(LocalDate date) {
+    public List<AttributeDTO.GetDto> findByExpiryDateBefore(LocalDate date) {
         return attributeRepository.findByExpiryDateBefore(date).stream()
-                .map(attributeMapper::toDto)
+                .map(attributeMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 }

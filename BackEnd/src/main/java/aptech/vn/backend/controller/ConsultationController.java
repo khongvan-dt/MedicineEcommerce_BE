@@ -7,10 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/consultations")
+@CrossOrigin("*")
 public class ConsultationController {
 
     private final ConsultationService consultationService;
@@ -20,31 +20,22 @@ public class ConsultationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ConsultationDTO>> getAllConsultations() {
-        List<ConsultationDTO> consultations = consultationService.findAll();
+    public ResponseEntity<List<ConsultationDTO.GetDto>> getAllConsultations() {
+        List<ConsultationDTO.GetDto> consultations = consultationService.findAll();
         return ResponseEntity.ok(consultations);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ConsultationDTO> getConsultationById(@PathVariable Long id) {
-        Optional<ConsultationDTO> consultation = consultationService.findById(id);
-        return consultation.map(ResponseEntity::ok)
+    public ResponseEntity<ConsultationDTO.GetDto> getConsultationById(@PathVariable Long id) {
+        return consultationService.findById(id)
+                .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public ResponseEntity<ConsultationDTO> createConsultation(@RequestBody ConsultationDTO consultationDTO) {
-        ConsultationDTO savedConsultation = consultationService.save(consultationDTO);
+    @PostMapping("/save")
+    public ResponseEntity<ConsultationDTO.GetDto> saveOrUpdateConsultation(@RequestBody ConsultationDTO.SaveDto consultationDTO) {
+        ConsultationDTO.GetDto savedConsultation = consultationService.saveOrUpdate(consultationDTO);
         return ResponseEntity.ok(savedConsultation);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<ConsultationDTO> updateConsultation(@PathVariable Long id, @RequestBody ConsultationDTO consultationDTO) {
-        if (!consultationService.findById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        ConsultationDTO updatedConsultation = consultationService.save(consultationDTO);
-        return ResponseEntity.ok(updatedConsultation);
     }
 
     @DeleteMapping("/{id}")
@@ -56,42 +47,45 @@ public class ConsultationController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/search/patient/{patientId}")
-    public ResponseEntity<List<ConsultationDTO>> findByPatientId(@PathVariable Long patientId) {
-        List<ConsultationDTO> consultations = consultationService.findByPatientId(patientId);
+    @GetMapping("/patient/{patientId}")
+    public ResponseEntity<List<ConsultationDTO.GetDto>> getConsultationsByPatientId(@PathVariable Long patientId) {
+        List<ConsultationDTO.GetDto> consultations = consultationService.findByPatientId(patientId);
         return ResponseEntity.ok(consultations);
     }
 
-    @GetMapping("/search/doctor/{doctorId}")
-    public ResponseEntity<List<ConsultationDTO>> findByDoctorId(@PathVariable Long doctorId) {
-        List<ConsultationDTO> consultations = consultationService.findByDoctorId(doctorId);
+    @GetMapping("/doctor/{doctorId}")
+    public ResponseEntity<List<ConsultationDTO.GetDto>> getConsultationsByDoctorId(@PathVariable Long doctorId) {
+        List<ConsultationDTO.GetDto> consultations = consultationService.findByDoctorId(doctorId);
         return ResponseEntity.ok(consultations);
     }
 
-    @GetMapping("/search/status")
-    public ResponseEntity<List<ConsultationDTO>> findByStatus(@RequestParam ConsultationStatus status) {
-        List<ConsultationDTO> consultations = consultationService.findByStatus(status);
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<ConsultationDTO.GetDto>> getConsultationsByStatus(@PathVariable ConsultationStatus status) {
+        List<ConsultationDTO.GetDto> consultations = consultationService.findByStatus(status);
         return ResponseEntity.ok(consultations);
     }
 
-    @GetMapping("/search/patient-doctor")
-    public ResponseEntity<List<ConsultationDTO>> findByPatientIdAndDoctorId(
-            @RequestParam Long patientId, @RequestParam Long doctorId) {
-        List<ConsultationDTO> consultations = consultationService.findByPatientIdAndDoctorId(patientId, doctorId);
+    @GetMapping("/patient/{patientId}/doctor/{doctorId}")
+    public ResponseEntity<List<ConsultationDTO.GetDto>> getConsultationsByPatientAndDoctor(
+            @PathVariable Long patientId,
+            @PathVariable Long doctorId) {
+        List<ConsultationDTO.GetDto> consultations = consultationService.findByPatientIdAndDoctorId(patientId, doctorId);
         return ResponseEntity.ok(consultations);
     }
 
-    @GetMapping("/search/doctor-status")
-    public ResponseEntity<List<ConsultationDTO>> findByDoctorIdAndStatus(
-            @RequestParam Long doctorId, @RequestParam ConsultationStatus status) {
-        List<ConsultationDTO> consultations = consultationService.findByDoctorIdAndStatus(doctorId, status);
+    @GetMapping("/doctor/{doctorId}/status/{status}")
+    public ResponseEntity<List<ConsultationDTO.GetDto>> getConsultationsByDoctorAndStatus(
+            @PathVariable Long doctorId,
+            @PathVariable ConsultationStatus status) {
+        List<ConsultationDTO.GetDto> consultations = consultationService.findByDoctorIdAndStatus(doctorId, status);
         return ResponseEntity.ok(consultations);
     }
 
-    @GetMapping("/search/patient-status")
-    public ResponseEntity<List<ConsultationDTO>> findByPatientIdAndStatus(
-            @RequestParam Long patientId, @RequestParam ConsultationStatus status) {
-        List<ConsultationDTO> consultations = consultationService.findByPatientIdAndStatus(patientId, status);
+    @GetMapping("/patient/{patientId}/status/{status}")
+    public ResponseEntity<List<ConsultationDTO.GetDto>> getConsultationsByPatientAndStatus(
+            @PathVariable Long patientId,
+            @PathVariable ConsultationStatus status) {
+        List<ConsultationDTO.GetDto> consultations = consultationService.findByPatientIdAndStatus(patientId, status);
         return ResponseEntity.ok(consultations);
     }
 }

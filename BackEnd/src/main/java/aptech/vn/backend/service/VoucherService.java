@@ -7,14 +7,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface VoucherService {
-    List<VoucherDTO> findAll();
-    Optional<VoucherDTO> findById(Long id);
-    VoucherDTO save(VoucherDTO voucherDTO);
+    List<VoucherDTO.GetDto> findAll();
+    Optional<VoucherDTO.GetDto> findById(Long id);
+    VoucherDTO.GetDto saveOrUpdate(VoucherDTO.SaveDto voucherDTO);
     void deleteById(Long id);
-    Optional<VoucherDTO> findByCode(String code);
-    List<VoucherDTO> findByStockGreaterThan(Integer minStock);
-    List<VoucherDTO> findByVoucherPercentageGreaterThanEqual(Double percentage);
-    List<VoucherDTO> findActive(LocalDateTime now);
-    List<VoucherDTO> findExpired(LocalDateTime date);
-    List<VoucherDTO> findNeverExpires();
+    Optional<VoucherDTO.GetDto> findByCode(String code);
+    List<VoucherDTO.GetDto> findByStockGreaterThan(Integer minStock);
+    List<VoucherDTO.GetDto> findByVoucherPercentageGreaterThanEqual(Double percentage);
+    List<VoucherDTO.GetDto> findActive(LocalDateTime now);
+    List<VoucherDTO.GetDto> findExpired(LocalDateTime date);
+    List<VoucherDTO.GetDto> findNeverExpires();
 }

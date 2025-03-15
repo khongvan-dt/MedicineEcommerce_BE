@@ -5,11 +5,10 @@ import aptech.vn.backend.entity.Role;
 import aptech.vn.backend.mapper.RoleMapper;
 import aptech.vn.backend.repository.RoleRepository;
 import aptech.vn.backend.service.RoleService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,23 +25,44 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<RoleDTO> findAll() {
+    public List<RoleDTO.GetDto> findAll() {
         return roleRepository.findAll()
                 .stream()
-                .map(roleMapper::toDto)
+                .map(roleMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<RoleDTO> findById(Long id) {
-        return roleRepository.findById(id).map(roleMapper::toDto);
+    public Optional<RoleDTO.GetDto> findById(Long id) {
+        return roleRepository.findById(id)
+                .map(roleMapper::toGetDto);
     }
 
     @Override
-    public RoleDTO save(RoleDTO roleDTO) {
-        Role role = roleMapper.toEntity(roleDTO);
-        role = roleRepository.save(role);
-        return roleMapper.toDto(role);
+    @Transactional
+    public RoleDTO.GetDto saveOrUpdate(RoleDTO.SaveDto roleDTO) {
+        Role role;
+
+        if (roleDTO.getId() == null || roleDTO.getId() == 0) {
+            // INSERT case
+            role = new Role();
+            role.setCreatedAt(LocalDateTime.now());
+            role.setUpdatedAt(LocalDateTime.now());
+        } else {
+            // UPDATE case
+            Optional<Role> existingRole = roleRepository.findById(roleDTO.getId());
+            if (existingRole.isEmpty()) {
+                throw new RuntimeException("Role not found with ID: " + roleDTO.getId());
+            }
+            role = existingRole.get();
+            role.setUpdatedAt(LocalDateTime.now());
+        }
+
+        // Cập nhật trường name
+        role.setName(roleDTO.getName());
+
+        Role savedRole = roleRepository.save(role);
+        return roleMapper.toGetDto(savedRole);
     }
 
     @Override
@@ -51,7 +71,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Optional<RoleDTO> findByName(String name) {
-        return roleRepository.findByName(name).map(roleMapper::toDto);
+    public Optional<RoleDTO.GetDto> findByName(String name) {
+        return roleRepository.findByName(name)
+                .map(roleMapper::toGetDto);
     }
 }

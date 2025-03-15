@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RoleService {
-    List<RoleDTO> findAll();
-    Optional<RoleDTO> findById(Long id);
-    RoleDTO save(RoleDTO roleDTO);
+    List<RoleDTO.GetDto> findAll();
+    Optional<RoleDTO.GetDto> findById(Long id);
+    RoleDTO.GetDto saveOrUpdate(RoleDTO.SaveDto roleDTO);
     void deleteById(Long id);
-    Optional<RoleDTO> findByName(String name);
+    Optional<RoleDTO.GetDto> findByName(String name);
 }

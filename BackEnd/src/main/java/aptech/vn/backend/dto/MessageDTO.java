@@ -7,15 +7,16 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
-public class CategoryDTO {
+public class MessageDTO {
 
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GetDto {
         private Long id;
-        private String name;
-        private Long parentId;
+        private Long senderId;
+        private Long receiverId;
+        private String content;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
     }
@@ -25,7 +26,8 @@ public class CategoryDTO {
     @AllArgsConstructor
     public static class SaveDto {
         private Long id;
-        private String name;
-        private Long parentId;
+        private Long senderId;
+        private Long receiverId;
+        private String content;
     }
 }

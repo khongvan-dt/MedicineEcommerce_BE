@@ -2,8 +2,10 @@ package aptech.vn.backend.service.impl;
 
 import aptech.vn.backend.dto.DiscountDTO;
 import aptech.vn.backend.entity.Discount;
+import aptech.vn.backend.entity.Medicine;
 import aptech.vn.backend.mapper.DiscountMapper;
 import aptech.vn.backend.repository.DiscountRepository;
+import aptech.vn.backend.repository.MedicineRepository;
 import aptech.vn.backend.service.DiscountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,32 +20,67 @@ import java.util.stream.Collectors;
 public class DiscountServiceImpl implements DiscountService {
 
     private final DiscountRepository discountRepository;
+    private final MedicineRepository medicineRepository;
     private final DiscountMapper discountMapper;
 
     @Autowired
-    public DiscountServiceImpl(DiscountRepository discountRepository, DiscountMapper discountMapper) {
+    public DiscountServiceImpl(DiscountRepository discountRepository,
+                               MedicineRepository medicineRepository,
+                               DiscountMapper discountMapper) {
         this.discountRepository = discountRepository;
+        this.medicineRepository = medicineRepository;
         this.discountMapper = discountMapper;
     }
 
     @Override
-    public List<DiscountDTO> findAll() {
+    public List<DiscountDTO.GetDto> findAll() {
         return discountRepository.findAll().stream()
-                .map(discountMapper::toDto)
+                .map(discountMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<DiscountDTO> findById(Long id) {
+    public Optional<DiscountDTO.GetDto> findById(Long id) {
         return discountRepository.findById(id)
-                .map(discountMapper::toDto);
+                .map(discountMapper::toGetDto);
     }
 
     @Override
-    public DiscountDTO save(DiscountDTO discountDTO) {
-        Discount discount = discountMapper.toEntity(discountDTO);
+    @Transactional
+    public DiscountDTO.GetDto saveOrUpdate(DiscountDTO.SaveDto discountDTO) {
+        Discount discount;
+
+        if (discountDTO.getId() == null || discountDTO.getId() == 0) {
+            // INSERT case
+            discount = new Discount();
+            discount.setCreatedAt(LocalDateTime.now());
+            discount.setUpdatedAt(LocalDateTime.now());
+        } else {
+            // UPDATE case
+            Optional<Discount> existingDiscount = discountRepository.findById(discountDTO.getId());
+            if (existingDiscount.isEmpty()) {
+                throw new RuntimeException("Discount not found with ID: " + discountDTO.getId());
+            }
+            discount = existingDiscount.get();
+            discount.setUpdatedAt(LocalDateTime.now());
+        }
+
+        // Xử lý medicine relationship
+        if (discountDTO.getMedicineId() != null) {
+            Medicine medicine = medicineRepository.findById(discountDTO.getMedicineId())
+                    .orElseThrow(() -> new RuntimeException("Medicine not found with ID: " + discountDTO.getMedicineId()));
+            discount.setMedicine(medicine);
+        }
+
+        // Cập nhật các trường khác
+        discount.setCode(discountDTO.getCode());
+        discount.setName(discountDTO.getName());
+        discount.setDiscountPercentage(discountDTO.getDiscountPercentage());
+        discount.setStartDate(discountDTO.getStartDate());
+        discount.setEndDate(discountDTO.getEndDate());
+
         Discount savedDiscount = discountRepository.save(discount);
-        return discountMapper.toDto(savedDiscount);
+        return discountMapper.toGetDto(savedDiscount);
     }
 
     @Override
@@ -52,43 +89,43 @@ public class DiscountServiceImpl implements DiscountService {
     }
 
     @Override
-    public Optional<DiscountDTO> findByCode(String code) {
+    public Optional<DiscountDTO.GetDto> findByCode(String code) {
         return discountRepository.findByCode(code)
-                .map(discountMapper::toDto);
+                .map(discountMapper::toGetDto);
     }
 
     @Override
-    public List<DiscountDTO> findByMedicineId(Long medicineId) {
+    public List<DiscountDTO.GetDto> findByMedicineId(Long medicineId) {
         return discountRepository.findByMedicine_Id(medicineId).stream()
-                .map(discountMapper::toDto)
+                .map(discountMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<DiscountDTO> findByActive(LocalDateTime now) {
+    public List<DiscountDTO.GetDto> findByActive(LocalDateTime now) {
         return discountRepository.findByStartDateBeforeAndEndDateAfter(now, now).stream()
-                .map(discountMapper::toDto)
+                .map(discountMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<DiscountDTO> findByDiscountPercentageGreaterThanEqual(Double percentage) {
+    public List<DiscountDTO.GetDto> findByDiscountPercentageGreaterThanEqual(Double percentage) {
         return discountRepository.findByDiscountPercentageGreaterThanEqual(percentage).stream()
-                .map(discountMapper::toDto)
+                .map(discountMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<DiscountDTO> findByExpired(LocalDateTime date) {
+    public List<DiscountDTO.GetDto> findByExpired(LocalDateTime date) {
         return discountRepository.findByEndDateBefore(date).stream()
-                .map(discountMapper::toDto)
+                .map(discountMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<DiscountDTO> findByNoExpiration() {
+    public List<DiscountDTO.GetDto> findByNoExpiration() {
         return discountRepository.findByEndDateIsNull().stream()
-                .map(discountMapper::toDto)
+                .map(discountMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 }

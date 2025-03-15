@@ -1,6 +1,5 @@
 package aptech.vn.backend.entity;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -23,6 +22,7 @@ public class Role extends BaseEntity {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
+    @Builder.Default  // Thêm annotation này
     @OneToMany(mappedBy = "role")
     private Set<UserRole> userRoles = new HashSet<>();
 }

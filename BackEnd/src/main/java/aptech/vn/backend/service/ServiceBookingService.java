@@ -10,14 +10,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ServiceBookingService {
-    List<ServiceBookingDTO> findAll();
-    Optional<ServiceBookingDTO> findById(Long id);
-    ServiceBookingDTO save(ServiceBookingDTO serviceBookingDTO);
+    List<ServiceBookingDTO.GetDto> findAll();
+    Optional<ServiceBookingDTO.GetDto> findById(Long id);
+    ServiceBookingDTO.GetDto saveOrUpdate(ServiceBookingDTO.SaveDto serviceBookingDTO);
     void deleteById(Long id);
-    List<ServiceBookingDTO> findByServiceId(Long serviceId);
-    List<ServiceBookingDTO> findByPatientId(Long patientId);
-    List<ServiceBookingDTO> findByStatus(BookingStatus status);
-    List<ServiceBookingDTO> findByPaymentMethod(PaymentMethod paymentMethod);
-    List<ServiceBookingDTO> findByTotalPriceGreaterThanEqual(BigDecimal amount);
-    List<ServiceBookingDTO> findByCreatedBetween(LocalDateTime start, LocalDateTime end);
+    List<ServiceBookingDTO.GetDto> findByServiceId(Long serviceId);
+    List<ServiceBookingDTO.GetDto> findByPatientId(Long patientId);
+    List<ServiceBookingDTO.GetDto> findByStatus(BookingStatus status);
+    List<ServiceBookingDTO.GetDto> findByPaymentMethod(PaymentMethod paymentMethod);
+    List<ServiceBookingDTO.GetDto> findByTotalPriceGreaterThanEqual(BigDecimal amount);
+    List<ServiceBookingDTO.GetDto> findByCreatedBetween(LocalDateTime start, LocalDateTime end);
 }

@@ -4,14 +4,13 @@ import aptech.vn.backend.dto.UserRoleDTO;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public interface UserRoleService {
-    List<UserRoleDTO> findAll();
-    Optional<UserRoleDTO> findById(Long id);
-    UserRoleDTO save(UserRoleDTO userRoleDTO);
+    List<UserRoleDTO.GetDto> findAll();
+    Optional<UserRoleDTO.GetDto> findById(Long id);
+    UserRoleDTO.GetDto saveOrUpdate(UserRoleDTO.SaveDto userRoleDTO);
     void deleteById(Long id);
-    List<UserRoleDTO> findByUserId(Long userId);
-    List<UserRoleDTO> findByRoleId(Long roleId);
-    Optional<UserRoleDTO> findByUserIdAndRoleId(Long userId, Long roleId);
+    List<UserRoleDTO.GetDto> findByUserId(Long userId);
+    List<UserRoleDTO.GetDto> findByRoleId(Long roleId);
+    Optional<UserRoleDTO.GetDto> findByUserIdAndRoleId(Long userId, Long roleId);
 }

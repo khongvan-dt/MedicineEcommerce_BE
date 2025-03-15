@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DoctorProfileService {
-    List<DoctorProfileDTO> findAll();
-    Optional<DoctorProfileDTO> findById(Long id);
-    DoctorProfileDTO save(DoctorProfileDTO doctorProfileDTO);
+    List<DoctorProfileDTO.GetDto> findAll();
+    Optional<DoctorProfileDTO.GetDto> findById(Long id);
+    DoctorProfileDTO.GetDto saveOrUpdate(DoctorProfileDTO.SaveDto doctorProfileDTO);
     void deleteById(Long id);
-    Optional<DoctorProfileDTO> findByUserId(Long userId);
-    List<DoctorProfileDTO> findBySpecializationContaining(String specialization);
-    List<DoctorProfileDTO> findByWorkplaceContaining(String workplace);
-    List<DoctorProfileDTO> findByAccountBalanceGreaterThanEqual(BigDecimal amount);
+    Optional<DoctorProfileDTO.GetDto> findByUserId(Long userId);
+    List<DoctorProfileDTO.GetDto> findBySpecializationContaining(String specialization);
+    List<DoctorProfileDTO.GetDto> findByWorkplaceContaining(String workplace);
+    List<DoctorProfileDTO.GetDto> findByAccountBalanceGreaterThanEqual(BigDecimal amount);
 }

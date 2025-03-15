@@ -6,17 +6,17 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ReviewService {
-    List<ReviewDTO> findAll();
-    Optional<ReviewDTO> findById(Long id);
-    ReviewDTO save(ReviewDTO reviewDTO);
+    List<ReviewDTO.GetDto> findAll();
+    Optional<ReviewDTO.GetDto> findById(Long id);
+    ReviewDTO.GetDto saveOrUpdate(ReviewDTO.SaveDto reviewDTO);
     void deleteById(Long id);
-    List<ReviewDTO> findByUserId(Long userId);
-    List<ReviewDTO> findByRating(Integer rating);
-    List<ReviewDTO> findByRatingGreaterThanEqual(Integer minRating);
-    List<ReviewDTO> findByDoctorId(Long doctorId);
-    List<ReviewDTO> findByMedicineId(Long medicineId);
-    List<ReviewDTO> findByServiceId(Long serviceId);
-    List<ReviewDTO> findByDoctorIdAndMinRating(Long doctorId, Integer minRating);
-    List<ReviewDTO> findByMedicineIdAndMinRating(Long medicineId, Integer minRating);
-    List<ReviewDTO> findByServiceIdAndMinRating(Long serviceId, Integer minRating);
+    List<ReviewDTO.GetDto> findByUserId(Long userId);
+    List<ReviewDTO.GetDto> findByRating(Integer rating);
+    List<ReviewDTO.GetDto> findByRatingGreaterThanEqual(Integer minRating);
+    List<ReviewDTO.GetDto> findByDoctorId(Long doctorId);
+    List<ReviewDTO.GetDto> findByMedicineId(Long medicineId);
+    List<ReviewDTO.GetDto> findByServiceId(Long serviceId);
+    List<ReviewDTO.GetDto> findByDoctorIdAndMinRating(Long doctorId, Integer minRating);
+    List<ReviewDTO.GetDto> findByMedicineIdAndMinRating(Long medicineId, Integer minRating);
+    List<ReviewDTO.GetDto> findByServiceIdAndMinRating(Long serviceId, Integer minRating);
 }

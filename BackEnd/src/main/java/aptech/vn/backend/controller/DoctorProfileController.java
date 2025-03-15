@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/doctor-profiles")
+@CrossOrigin("*")
 public class DoctorProfileController {
 
     private final DoctorProfileService doctorProfileService;
@@ -20,31 +20,22 @@ public class DoctorProfileController {
     }
 
     @GetMapping
-    public ResponseEntity<List<DoctorProfileDTO>> getAllDoctorProfiles() {
-        List<DoctorProfileDTO> doctorProfiles = doctorProfileService.findAll();
+    public ResponseEntity<List<DoctorProfileDTO.GetDto>> getAllDoctorProfiles() {
+        List<DoctorProfileDTO.GetDto> doctorProfiles = doctorProfileService.findAll();
         return ResponseEntity.ok(doctorProfiles);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DoctorProfileDTO> getDoctorProfileById(@PathVariable Long id) {
-        Optional<DoctorProfileDTO> doctorProfile = doctorProfileService.findById(id);
-        return doctorProfile.map(ResponseEntity::ok)
+    public ResponseEntity<DoctorProfileDTO.GetDto> getDoctorProfileById(@PathVariable Long id) {
+        return doctorProfileService.findById(id)
+                .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public ResponseEntity<DoctorProfileDTO> createDoctorProfile(@RequestBody DoctorProfileDTO doctorProfileDTO) {
-        DoctorProfileDTO savedDoctorProfile = doctorProfileService.save(doctorProfileDTO);
+    @PostMapping("/save")
+    public ResponseEntity<DoctorProfileDTO.GetDto> saveOrUpdateDoctorProfile(@RequestBody DoctorProfileDTO.SaveDto doctorProfileDTO) {
+        DoctorProfileDTO.GetDto savedDoctorProfile = doctorProfileService.saveOrUpdate(doctorProfileDTO);
         return ResponseEntity.ok(savedDoctorProfile);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<DoctorProfileDTO> updateDoctorProfile(@PathVariable Long id, @RequestBody DoctorProfileDTO doctorProfileDTO) {
-        if (!doctorProfileService.findById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        DoctorProfileDTO updatedDoctorProfile = doctorProfileService.save(doctorProfileDTO);
-        return ResponseEntity.ok(updatedDoctorProfile);
     }
 
     @DeleteMapping("/{id}")
@@ -57,26 +48,27 @@ public class DoctorProfileController {
     }
 
     @GetMapping("/search/user/{userId}")
-    public ResponseEntity<Optional<DoctorProfileDTO>> findByUserId(@PathVariable Long userId) {
-        Optional<DoctorProfileDTO> doctorProfile = doctorProfileService.findByUserId(userId);
-        return ResponseEntity.ok(doctorProfile);
+    public ResponseEntity<DoctorProfileDTO.GetDto> findByUserId(@PathVariable Long userId) {
+        return doctorProfileService.findByUserId(userId)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/search/specialization")
-    public ResponseEntity<List<DoctorProfileDTO>> findBySpecialization(@RequestParam String specialization) {
-        List<DoctorProfileDTO> doctorProfiles = doctorProfileService.findBySpecializationContaining(specialization);
+    public ResponseEntity<List<DoctorProfileDTO.GetDto>> findBySpecialization(@RequestParam String specialization) {
+        List<DoctorProfileDTO.GetDto> doctorProfiles = doctorProfileService.findBySpecializationContaining(specialization);
         return ResponseEntity.ok(doctorProfiles);
     }
 
     @GetMapping("/search/workplace")
-    public ResponseEntity<List<DoctorProfileDTO>> findByWorkplace(@RequestParam String workplace) {
-        List<DoctorProfileDTO> doctorProfiles = doctorProfileService.findByWorkplaceContaining(workplace);
+    public ResponseEntity<List<DoctorProfileDTO.GetDto>> findByWorkplace(@RequestParam String workplace) {
+        List<DoctorProfileDTO.GetDto> doctorProfiles = doctorProfileService.findByWorkplaceContaining(workplace);
         return ResponseEntity.ok(doctorProfiles);
     }
 
     @GetMapping("/search/account-balance")
-    public ResponseEntity<List<DoctorProfileDTO>> findByAccountBalanceGreaterThanEqual(@RequestParam BigDecimal amount) {
-        List<DoctorProfileDTO> doctorProfiles = doctorProfileService.findByAccountBalanceGreaterThanEqual(amount);
+    public ResponseEntity<List<DoctorProfileDTO.GetDto>> findByAccountBalanceGreaterThanEqual(@RequestParam BigDecimal amount) {
+        List<DoctorProfileDTO.GetDto> doctorProfiles = doctorProfileService.findByAccountBalanceGreaterThanEqual(amount);
         return ResponseEntity.ok(doctorProfiles);
     }
 }

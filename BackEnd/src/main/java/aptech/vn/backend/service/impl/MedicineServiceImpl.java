@@ -1,12 +1,15 @@
 package aptech.vn.backend.service.impl;
 
 import aptech.vn.backend.dto.MedicineDTO;
+import aptech.vn.backend.entity.Brand;
 import aptech.vn.backend.entity.Medicine;
 import aptech.vn.backend.mapper.MedicineMapper;
+import aptech.vn.backend.repository.BrandRepository;
 import aptech.vn.backend.repository.MedicineRepository;
 import aptech.vn.backend.service.MedicineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,11 +20,16 @@ import java.util.stream.Collectors;
 public class MedicineServiceImpl implements MedicineService {
 
     private final MedicineRepository medicineRepository;
+    private final BrandRepository brandRepository;
     private final MedicineMapper medicineMapper;
 
     @Autowired
-    public MedicineServiceImpl(MedicineRepository medicineRepository, MedicineMapper medicineMapper) {
+    public MedicineServiceImpl(
+            MedicineRepository medicineRepository,
+            BrandRepository brandRepository,
+            MedicineMapper medicineMapper) {
         this.medicineRepository = medicineRepository;
+        this.brandRepository = brandRepository;
         this.medicineMapper = medicineMapper;
     }
 
@@ -39,13 +47,44 @@ public class MedicineServiceImpl implements MedicineService {
     }
 
     @Override
-    public MedicineDTO.InsertDto save(MedicineDTO.InsertDto medicineDTO) {
-        Medicine medicine = medicineMapper.toEntity(medicineDTO);
+    @Transactional
+    public MedicineDTO.GetDto saveOrUpdate(MedicineDTO.SaveDto medicineDTO) {
+        Medicine medicine;
+
+        if (medicineDTO.getId() == null || medicineDTO.getId() == 0) {
+            // INSERT case
+            medicine = new Medicine();
+            medicine.setCreatedAt(LocalDateTime.now());
+            medicine.setUpdatedAt(LocalDateTime.now());
+        } else {
+            // UPDATE case
+            Optional<Medicine> existingMedicine = medicineRepository.findByIdAndDeletedAtIsNull(medicineDTO.getId());
+            if (existingMedicine.isEmpty()) {
+                throw new RuntimeException("Medicine not found with ID: " + medicineDTO.getId());
+            }
+            medicine = existingMedicine.get();
+            medicine.setUpdatedAt(LocalDateTime.now());
+        }
+
+        // Xử lý brand relationship nếu brandId được cung cấp
+        if (medicineDTO.getBrandId() != null) {
+            Brand brand = brandRepository.findById(medicineDTO.getBrandId())
+                    .orElseThrow(() -> new RuntimeException("Brand not found with ID: " + medicineDTO.getBrandId()));
+            medicine.setBrand(brand);
+        }
+
+        // Cập nhật các trường cơ bản
+        medicine.setCode(medicineDTO.getCode());
+        medicine.setName(medicineDTO.getName());
+        medicine.setOrigin(medicineDTO.getOrigin());
+        medicine.setManufacturer(medicineDTO.getManufacturer());
+
         Medicine savedMedicine = medicineRepository.save(medicine);
-        return medicineMapper.toInsertDto(savedMedicine);
+        return medicineMapper.toGetDto(savedMedicine);
     }
 
     @Override
+    @Transactional
     public void softDeleteByIds(List<Long> ids) {
         List<Medicine> medicines = medicineRepository.findAllById(ids);
         medicines.forEach(medicine -> medicine.setDeletedAt(LocalDateTime.now()));
@@ -74,7 +113,7 @@ public class MedicineServiceImpl implements MedicineService {
 
     @Override
     public List<MedicineDTO.GetDto> findByBrandId(Long brandId) {
-        return medicineRepository.findByBrandIdAndDeletedAtIsNull(brandId).stream()
+        return medicineRepository.findByBrand_IdAndDeletedAtIsNull(brandId).stream()
                 .map(medicineMapper::toGetDto)
                 .collect(Collectors.toList());
     }

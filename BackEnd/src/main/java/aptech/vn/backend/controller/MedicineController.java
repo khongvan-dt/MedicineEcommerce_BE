@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/medicines")
@@ -27,24 +26,18 @@ public class MedicineController {
 
     @GetMapping("/{id}")
     public ResponseEntity<MedicineDTO.GetDto> getMedicineById(@PathVariable Long id) {
-        Optional<MedicineDTO.GetDto> medicine = medicineService.findById(id);
-        return medicine.map(ResponseEntity::ok)
+        return medicineService.findById(id)
+                .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public ResponseEntity<ApiResponse> createMedicine(@RequestBody MedicineDTO.InsertDto medicineDTO) {
-        MedicineDTO.InsertDto savedMedicine = medicineService.save(medicineDTO);
-        return ResponseEntity.ok(new ApiResponse(true, "Thêm thuốc thành công!", savedMedicine));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse> updateMedicine(@PathVariable Long id, @RequestBody MedicineDTO.InsertDto medicineDTO) {
-        if (!medicineService.findById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        MedicineDTO.InsertDto updatedMedicine = medicineService.save(medicineDTO);
-        return ResponseEntity.ok(new ApiResponse(true, "Cập nhật thuốc thành công!", updatedMedicine));
+    @PostMapping("/save")
+    public ResponseEntity<ApiResponse> saveOrUpdateMedicine(@RequestBody MedicineDTO.SaveDto medicineDTO) {
+        MedicineDTO.GetDto savedMedicine = medicineService.saveOrUpdate(medicineDTO);
+        return ResponseEntity.ok(new ApiResponse(true,
+                medicineDTO.getId() == null || medicineDTO.getId() == 0 ?
+                        "Thêm thuốc thành công!" : "Cập nhật thuốc thành công!",
+                savedMedicine));
     }
 
     @PostMapping("/delete")
@@ -55,13 +48,13 @@ public class MedicineController {
 
     @GetMapping("/by-code")
     public ResponseEntity<MedicineDTO.GetDto> getMedicineByCode(@RequestParam String code) {
-        Optional<MedicineDTO.GetDto> medicine = medicineService.findByCode(code);
-        return medicine.map(ResponseEntity::ok)
+        return medicineService.findByCode(code)
+                .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/by-name")
     public ResponseEntity<List<MedicineDTO.GetDto>> getMedicineByName(@RequestParam String name) {
-        return ResponseEntity.ok(medicineService.findByName(name));
+        return ResponseEntity.ok(medicineService.findByNameContaining(name));
     }
 }

@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/vouchers")
+@CrossOrigin("*")
 public class VoucherController {
 
     private final VoucherService voucherService;
@@ -20,31 +20,22 @@ public class VoucherController {
     }
 
     @GetMapping
-    public ResponseEntity<List<VoucherDTO>> getAllVouchers() {
-        List<VoucherDTO> vouchers = voucherService.findAll();
+    public ResponseEntity<List<VoucherDTO.GetDto>> getAllVouchers() {
+        List<VoucherDTO.GetDto> vouchers = voucherService.findAll();
         return ResponseEntity.ok(vouchers);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<VoucherDTO> getVoucherById(@PathVariable Long id) {
-        Optional<VoucherDTO> voucher = voucherService.findById(id);
-        return voucher.map(ResponseEntity::ok)
+    public ResponseEntity<VoucherDTO.GetDto> getVoucherById(@PathVariable Long id) {
+        return voucherService.findById(id)
+                .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public ResponseEntity<VoucherDTO> createVoucher(@RequestBody VoucherDTO voucherDTO) {
-        VoucherDTO savedVoucher = voucherService.save(voucherDTO);
+    @PostMapping("/save")
+    public ResponseEntity<VoucherDTO.GetDto> saveOrUpdateVoucher(@RequestBody VoucherDTO.SaveDto voucherDTO) {
+        VoucherDTO.GetDto savedVoucher = voucherService.saveOrUpdate(voucherDTO);
         return ResponseEntity.ok(savedVoucher);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<VoucherDTO> updateVoucher(@PathVariable Long id, @RequestBody VoucherDTO voucherDTO) {
-        if (!voucherService.findById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        VoucherDTO updatedVoucher = voucherService.save(voucherDTO);
-        return ResponseEntity.ok(updatedVoucher);
     }
 
     @DeleteMapping("/{id}")
@@ -57,34 +48,34 @@ public class VoucherController {
     }
 
     @GetMapping("/by-code")
-    public ResponseEntity<VoucherDTO> getVoucherByCode(@RequestParam String code) {
-        Optional<VoucherDTO> voucher = voucherService.findByCode(code);
-        return voucher.map(ResponseEntity::ok)
+    public ResponseEntity<VoucherDTO.GetDto> getVoucherByCode(@RequestParam String code) {
+        return voucherService.findByCode(code)
+                .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/by-stock")
-    public ResponseEntity<List<VoucherDTO>> getVouchersByStock(@RequestParam Integer minStock) {
+    public ResponseEntity<List<VoucherDTO.GetDto>> getVouchersByStock(@RequestParam Integer minStock) {
         return ResponseEntity.ok(voucherService.findByStockGreaterThan(minStock));
     }
 
     @GetMapping("/by-percentage")
-    public ResponseEntity<List<VoucherDTO>> getVouchersByPercentage(@RequestParam Double percentage) {
+    public ResponseEntity<List<VoucherDTO.GetDto>> getVouchersByPercentage(@RequestParam Double percentage) {
         return ResponseEntity.ok(voucherService.findByVoucherPercentageGreaterThanEqual(percentage));
     }
 
     @GetMapping("/active")
-    public ResponseEntity<List<VoucherDTO>> getActiveVouchers() {
+    public ResponseEntity<List<VoucherDTO.GetDto>> getActiveVouchers() {
         return ResponseEntity.ok(voucherService.findActive(LocalDateTime.now()));
     }
 
     @GetMapping("/expired")
-    public ResponseEntity<List<VoucherDTO>> getExpiredVouchers() {
+    public ResponseEntity<List<VoucherDTO.GetDto>> getExpiredVouchers() {
         return ResponseEntity.ok(voucherService.findExpired(LocalDateTime.now()));
     }
 
     @GetMapping("/never-expires")
-    public ResponseEntity<List<VoucherDTO>> getNeverExpiresVouchers() {
+    public ResponseEntity<List<VoucherDTO.GetDto>> getNeverExpiresVouchers() {
         return ResponseEntity.ok(voucherService.findNeverExpires());
     }
 }

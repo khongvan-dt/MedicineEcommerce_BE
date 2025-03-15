@@ -11,7 +11,8 @@ public class MedicineDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class InsertDto {
+    public static class SaveDto {
+        private Long id;
         private String code;
         private String name;
         private Long brandId;
@@ -23,10 +24,12 @@ public class MedicineDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class GetDto {
-        public long id;
+        private Long id;
         private String code;
         private String name;
         private String origin;
         private String manufacturer;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
     }
 }

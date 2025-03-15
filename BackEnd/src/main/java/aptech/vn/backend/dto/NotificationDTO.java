@@ -7,12 +7,25 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class NotificationDTO {
-    private Long id;
-    private Long userId;
-    private String message;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetDto {
+        private Long id;
+        private Long userId;
+        private String message;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SaveDto {
+        private Long id;
+        private Long userId;
+        private String message;
+    }
 }

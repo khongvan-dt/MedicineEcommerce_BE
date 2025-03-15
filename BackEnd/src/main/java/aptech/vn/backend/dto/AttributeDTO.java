@@ -9,15 +9,31 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class AttributeDTO {
-    private Long id;
-    private String name;
-    private BigDecimal priceIn;
-    private BigDecimal priceOut;
-    private Integer stock;
-    private LocalDate expiryDate;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetDto {
+        private Long id;
+        private String name;
+        private BigDecimal priceIn;
+        private BigDecimal priceOut;
+        private Integer stock;
+        private LocalDate expiryDate;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+    }
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SaveDto {
+        private Long id;
+        private String name;
+        private BigDecimal priceIn;
+        private BigDecimal priceOut;
+        private Integer stock;
+        private LocalDate expiryDate;
+
+    }
+
 }

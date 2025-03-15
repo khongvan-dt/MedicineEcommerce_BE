@@ -5,11 +5,10 @@ import aptech.vn.backend.entity.Service;
 import aptech.vn.backend.mapper.ServiceMapper;
 import aptech.vn.backend.repository.ServiceRepository;
 import aptech.vn.backend.service.ServiceService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,7 +16,6 @@ import java.util.stream.Collectors;
 @org.springframework.stereotype.Service
 public class ServiceServiceImpl implements ServiceService {
     private final ServiceMapper serviceMapper;
-
     private final ServiceRepository serviceRepository;
 
     public ServiceServiceImpl(ServiceRepository serviceRepository, ServiceMapper serviceMapper) {
@@ -26,23 +24,46 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public List<ServiceDTO> findAll() {
+    public List<ServiceDTO.GetDto> findAll() {
         return serviceRepository.findAll()
                 .stream()
-                .map(serviceMapper::toDto)
+                .map(serviceMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<ServiceDTO> findById(Long id) {
-        return serviceRepository.findById(id).map(serviceMapper::toDto);
+    public Optional<ServiceDTO.GetDto> findById(Long id) {
+        return serviceRepository.findById(id)
+                .map(serviceMapper::toGetDto);
     }
 
     @Override
-    public ServiceDTO save(ServiceDTO serviceDTO) {
-        Service service = serviceMapper.toEntity(serviceDTO);
-        serviceRepository.save(service);
-        return serviceMapper.toDto(service);
+    @Transactional
+    public ServiceDTO.GetDto saveOrUpdate(ServiceDTO.SaveDto serviceDTO) {
+        Service service;
+
+        if (serviceDTO.getId() == null || serviceDTO.getId() == 0) {
+            // INSERT case
+            service = new Service();
+            service.setCreatedAt(LocalDateTime.now());
+            service.setUpdatedAt(LocalDateTime.now());
+        } else {
+            // UPDATE case
+            Optional<Service> existingService = serviceRepository.findById(serviceDTO.getId());
+            if (existingService.isEmpty()) {
+                throw new RuntimeException("Service not found with ID: " + serviceDTO.getId());
+            }
+            service = existingService.get();
+            service.setUpdatedAt(LocalDateTime.now());
+        }
+
+        // Cập nhật các trường
+        service.setName(serviceDTO.getName());
+        service.setPrice(serviceDTO.getPrice());
+        service.setDescription(serviceDTO.getDescription());
+
+        Service savedService = serviceRepository.save(service);
+        return serviceMapper.toGetDto(savedService);
     }
 
     @Override
@@ -51,42 +72,42 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public List<ServiceDTO> findByName(String name) {
+    public List<ServiceDTO.GetDto> findByName(String name) {
         return serviceRepository.findByName(name)
                 .stream()
-                .map(serviceMapper::toDto)
+                .map(serviceMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ServiceDTO> findByNameContaining(String namePattern) {
+    public List<ServiceDTO.GetDto> findByNameContaining(String namePattern) {
         return serviceRepository.findByNameContaining(namePattern)
                 .stream()
-                .map(serviceMapper::toDto)
+                .map(serviceMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ServiceDTO> findByPriceLessThanEqual(BigDecimal maxPrice) {
+    public List<ServiceDTO.GetDto> findByPriceLessThanEqual(BigDecimal maxPrice) {
         return serviceRepository.findByPriceLessThanEqual(maxPrice)
                 .stream()
-                .map(serviceMapper::toDto)
+                .map(serviceMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ServiceDTO> findByPriceGreaterThanEqual(BigDecimal minPrice) {
+    public List<ServiceDTO.GetDto> findByPriceGreaterThanEqual(BigDecimal minPrice) {
         return serviceRepository.findByPriceGreaterThanEqual(minPrice)
                 .stream()
-                .map(serviceMapper::toDto)
+                .map(serviceMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ServiceDTO> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice) {
+    public List<ServiceDTO.GetDto> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice) {
         return serviceRepository.findByPriceBetween(minPrice, maxPrice)
                 .stream()
-                .map(serviceMapper::toDto)
+                .map(serviceMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 }

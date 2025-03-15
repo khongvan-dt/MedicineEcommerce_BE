@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
-public class CategoryDTO {
+public class ServiceTypeDTO {
 
     @Data
     @NoArgsConstructor
@@ -15,7 +15,6 @@ public class CategoryDTO {
     public static class GetDto {
         private Long id;
         private String name;
-        private Long parentId;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
     }
@@ -26,6 +25,5 @@ public class CategoryDTO {
     public static class SaveDto {
         private Long id;
         private String name;
-        private Long parentId;
     }
 }

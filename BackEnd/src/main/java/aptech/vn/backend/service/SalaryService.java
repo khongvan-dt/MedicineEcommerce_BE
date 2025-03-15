@@ -8,16 +8,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-
 public interface SalaryService {
-    List<SalaryDTO> findAll();
-    Optional<SalaryDTO> findById(Long id);
-    SalaryDTO save(SalaryDTO salaryDTO);
+    List<SalaryDTO.GetDto> findAll();
+    Optional<SalaryDTO.GetDto> findById(Long id);
+    SalaryDTO.GetDto saveOrUpdate(SalaryDTO.SaveDto salaryDTO);
     void deleteById(Long id);
-    List<SalaryDTO> findByUserId(Long userId);
-    List<SalaryDTO> findByBankCode(String bankCode);
-    List<SalaryDTO> findByBankName(String bankName);
-    List<SalaryDTO> findByStatus(PaymentStatus status);
-    List<SalaryDTO> findByPriceGreaterThanEqual(BigDecimal amount);
-    List<SalaryDTO> findByCreatedBetween(LocalDateTime start, LocalDateTime end);
+    List<SalaryDTO.GetDto> findByUserId(Long userId);
+    List<SalaryDTO.GetDto> findByBankCode(String bankCode);
+    List<SalaryDTO.GetDto> findByBankName(String bankName);
+    List<SalaryDTO.GetDto> findByStatus(PaymentStatus status);
+    List<SalaryDTO.GetDto> findByPriceGreaterThanEqual(BigDecimal amount);
+    List<SalaryDTO.GetDto> findByCreatedBetween(LocalDateTime start, LocalDateTime end);
 }

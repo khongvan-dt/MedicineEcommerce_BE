@@ -7,10 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/medicine-media")
+@CrossOrigin("*")
 public class MedicineMediaController {
 
     private final MedicineMediaService medicineMediaService;
@@ -20,31 +20,22 @@ public class MedicineMediaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MedicineMediaDTO>> getAllMedicineMedia() {
-        List<MedicineMediaDTO> mediaList = medicineMediaService.findAll();
+    public ResponseEntity<List<MedicineMediaDTO.GetDto>> getAllMedicineMedia() {
+        List<MedicineMediaDTO.GetDto> mediaList = medicineMediaService.findAll();
         return ResponseEntity.ok(mediaList);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MedicineMediaDTO> getMedicineMediaById(@PathVariable Long id) {
-        Optional<MedicineMediaDTO> media = medicineMediaService.findById(id);
-        return media.map(ResponseEntity::ok)
+    public ResponseEntity<MedicineMediaDTO.GetDto> getMedicineMediaById(@PathVariable Long id) {
+        return medicineMediaService.findById(id)
+                .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public ResponseEntity<MedicineMediaDTO> createMedicineMedia(@RequestBody MedicineMediaDTO medicineMediaDTO) {
-        MedicineMediaDTO savedMedia = medicineMediaService.save(medicineMediaDTO);
+    @PostMapping("/save")
+    public ResponseEntity<MedicineMediaDTO.GetDto> saveOrUpdateMedicineMedia(@RequestBody MedicineMediaDTO.SaveDto medicineMediaDTO) {
+        MedicineMediaDTO.GetDto savedMedia = medicineMediaService.saveOrUpdate(medicineMediaDTO);
         return ResponseEntity.ok(savedMedia);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<MedicineMediaDTO> updateMedicineMedia(@PathVariable Long id, @RequestBody MedicineMediaDTO medicineMediaDTO) {
-        if (!medicineMediaService.findById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        MedicineMediaDTO updatedMedia = medicineMediaService.save(medicineMediaDTO);
-        return ResponseEntity.ok(updatedMedia);
     }
 
     @DeleteMapping("/{id}")
@@ -57,27 +48,29 @@ public class MedicineMediaController {
     }
 
     @GetMapping("/by-medicine/{medicineId}")
-    public ResponseEntity<List<MedicineMediaDTO>> getMediaByMedicineId(@PathVariable Long medicineId) {
-        List<MedicineMediaDTO> mediaList = medicineMediaService.findByMedicineId(medicineId);
+    public ResponseEntity<List<MedicineMediaDTO.GetDto>> getMediaByMedicineId(@PathVariable Long medicineId) {
+        List<MedicineMediaDTO.GetDto> mediaList = medicineMediaService.findByMedicineId(medicineId);
         return ResponseEntity.ok(mediaList);
     }
 
     @GetMapping("/by-media-type/{mediaType}")
-    public ResponseEntity<List<MedicineMediaDTO>> getMediaByType(@PathVariable MediaType mediaType) {
-        List<MedicineMediaDTO> mediaList = medicineMediaService.findByMediaType(mediaType);
+    public ResponseEntity<List<MedicineMediaDTO.GetDto>> getMediaByType(@PathVariable MediaType mediaType) {
+        List<MedicineMediaDTO.GetDto> mediaList = medicineMediaService.findByMediaType(mediaType);
         return ResponseEntity.ok(mediaList);
     }
 
     @GetMapping("/by-medicine-and-media-type")
-    public ResponseEntity<List<MedicineMediaDTO>> getMediaByMedicineAndType(@RequestParam Long medicineId, @RequestParam MediaType mediaType) {
-        List<MedicineMediaDTO> mediaList = medicineMediaService.findByMedicineIdAndMediaType(medicineId, mediaType);
+    public ResponseEntity<List<MedicineMediaDTO.GetDto>> getMediaByMedicineAndType(
+            @RequestParam Long medicineId,
+            @RequestParam MediaType mediaType) {
+        List<MedicineMediaDTO.GetDto> mediaList = medicineMediaService.findByMedicineIdAndMediaType(medicineId, mediaType);
         return ResponseEntity.ok(mediaList);
     }
 
     @GetMapping("/main-image/{medicineId}")
-    public ResponseEntity<MedicineMediaDTO> getMainImageByMedicineId(@PathVariable Long medicineId) {
-        Optional<MedicineMediaDTO> mainImage = medicineMediaService.findMainImageByMedicineId(medicineId);
-        return mainImage.map(ResponseEntity::ok)
+    public ResponseEntity<MedicineMediaDTO.GetDto> getMainImageByMedicineId(@PathVariable Long medicineId) {
+        return medicineMediaService.findMainImageByMedicineId(medicineId)
+                .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

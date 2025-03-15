@@ -7,7 +7,7 @@ import java.util.Optional;
 public interface MedicineService {
     List<MedicineDTO.GetDto> findAll();
     Optional<MedicineDTO.GetDto> findById(Long id);
-    MedicineDTO.InsertDto save(MedicineDTO.InsertDto medicineDTO);
+    MedicineDTO.GetDto saveOrUpdate(MedicineDTO.SaveDto medicineDTO);
     void softDeleteByIds(List<Long> ids);
     Optional<MedicineDTO.GetDto> findByCode(String code);
     List<MedicineDTO.GetDto> findByName(String name);

@@ -1,14 +1,13 @@
 package aptech.vn.backend.service.impl;
 
 import aptech.vn.backend.dto.ServiceBookingDTO;
-import aptech.vn.backend.entity.BookingStatus;
-import aptech.vn.backend.entity.PaymentMethod;
-import aptech.vn.backend.entity.ServiceBooking;
+import aptech.vn.backend.entity.*;
+import aptech.vn.backend.entity.PatientProfile;
 import aptech.vn.backend.mapper.ServiceBookingMapper;
+import aptech.vn.backend.repository.PatientProfileRepository;
 import aptech.vn.backend.repository.ServiceBookingRepository;
+import aptech.vn.backend.repository.ServiceRepository;
 import aptech.vn.backend.service.ServiceBookingService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,30 +21,71 @@ import java.util.stream.Collectors;
 public class ServiceBookingServiceImpl implements ServiceBookingService {
     private final ServiceBookingMapper serviceBookingMapper;
     private final ServiceBookingRepository serviceBookingRepository;
+    private final ServiceRepository serviceRepository;
+    private final PatientProfileRepository patientRepository;
 
-    public ServiceBookingServiceImpl(ServiceBookingRepository serviceBookingRepository, ServiceBookingMapper serviceBookingMapper) {
+    public ServiceBookingServiceImpl(
+            ServiceBookingRepository serviceBookingRepository,
+            ServiceRepository serviceRepository,
+            PatientProfileRepository patientRepository,
+            ServiceBookingMapper serviceBookingMapper) {
         this.serviceBookingRepository = serviceBookingRepository;
+        this.serviceRepository = serviceRepository;
+        this.patientRepository = patientRepository;
         this.serviceBookingMapper = serviceBookingMapper;
     }
 
     @Override
-    public List<ServiceBookingDTO> findAll() {
+    public List<ServiceBookingDTO.GetDto> findAll() {
         return serviceBookingRepository.findAll()
                 .stream()
-                .map(serviceBookingMapper::toDto)
+                .map(serviceBookingMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<ServiceBookingDTO> findById(Long id) {
-        return serviceBookingRepository.findById(id).map(serviceBookingMapper::toDto);
+    public Optional<ServiceBookingDTO.GetDto> findById(Long id) {
+        return serviceBookingRepository.findById(id)
+                .map(serviceBookingMapper::toGetDto);
     }
 
     @Override
-    public ServiceBookingDTO save(ServiceBookingDTO serviceBookingDTO) {
-        ServiceBooking serviceBooking = serviceBookingMapper.toEntity(serviceBookingDTO);
-        serviceBookingRepository.save(serviceBooking);
-        return serviceBookingMapper.toDto(serviceBooking);
+    @Transactional
+    public ServiceBookingDTO.GetDto saveOrUpdate(ServiceBookingDTO.SaveDto serviceBookingDTO) {
+        ServiceBooking serviceBooking;
+
+        if (serviceBookingDTO.getId() == null || serviceBookingDTO.getId() == 0) {
+            // INSERT case
+            serviceBooking = new ServiceBooking();
+            serviceBooking.setCreatedAt(LocalDateTime.now());
+            serviceBooking.setUpdatedAt(LocalDateTime.now());
+        } else {
+            // UPDATE case
+            Optional<ServiceBooking> existingBooking = serviceBookingRepository.findById(serviceBookingDTO.getId());
+            if (existingBooking.isEmpty()) {
+                throw new RuntimeException("Service booking not found with ID: " + serviceBookingDTO.getId());
+            }
+            serviceBooking = existingBooking.get();
+            serviceBooking.setUpdatedAt(LocalDateTime.now());
+        }
+
+        // Xử lý service relationship
+        aptech.vn.backend.entity.Service service = serviceRepository.findById(serviceBookingDTO.getServiceId())
+                .orElseThrow(() -> new RuntimeException("Service not found with ID: " + serviceBookingDTO.getServiceId()));
+        serviceBooking.setService(service);
+
+        // Xử lý patient relationship
+        PatientProfile patient = patientRepository.findById(serviceBookingDTO.getPatientId())
+                .orElseThrow(() -> new RuntimeException("Patient not found with ID: " + serviceBookingDTO.getPatientId()));
+        serviceBooking.setPatient(patient);
+
+        // Cập nhật các trường khác
+        serviceBooking.setTotalPrice(serviceBookingDTO.getTotalPrice());
+        serviceBooking.setPaymentMethod(serviceBookingDTO.getPaymentMethod());
+        serviceBooking.setStatus(serviceBookingDTO.getStatus());
+
+        ServiceBooking savedBooking = serviceBookingRepository.save(serviceBooking);
+        return serviceBookingMapper.toGetDto(savedBooking);
     }
 
     @Override
@@ -54,50 +94,50 @@ public class ServiceBookingServiceImpl implements ServiceBookingService {
     }
 
     @Override
-    public List<ServiceBookingDTO> findByServiceId(Long serviceId) {
+    public List<ServiceBookingDTO.GetDto> findByServiceId(Long serviceId) {
         return serviceBookingRepository.findByService_Id(serviceId)
                 .stream()
-                .map(serviceBookingMapper::toDto)
+                .map(serviceBookingMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ServiceBookingDTO> findByPatientId(Long patientId) {
+    public List<ServiceBookingDTO.GetDto> findByPatientId(Long patientId) {
         return serviceBookingRepository.findByPatient_Id(patientId)
                 .stream()
-                .map(serviceBookingMapper::toDto)
+                .map(serviceBookingMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ServiceBookingDTO> findByStatus(BookingStatus status) {
+    public List<ServiceBookingDTO.GetDto> findByStatus(BookingStatus status) {
         return serviceBookingRepository.findByStatus(status)
                 .stream()
-                .map(serviceBookingMapper::toDto)
+                .map(serviceBookingMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ServiceBookingDTO> findByPaymentMethod(PaymentMethod paymentMethod) {
+    public List<ServiceBookingDTO.GetDto> findByPaymentMethod(PaymentMethod paymentMethod) {
         return serviceBookingRepository.findByPaymentMethod(paymentMethod)
                 .stream()
-                .map(serviceBookingMapper::toDto)
+                .map(serviceBookingMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ServiceBookingDTO> findByTotalPriceGreaterThanEqual(BigDecimal amount) {
+    public List<ServiceBookingDTO.GetDto> findByTotalPriceGreaterThanEqual(BigDecimal amount) {
         return serviceBookingRepository.findByTotalPriceGreaterThanEqual(amount)
                 .stream()
-                .map(serviceBookingMapper::toDto)
+                .map(serviceBookingMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ServiceBookingDTO> findByCreatedBetween(LocalDateTime start, LocalDateTime end) {
+    public List<ServiceBookingDTO.GetDto> findByCreatedBetween(LocalDateTime start, LocalDateTime end) {
         return serviceBookingRepository.findByCreatedAtBetween(start, end)
                 .stream()
-                .map(serviceBookingMapper::toDto)
+                .map(serviceBookingMapper::toGetDto)
                 .collect(Collectors.toList());
     }
 }

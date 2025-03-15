@@ -7,16 +7,33 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class ReviewDTO {
-    private Long id;
-    private Long userId;
-    private Integer rating;
-    private String comment;
-    private Long doctorId;
-    private Long medicineId;
-    private Long serviceId;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetDto {
+        private Long id;
+        private Long userId;
+        private Integer rating;
+        private String comment;
+        private Long doctorId;
+        private Long medicineId;
+        private Long serviceId;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SaveDto {
+        private Long id;
+        private Long userId;
+        private Integer rating;
+        private String comment;
+        private Long doctorId;
+        private Long medicineId;
+        private Long serviceId;
+    }
 }

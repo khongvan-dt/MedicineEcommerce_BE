@@ -9,20 +9,12 @@ import java.util.Optional;
 
 @Repository
 public interface MedicineRepository extends JpaRepository<Medicine, Long> {
-
     List<Medicine> findAllByDeletedAtIsNull();
-
     Optional<Medicine> findByIdAndDeletedAtIsNull(Long id);
-
     Optional<Medicine> findByCodeAndDeletedAtIsNull(String code);
-
     List<Medicine> findByNameAndDeletedAtIsNull(String name);
-
     List<Medicine> findByNameContainingAndDeletedAtIsNull(String namePattern);
-
-    List<Medicine> findByBrandIdAndDeletedAtIsNull(Long brandId);
-
+    List<Medicine> findByBrand_IdAndDeletedAtIsNull(Long brandId);
     List<Medicine> findByOriginAndDeletedAtIsNull(String origin);
-
     List<Medicine> findByManufacturerAndDeletedAtIsNull(String manufacturer);
 }

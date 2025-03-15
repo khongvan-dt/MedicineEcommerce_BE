@@ -9,15 +9,31 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class SalaryDTO {
-    private Long id;
-    private Long userId;
-    private String bankCode;
-    private String bankName;
-    private BigDecimal price;
-    private PaymentStatus status;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetDto {
+        private Long id;
+        private Long userId;
+        private String bankCode;
+        private String bankName;
+        private BigDecimal price;
+        private PaymentStatus status;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SaveDto {
+        private Long id;
+        private Long userId;
+        private String bankCode;
+        private String bankName;
+        private BigDecimal price;
+        private PaymentStatus status;
+    }
 }

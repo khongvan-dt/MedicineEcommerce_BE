@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AttributeService {
-    List<AttributeDTO> findAll();
-    Optional<AttributeDTO> findById(Long id);
-    AttributeDTO save(AttributeDTO attributeDTO);
+    List<AttributeDTO.GetDto> findAll();
+    Optional<AttributeDTO.GetDto> findById(Long id);
+    AttributeDTO.GetDto saveOrUpdate(AttributeDTO.SaveDto attributeDTO);
     void deleteById(Long id);
-    List<AttributeDTO> findByName(String name);
-    List<AttributeDTO> findByPriceInLessThanEqual(BigDecimal price);
-    List<AttributeDTO> findByPriceOutLessThanEqual(BigDecimal price);
-    List<AttributeDTO> findByStockGreaterThan(Integer stock);
-    List<AttributeDTO> findByExpiryDateBefore(LocalDate date);
+    List<AttributeDTO.GetDto> findByName(String name);
+    List<AttributeDTO.GetDto> findByPriceInLessThanEqual(BigDecimal price);
+    List<AttributeDTO.GetDto> findByPriceOutLessThanEqual(BigDecimal price);
+    List<AttributeDTO.GetDto> findByStockGreaterThan(Integer stock);
+    List<AttributeDTO.GetDto> findByExpiryDateBefore(LocalDate date);
 }

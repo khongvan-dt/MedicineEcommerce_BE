@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PatientProfileService {
-    List<PatientProfileDTO> findAll();
-    Optional<PatientProfileDTO> findById(Long id);
-    PatientProfileDTO save(PatientProfileDTO patientProfileDTO);
+    List<PatientProfileDTO.GetDto> findAll();
+    Optional<PatientProfileDTO.GetDto> findById(Long id);
+    PatientProfileDTO.GetDto saveOrUpdate(PatientProfileDTO.SaveDto patientProfileDTO);
     void deleteById(Long id);
-    Optional<PatientProfileDTO> findByUserId(Long userId);
-    List<PatientProfileDTO> findByBloodType(String bloodType);
-    List<PatientProfileDTO> findByMedicalHistoryContaining(String keyword);
-    List<PatientProfileDTO> findByAllergiesContaining(String keyword);
-    List<PatientProfileDTO> findByAccountBalanceGreaterThanEqual(BigDecimal amount);
+    Optional<PatientProfileDTO.GetDto> findByUserId(Long userId);
+    List<PatientProfileDTO.GetDto> findByBloodType(String bloodType);
+    List<PatientProfileDTO.GetDto> findByMedicalHistoryContaining(String keyword);
+    List<PatientProfileDTO.GetDto> findByAllergiesContaining(String keyword);
+    List<PatientProfileDTO.GetDto> findByAccountBalanceGreaterThanEqual(BigDecimal amount);
 }

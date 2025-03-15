@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/medicine-categories")
@@ -20,31 +19,22 @@ public class MedicineCategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MedicineCategoryDTO>> getAllMedicineCategories() {
-        List<MedicineCategoryDTO> categories = medicineCategoryService.findAll();
+    public ResponseEntity<List<MedicineCategoryDTO.GetDto>> getAllMedicineCategories() {
+        List<MedicineCategoryDTO.GetDto> categories = medicineCategoryService.findAll();
         return ResponseEntity.ok(categories);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MedicineCategoryDTO> getMedicineCategoryById(@PathVariable Long id) {
-        Optional<MedicineCategoryDTO> category = medicineCategoryService.findById(id);
-        return category.map(ResponseEntity::ok)
+    public ResponseEntity<MedicineCategoryDTO.GetDto> getMedicineCategoryById(@PathVariable Long id) {
+        return medicineCategoryService.findById(id)
+                .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public ResponseEntity<MedicineCategoryDTO> createMedicineCategory(@RequestBody MedicineCategoryDTO medicineCategoryDTO) {
-        MedicineCategoryDTO savedCategory = medicineCategoryService.save(medicineCategoryDTO);
+    @PostMapping("/save")
+    public ResponseEntity<MedicineCategoryDTO.GetDto> saveOrUpdateMedicineCategory(@RequestBody MedicineCategoryDTO.SaveDto medicineCategoryDTO) {
+        MedicineCategoryDTO.GetDto savedCategory = medicineCategoryService.saveOrUpdate(medicineCategoryDTO);
         return ResponseEntity.ok(savedCategory);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<MedicineCategoryDTO> updateMedicineCategory(@PathVariable Long id, @RequestBody MedicineCategoryDTO medicineCategoryDTO) {
-        if (!medicineCategoryService.findById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        MedicineCategoryDTO updatedCategory = medicineCategoryService.save(medicineCategoryDTO);
-        return ResponseEntity.ok(updatedCategory);
     }
 
     @DeleteMapping("/{id}")
@@ -57,21 +47,23 @@ public class MedicineCategoryController {
     }
 
     @GetMapping("/by-medicine/{medicineId}")
-    public ResponseEntity<List<MedicineCategoryDTO>> getByMedicineId(@PathVariable Long medicineId) {
-        List<MedicineCategoryDTO> categories = medicineCategoryService.findByMedicineId(medicineId);
+    public ResponseEntity<List<MedicineCategoryDTO.GetDto>> getByMedicineId(@PathVariable Long medicineId) {
+        List<MedicineCategoryDTO.GetDto> categories = medicineCategoryService.findByMedicineId(medicineId);
         return ResponseEntity.ok(categories);
     }
 
     @GetMapping("/by-category/{categoryId}")
-    public ResponseEntity<List<MedicineCategoryDTO>> getByCategoryId(@PathVariable Long categoryId) {
-        List<MedicineCategoryDTO> categories = medicineCategoryService.findByCategoryId(categoryId);
+    public ResponseEntity<List<MedicineCategoryDTO.GetDto>> getByCategoryId(@PathVariable Long categoryId) {
+        List<MedicineCategoryDTO.GetDto> categories = medicineCategoryService.findByCategoryId(categoryId);
         return ResponseEntity.ok(categories);
     }
 
     @GetMapping("/by-medicine-and-category")
-    public ResponseEntity<MedicineCategoryDTO> getByMedicineAndCategory(@RequestParam Long medicineId, @RequestParam Long categoryId) {
-        Optional<MedicineCategoryDTO> category = medicineCategoryService.findByMedicineIdAndCategoryId(medicineId, categoryId);
-        return category.map(ResponseEntity::ok)
+    public ResponseEntity<MedicineCategoryDTO.GetDto> getByMedicineAndCategory(
+            @RequestParam Long medicineId,
+            @RequestParam Long categoryId) {
+        return medicineCategoryService.findByMedicineIdAndCategoryId(medicineId, categoryId)
+                .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

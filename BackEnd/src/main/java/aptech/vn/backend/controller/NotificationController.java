@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/notifications")
+@CrossOrigin("*")
 public class NotificationController {
 
     private final NotificationService notificationService;
@@ -20,31 +20,22 @@ public class NotificationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<NotificationDTO>> getAllNotifications() {
-        List<NotificationDTO> notifications = notificationService.findAll();
+    public ResponseEntity<List<NotificationDTO.GetDto>> getAllNotifications() {
+        List<NotificationDTO.GetDto> notifications = notificationService.findAll();
         return ResponseEntity.ok(notifications);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<NotificationDTO> getNotificationById(@PathVariable Long id) {
-        Optional<NotificationDTO> notification = notificationService.findById(id);
-        return notification.map(ResponseEntity::ok)
+    public ResponseEntity<NotificationDTO.GetDto> getNotificationById(@PathVariable Long id) {
+        return notificationService.findById(id)
+                .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public ResponseEntity<NotificationDTO> createNotification(@RequestBody NotificationDTO notificationDTO) {
-        NotificationDTO savedNotification = notificationService.save(notificationDTO);
+    @PostMapping("/save")
+    public ResponseEntity<NotificationDTO.GetDto> saveOrUpdateNotification(@RequestBody NotificationDTO.SaveDto notificationDTO) {
+        NotificationDTO.GetDto savedNotification = notificationService.saveOrUpdate(notificationDTO);
         return ResponseEntity.ok(savedNotification);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<NotificationDTO> updateNotification(@PathVariable Long id, @RequestBody NotificationDTO notificationDTO) {
-        if (!notificationService.findById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        NotificationDTO updatedNotification = notificationService.save(notificationDTO);
-        return ResponseEntity.ok(updatedNotification);
     }
 
     @DeleteMapping("/{id}")
@@ -57,17 +48,17 @@ public class NotificationController {
     }
 
     @GetMapping("/by-user/{userId}")
-    public ResponseEntity<List<NotificationDTO>> getNotificationsByUserId(@PathVariable Long userId) {
-        List<NotificationDTO> notifications = notificationService.findByUserId(userId);
+    public ResponseEntity<List<NotificationDTO.GetDto>> getNotificationsByUserId(@PathVariable Long userId) {
+        List<NotificationDTO.GetDto> notifications = notificationService.findByUserId(userId);
         return ResponseEntity.ok(notifications);
     }
 
     @GetMapping("/by-user-and-date")
-    public ResponseEntity<List<NotificationDTO>> getNotificationsByUserAndDate(
+    public ResponseEntity<List<NotificationDTO.GetDto>> getNotificationsByUserAndDate(
             @RequestParam Long userId,
             @RequestParam String date) {
         LocalDateTime dateTime = LocalDateTime.parse(date);
-        List<NotificationDTO> notifications = notificationService.findByUserIdAndCreatedAfter(userId, dateTime);
+        List<NotificationDTO.GetDto> notifications = notificationService.findByUserIdAndCreatedAfter(userId, dateTime);
         return ResponseEntity.ok(notifications);
     }
 }
