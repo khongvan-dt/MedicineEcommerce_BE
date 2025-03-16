@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ServiceTypeService {
-    List<ServiceTypeDTO.GetDto> findAll();
-    Optional<ServiceTypeDTO.GetDto> findById(Long id);
-    ServiceTypeDTO.GetDto saveOrUpdate(ServiceTypeDTO.SaveDto serviceTypeDTO);
+    List<ServiceTypeDTO.GetServiceTypeDto> findAll();
+    Optional<ServiceTypeDTO.GetServiceTypeDto> findById(Long id);
+    ServiceTypeDTO.GetServiceTypeDto saveOrUpdate(ServiceTypeDTO.SaveServiceTypeDto serviceTypeDTO);
     void deleteById(Long id);
-    Optional<ServiceTypeDTO.GetDto> findByName(String name);
-    Page<ServiceTypeDTO.GetDto> findAll(Pageable pageable);
-    List<ServiceTypeDTO.GetDto> findByNameContaining(String namePattern);
+    Optional<ServiceTypeDTO.GetServiceTypeDto> findByName(String name);
+    Page<ServiceTypeDTO.GetServiceTypeDto> findAll(Pageable pageable);
+    List<ServiceTypeDTO.GetServiceTypeDto> findByNameContaining(String namePattern);
 }

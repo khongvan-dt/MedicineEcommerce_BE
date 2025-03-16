@@ -28,21 +28,21 @@ public class MedicineBatchServiceImpl implements MedicineBatchService {
     }
 
     @Override
-    public List<MedicineBatchDTO.GetDto> findAll() {
+    public List<MedicineBatchDTO.GetMedicineBatchDto> findAll() {
         return medicineBatchRepository.findAll().stream()
-                .map(medicineBatchMapper::toGetDto)
+                .map(medicineBatchMapper::toGetMedicineBatchDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<MedicineBatchDTO.GetDto> findById(Long id) {
+    public Optional<MedicineBatchDTO.GetMedicineBatchDto> findById(Long id) {
         return medicineBatchRepository.findById(id)
-                .map(medicineBatchMapper::toGetDto);
+                .map(medicineBatchMapper::toGetMedicineBatchDto);
     }
 
     @Override
     @Transactional
-    public MedicineBatchDTO.GetDto saveOrUpdate(MedicineBatchDTO.SaveDto medicineBatchDTO) {
+    public MedicineBatchDTO.GetMedicineBatchDto saveOrUpdate(MedicineBatchDTO.SaveMedicineBatchDto medicineBatchDTO) {
         MedicineBatch medicineBatch;
 
         if (medicineBatchDTO.getId() == null || medicineBatchDTO.getId() == 0) {
@@ -67,7 +67,7 @@ public class MedicineBatchServiceImpl implements MedicineBatchService {
         medicineBatch.setExpiryDate(medicineBatchDTO.getExpiryDate());
 
         MedicineBatch savedMedicineBatch = medicineBatchRepository.save(medicineBatch);
-        return medicineBatchMapper.toGetDto(savedMedicineBatch);
+        return medicineBatchMapper.toGetMedicineBatchDto(savedMedicineBatch);
     }
 
     @Override
@@ -76,29 +76,29 @@ public class MedicineBatchServiceImpl implements MedicineBatchService {
     }
 
     @Override
-    public Optional<MedicineBatchDTO.GetDto> findByBatchName(String batchName) {
+    public Optional<MedicineBatchDTO.GetMedicineBatchDto> findByBatchName(String batchName) {
         return medicineBatchRepository.findByBatchName(batchName)
-                .map(medicineBatchMapper::toGetDto);
+                .map(medicineBatchMapper::toGetMedicineBatchDto);
     }
 
     @Override
-    public List<MedicineBatchDTO.GetDto> findByMedicineCode(String medicineCode) {
+    public List<MedicineBatchDTO.GetMedicineBatchDto> findByMedicineCode(String medicineCode) {
         return medicineBatchRepository.findByMedicineCode(medicineCode).stream()
-                .map(medicineBatchMapper::toGetDto)
+                .map(medicineBatchMapper::toGetMedicineBatchDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<MedicineBatchDTO.GetDto> findByQuantityGreaterThan(Integer quantity) {
+    public List<MedicineBatchDTO.GetMedicineBatchDto> findByQuantityGreaterThan(Integer quantity) {
         return medicineBatchRepository.findByQuantityGreaterThan(quantity).stream()
-                .map(medicineBatchMapper::toGetDto)
+                .map(medicineBatchMapper::toGetMedicineBatchDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<MedicineBatchDTO.GetDto> findByExpiryDateBefore(LocalDate date) {
+    public List<MedicineBatchDTO.GetMedicineBatchDto> findByExpiryDateBefore(LocalDate date) {
         return medicineBatchRepository.findByExpiryDateBefore(date).stream()
-                .map(medicineBatchMapper::toGetDto)
+                .map(medicineBatchMapper::toGetMedicineBatchDto)
                 .collect(Collectors.toList());
     }
 }

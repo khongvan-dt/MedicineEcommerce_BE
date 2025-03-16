@@ -19,21 +19,21 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoryDTO.GetDto>> getAllCategories() {
-        List<CategoryDTO.GetDto> categories = categoryService.findAll();
+    public ResponseEntity<List<CategoryDTO.GetCategoryDto>> getAllCategories() {
+        List<CategoryDTO.GetCategoryDto> categories = categoryService.findAll();
         return ResponseEntity.ok(categories);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryDTO.GetDto> getCategoryById(@PathVariable Long id) {
+    public ResponseEntity<CategoryDTO.GetCategoryDto> getCategoryById(@PathVariable Long id) {
         return categoryService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/save")
-    public ResponseEntity<CategoryDTO.GetDto> saveOrUpdateCategory(@RequestBody CategoryDTO.SaveDto categoryDTO) {
-        CategoryDTO.GetDto savedCategory = categoryService.saveOrUpdate(categoryDTO);
+    public ResponseEntity<CategoryDTO.GetCategoryDto> saveOrUpdateCategory(@RequestBody CategoryDTO.SaveCategoryDto categoryDTO) {
+        CategoryDTO.GetCategoryDto savedCategory = categoryService.saveOrUpdate(categoryDTO);
         return ResponseEntity.ok(savedCategory);
     }
 
@@ -47,20 +47,20 @@ public class CategoryController {
     }
 
     @GetMapping("/search/name")
-    public ResponseEntity<List<CategoryDTO.GetDto>> findByName(@RequestParam String name) {
-        List<CategoryDTO.GetDto> categories = categoryService.findByName(name);
+    public ResponseEntity<List<CategoryDTO.GetCategoryDto>> findByName(@RequestParam String name) {
+        List<CategoryDTO.GetCategoryDto> categories = categoryService.findByName(name);
         return ResponseEntity.ok(categories);
     }
 
     @GetMapping("/search/parent")
-    public ResponseEntity<List<CategoryDTO.GetDto>> findByParentId(@RequestParam Long parentId) {
-        List<CategoryDTO.GetDto> categories = categoryService.findByParentId(parentId);
+    public ResponseEntity<List<CategoryDTO.GetCategoryDto>> findByParentId(@RequestParam Long parentId) {
+        List<CategoryDTO.GetCategoryDto> categories = categoryService.findByParentId(parentId);
         return ResponseEntity.ok(categories);
     }
 
     @GetMapping("/roots")
-    public ResponseEntity<List<CategoryDTO.GetDto>> findRootCategories() {
-        List<CategoryDTO.GetDto> categories = categoryService.findRootCategories();
+    public ResponseEntity<List<CategoryDTO.GetCategoryDto>> findRootCategories() {
+        List<CategoryDTO.GetCategoryDto> categories = categoryService.findRootCategories();
         return ResponseEntity.ok(categories);
     }
 }

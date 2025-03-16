@@ -15,7 +15,7 @@ public class ServiceBookingDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetDto {
+    public static class GetServiceBookingDto {
         private Long id;
         private Long serviceId;
         private Long patientId;
@@ -29,7 +29,7 @@ public class ServiceBookingDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SaveDto {
+    public static class SaveServiceBookingDto {
         private Long id;
         private Long serviceId;
         private Long patientId;

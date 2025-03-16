@@ -10,7 +10,7 @@ import org.mapstruct.ReportingPolicy;
 public interface MessageMapper {
     @Mapping(target = "senderId", source = "sender.id")
     @Mapping(target = "receiverId", source = "receiver.id")
-    MessageDTO.GetDto toGetDto(Message entity);
+    MessageDTO.GetMessageDto toGetMessageDto(Message entity);
 
-    Message toEntity(MessageDTO.SaveDto dto);
+    Message toMessageEntity(MessageDTO.SaveMessageDto dto);
 }

@@ -13,7 +13,7 @@ public class MedicineBatchDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetDto {
+    public static class GetMedicineBatchDto {
         private Long id;
         private String batchName;
         private String medicineCode;
@@ -26,7 +26,7 @@ public class MedicineBatchDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SaveDto {
+    public static class SaveMedicineBatchDto {
         private Long id;
         private String batchName;
         private String medicineCode;

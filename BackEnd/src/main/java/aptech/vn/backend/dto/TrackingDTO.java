@@ -8,14 +8,32 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+
 public class TrackingDTO {
-    private Long id;
-    private Long orderId;
-    private String location;
-    private String message;
-    private TrackingStatus status;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetTrackingDto {
+        private Long id;
+        private Long orderId;
+        private String location;
+        private String message;
+        private TrackingStatus status;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SaveTrackingDto {
+        private Long id;
+        private Long orderId;
+        private String location;
+        private String message;
+        private TrackingStatus status;
+
+    }
 }

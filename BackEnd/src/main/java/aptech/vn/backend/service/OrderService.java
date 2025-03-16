@@ -10,15 +10,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OrderService {
-    List<OrderDTO.GetDto> findAll();
-    Optional<OrderDTO.GetDto> findById(Long id);
-    OrderDTO.GetDto saveOrUpdate(OrderDTO.SaveDto orderDTO);
+    List<OrderDTO.GetOrderDto> findAll();
+    Optional<OrderDTO.GetOrderDto> findById(Long id);
+    OrderDTO.GetOrderDto saveOrUpdate(OrderDTO.SaveOrderDto orderDTO);
     void deleteById(Long id);
-    Optional<OrderDTO.GetDto> findByOrderCode(String orderCode);
-    List<OrderDTO.GetDto> findByPatientId(Long patientId);
-    List<OrderDTO.GetDto> findByStatus(OrderStatus status);
-    List<OrderDTO.GetDto> findByPaymentMethod(PaymentMethod paymentMethod);
-    List<OrderDTO.GetDto> findByVoucherCode(String voucherCode);
-    List<OrderDTO.GetDto> findByTotalPriceGreaterThanEqual(BigDecimal amount);
-    List<OrderDTO.GetDto> findByCreatedBetween(LocalDateTime start, LocalDateTime end);
+    Optional<OrderDTO.GetOrderDto> findByOrderCode(String orderCode);
+    List<OrderDTO.GetOrderDto> findByPatientId(Long patientId);
+    List<OrderDTO.GetOrderDto> findByStatus(OrderStatus status);
+    List<OrderDTO.GetOrderDto> findByPaymentMethod(PaymentMethod paymentMethod);
+    List<OrderDTO.GetOrderDto> findByVoucherCode(String voucherCode);
+    List<OrderDTO.GetOrderDto> findByTotalPriceGreaterThanEqual(BigDecimal amount);
+    List<OrderDTO.GetOrderDto> findByCreatedBetween(LocalDateTime start, LocalDateTime end);
 }

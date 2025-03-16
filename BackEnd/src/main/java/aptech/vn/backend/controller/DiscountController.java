@@ -20,21 +20,21 @@ public class DiscountController {
     }
 
     @GetMapping
-    public ResponseEntity<List<DiscountDTO.GetDto>> getAllDiscounts() {
-        List<DiscountDTO.GetDto> discounts = discountService.findAll();
+    public ResponseEntity<List<DiscountDTO.GetDiscountDto>> getAllDiscounts() {
+        List<DiscountDTO.GetDiscountDto> discounts = discountService.findAll();
         return ResponseEntity.ok(discounts);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DiscountDTO.GetDto> getDiscountById(@PathVariable Long id) {
+    public ResponseEntity<DiscountDTO.GetDiscountDto> getDiscountById(@PathVariable Long id) {
         return discountService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/save")
-    public ResponseEntity<DiscountDTO.GetDto> saveOrUpdateDiscount(@RequestBody DiscountDTO.SaveDto discountDTO) {
-        DiscountDTO.GetDto savedDiscount = discountService.saveOrUpdate(discountDTO);
+    public ResponseEntity<DiscountDTO.GetDiscountDto> saveOrUpdateDiscount(@RequestBody DiscountDTO.SaveDiscountDto discountDTO) {
+        DiscountDTO.GetDiscountDto savedDiscount = discountService.saveOrUpdate(discountDTO);
         return ResponseEntity.ok(savedDiscount);
     }
 
@@ -48,39 +48,39 @@ public class DiscountController {
     }
 
     @GetMapping("/search/code/{code}")
-    public ResponseEntity<DiscountDTO.GetDto> findByCode(@PathVariable String code) {
+    public ResponseEntity<DiscountDTO.GetDiscountDto> findByCode(@PathVariable String code) {
         return discountService.findByCode(code)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/search/medicine/{medicineId}")
-    public ResponseEntity<List<DiscountDTO.GetDto>> findByMedicineId(@PathVariable Long medicineId) {
-        List<DiscountDTO.GetDto> discounts = discountService.findByMedicineId(medicineId);
+    public ResponseEntity<List<DiscountDTO.GetDiscountDto>> findByMedicineId(@PathVariable Long medicineId) {
+        List<DiscountDTO.GetDiscountDto> discounts = discountService.findByMedicineId(medicineId);
         return ResponseEntity.ok(discounts);
     }
 
     @GetMapping("/search/active")
-    public ResponseEntity<List<DiscountDTO.GetDto>> findByActive() {
-        List<DiscountDTO.GetDto> discounts = discountService.findByActive(LocalDateTime.now());
+    public ResponseEntity<List<DiscountDTO.GetDiscountDto>> findByActive() {
+        List<DiscountDTO.GetDiscountDto> discounts = discountService.findByActive(LocalDateTime.now());
         return ResponseEntity.ok(discounts);
     }
 
     @GetMapping("/search/percentage")
-    public ResponseEntity<List<DiscountDTO.GetDto>> findByDiscountPercentageGreaterThanEqual(@RequestParam Double percentage) {
-        List<DiscountDTO.GetDto> discounts = discountService.findByDiscountPercentageGreaterThanEqual(percentage);
+    public ResponseEntity<List<DiscountDTO.GetDiscountDto>> findByDiscountPercentageGreaterThanEqual(@RequestParam Double percentage) {
+        List<DiscountDTO.GetDiscountDto> discounts = discountService.findByDiscountPercentageGreaterThanEqual(percentage);
         return ResponseEntity.ok(discounts);
     }
 
     @GetMapping("/search/expired")
-    public ResponseEntity<List<DiscountDTO.GetDto>> findByExpired() {
-        List<DiscountDTO.GetDto> discounts = discountService.findByExpired(LocalDateTime.now());
+    public ResponseEntity<List<DiscountDTO.GetDiscountDto>> findByExpired() {
+        List<DiscountDTO.GetDiscountDto> discounts = discountService.findByExpired(LocalDateTime.now());
         return ResponseEntity.ok(discounts);
     }
 
     @GetMapping("/search/no-expiration")
-    public ResponseEntity<List<DiscountDTO.GetDto>> findByNoExpiration() {
-        List<DiscountDTO.GetDto> discounts = discountService.findByNoExpiration();
+    public ResponseEntity<List<DiscountDTO.GetDiscountDto>> findByNoExpiration() {
+        List<DiscountDTO.GetDiscountDto> discounts = discountService.findByNoExpiration();
         return ResponseEntity.ok(discounts);
     }
 }

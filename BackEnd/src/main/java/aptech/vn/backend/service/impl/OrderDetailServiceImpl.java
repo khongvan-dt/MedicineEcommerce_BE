@@ -39,22 +39,22 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     }
 
     @Override
-    public List<OrderDetailDTO.GetDto> findAll() {
+    public List<OrderDetailDTO.GetOrderDetailDto> findAll() {
         return orderDetailRepository.findAll()
                 .stream()
-                .map(orderDetailMapper::toGetDto)
+                .map(orderDetailMapper::toGetOrderDetailDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<OrderDetailDTO.GetDto> findById(Long id) {
+    public Optional<OrderDetailDTO.GetOrderDetailDto> findById(Long id) {
         return orderDetailRepository.findById(id)
-                .map(orderDetailMapper::toGetDto);
+                .map(orderDetailMapper::toGetOrderDetailDto);
     }
 
     @Override
     @Transactional
-    public OrderDetailDTO.GetDto saveOrUpdate(OrderDetailDTO.SaveDto orderDetailDTO) {
+    public OrderDetailDTO.GetOrderDetailDto saveOrUpdate(OrderDetailDTO.SaveOrderDetailDto orderDetailDTO) {
         OrderDetail orderDetail;
 
         if (orderDetailDTO.getId() == null || orderDetailDTO.getId() == 0) {
@@ -87,7 +87,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         orderDetail.setUnitPrice(orderDetailDTO.getUnitPrice());
 
         OrderDetail savedOrderDetail = orderDetailRepository.save(orderDetail);
-        return orderDetailMapper.toGetDto(savedOrderDetail);
+        return orderDetailMapper.toGetOrderDetailDto(savedOrderDetail);
     }
 
     @Override
@@ -96,34 +96,34 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     }
 
     @Override
-    public List<OrderDetailDTO.GetDto> findByOrderId(Long orderId) {
+    public List<OrderDetailDTO.GetOrderDetailDto> findByOrderId(Long orderId) {
         return orderDetailRepository.findByOrder_Id(orderId)
                 .stream()
-                .map(orderDetailMapper::toGetDto)
+                .map(orderDetailMapper::toGetOrderDetailDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<OrderDetailDTO.GetDto> findByMedicineId(Long medicineId) {
+    public List<OrderDetailDTO.GetOrderDetailDto> findByMedicineId(Long medicineId) {
         return orderDetailRepository.findByMedicine_Id(medicineId)
                 .stream()
-                .map(orderDetailMapper::toGetDto)
+                .map(orderDetailMapper::toGetOrderDetailDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<OrderDetailDTO.GetDto> findByOrderIdAndMedicineId(Long orderId, Long medicineId) {
+    public List<OrderDetailDTO.GetOrderDetailDto> findByOrderIdAndMedicineId(Long orderId, Long medicineId) {
         return orderDetailRepository.findByOrder_IdAndMedicine_Id(orderId, medicineId)
                 .stream()
-                .map(orderDetailMapper::toGetDto)
+                .map(orderDetailMapper::toGetOrderDetailDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<OrderDetailDTO.GetDto> findByQuantityGreaterThan(Integer quantity) {
+    public List<OrderDetailDTO.GetOrderDetailDto> findByQuantityGreaterThan(Integer quantity) {
         return orderDetailRepository.findByQuantityGreaterThan(quantity)
                 .stream()
-                .map(orderDetailMapper::toGetDto)
+                .map(orderDetailMapper::toGetOrderDetailDto)
                 .collect(Collectors.toList());
     }
 }

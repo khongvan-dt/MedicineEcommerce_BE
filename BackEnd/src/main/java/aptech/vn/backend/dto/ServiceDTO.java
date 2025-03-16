@@ -13,7 +13,7 @@ public class ServiceDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetDto {
+    public static class GetServiceDto {
         private Long id;
         private String name;
         private BigDecimal price;
@@ -25,7 +25,7 @@ public class ServiceDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SaveDto {
+    public static class SaveServiceDto {
         private Long id;
         private String name;
         private BigDecimal price;

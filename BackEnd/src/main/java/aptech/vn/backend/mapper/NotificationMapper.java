@@ -11,7 +11,7 @@ public interface NotificationMapper {
     @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")
-    NotificationDTO.GetDto toGetDto(Notification entity);
+    NotificationDTO.GetNotificationDto toGetNotificationDto(Notification entity);
 
-    Notification toEntity(NotificationDTO.SaveDto dto);
+    Notification toNotificationEntity(NotificationDTO.SaveNotificationDto dto);
 }

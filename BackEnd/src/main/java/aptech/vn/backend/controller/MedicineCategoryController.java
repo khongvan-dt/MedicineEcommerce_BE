@@ -19,21 +19,21 @@ public class MedicineCategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MedicineCategoryDTO.GetDto>> getAllMedicineCategories() {
-        List<MedicineCategoryDTO.GetDto> categories = medicineCategoryService.findAll();
+    public ResponseEntity<List<MedicineCategoryDTO.GetMedicineCategoryDto>> getAllMedicineCategories() {
+        List<MedicineCategoryDTO.GetMedicineCategoryDto> categories = medicineCategoryService.findAll();
         return ResponseEntity.ok(categories);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MedicineCategoryDTO.GetDto> getMedicineCategoryById(@PathVariable Long id) {
+    public ResponseEntity<MedicineCategoryDTO.GetMedicineCategoryDto> getMedicineCategoryById(@PathVariable Long id) {
         return medicineCategoryService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/save")
-    public ResponseEntity<MedicineCategoryDTO.GetDto> saveOrUpdateMedicineCategory(@RequestBody MedicineCategoryDTO.SaveDto medicineCategoryDTO) {
-        MedicineCategoryDTO.GetDto savedCategory = medicineCategoryService.saveOrUpdate(medicineCategoryDTO);
+    public ResponseEntity<MedicineCategoryDTO.GetMedicineCategoryDto> saveOrUpdateMedicineCategory(@RequestBody MedicineCategoryDTO.SaveMedicineCategoryDto medicineCategoryDTO) {
+        MedicineCategoryDTO.GetMedicineCategoryDto savedCategory = medicineCategoryService.saveOrUpdate(medicineCategoryDTO);
         return ResponseEntity.ok(savedCategory);
     }
 
@@ -47,19 +47,19 @@ public class MedicineCategoryController {
     }
 
     @GetMapping("/by-medicine/{medicineId}")
-    public ResponseEntity<List<MedicineCategoryDTO.GetDto>> getByMedicineId(@PathVariable Long medicineId) {
-        List<MedicineCategoryDTO.GetDto> categories = medicineCategoryService.findByMedicineId(medicineId);
+    public ResponseEntity<List<MedicineCategoryDTO.GetMedicineCategoryDto>> getByMedicineId(@PathVariable Long medicineId) {
+        List<MedicineCategoryDTO.GetMedicineCategoryDto> categories = medicineCategoryService.findByMedicineId(medicineId);
         return ResponseEntity.ok(categories);
     }
 
     @GetMapping("/by-category/{categoryId}")
-    public ResponseEntity<List<MedicineCategoryDTO.GetDto>> getByCategoryId(@PathVariable Long categoryId) {
-        List<MedicineCategoryDTO.GetDto> categories = medicineCategoryService.findByCategoryId(categoryId);
+    public ResponseEntity<List<MedicineCategoryDTO.GetMedicineCategoryDto>> getByCategoryId(@PathVariable Long categoryId) {
+        List<MedicineCategoryDTO.GetMedicineCategoryDto> categories = medicineCategoryService.findByCategoryId(categoryId);
         return ResponseEntity.ok(categories);
     }
 
     @GetMapping("/by-medicine-and-category")
-    public ResponseEntity<MedicineCategoryDTO.GetDto> getByMedicineAndCategory(
+    public ResponseEntity<MedicineCategoryDTO.GetMedicineCategoryDto> getByMedicineAndCategory(
             @RequestParam Long medicineId,
             @RequestParam Long categoryId) {
         return medicineCategoryService.findByMedicineIdAndCategoryId(medicineId, categoryId)

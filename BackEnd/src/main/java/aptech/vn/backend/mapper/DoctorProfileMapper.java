@@ -11,7 +11,7 @@ public interface DoctorProfileMapper {
     @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")
-    DoctorProfileDTO.GetDto toGetDto(DoctorProfile entity);
+    DoctorProfileDTO.GetDoctorProfileDto toGetDoctorProfileDto(DoctorProfile entity);
 
-    DoctorProfile toEntity(DoctorProfileDTO.SaveDto dto);
+    DoctorProfile toDoctorProfileEntity(DoctorProfileDTO.SaveDoctorProfileDto dto);
 }

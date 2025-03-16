@@ -36,21 +36,21 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDTO.GetDto> findAll() {
+    public List<OrderDTO.GetOrderDto> findAll() {
         return orderRepository.findAll()
                 .stream()
-                .map(orderMapper::toGetDto)
+                .map(orderMapper::toGetOrderDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<OrderDTO.GetDto> findById(Long id) {
+    public Optional<OrderDTO.GetOrderDto> findById(Long id) {
         return orderRepository.findById(id)
-                .map(orderMapper::toGetDto);
+                .map(orderMapper::toGetOrderDto);
     }
 
     @Override
-    public OrderDTO.GetDto saveOrUpdate(OrderDTO.SaveDto orderDTO) {
+    public OrderDTO.GetOrderDto saveOrUpdate(OrderDTO.SaveOrderDto orderDTO) {
         Order order;
 
         if (orderDTO.getId() == null || orderDTO.getId() == 0) {
@@ -91,7 +91,7 @@ public class OrderServiceImpl implements OrderService {
         order.setNote(orderDTO.getNote());
 
         Order savedOrder = orderRepository.save(order);
-        return orderMapper.toGetDto(savedOrder);
+        return orderMapper.toGetOrderDto(savedOrder);
     }
 
     @Override
@@ -100,56 +100,56 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Optional<OrderDTO.GetDto> findByOrderCode(String orderCode) {
+    public Optional<OrderDTO.GetOrderDto> findByOrderCode(String orderCode) {
         return orderRepository.findByOrderCode(orderCode)
-                .map(orderMapper::toGetDto);
+                .map(orderMapper::toGetOrderDto);
     }
 
     @Override
-    public List<OrderDTO.GetDto> findByPatientId(Long patientId) {
+    public List<OrderDTO.GetOrderDto> findByPatientId(Long patientId) {
         return orderRepository.findByPatient_Id(patientId)
                 .stream()
-                .map(orderMapper::toGetDto)
+                .map(orderMapper::toGetOrderDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<OrderDTO.GetDto> findByStatus(OrderStatus status) {
+    public List<OrderDTO.GetOrderDto> findByStatus(OrderStatus status) {
         return orderRepository.findByStatus(status)
                 .stream()
-                .map(orderMapper::toGetDto)
+                .map(orderMapper::toGetOrderDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<OrderDTO.GetDto> findByPaymentMethod(PaymentMethod paymentMethod) {
+    public List<OrderDTO.GetOrderDto> findByPaymentMethod(PaymentMethod paymentMethod) {
         return orderRepository.findByPaymentMethod(paymentMethod)
                 .stream()
-                .map(orderMapper::toGetDto)
+                .map(orderMapper::toGetOrderDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<OrderDTO.GetDto> findByVoucherCode(String voucherCode) {
+    public List<OrderDTO.GetOrderDto> findByVoucherCode(String voucherCode) {
         return orderRepository.findByVoucherCode(voucherCode)
                 .stream()
-                .map(orderMapper::toGetDto)
+                .map(orderMapper::toGetOrderDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<OrderDTO.GetDto> findByTotalPriceGreaterThanEqual(BigDecimal amount) {
+    public List<OrderDTO.GetOrderDto> findByTotalPriceGreaterThanEqual(BigDecimal amount) {
         return orderRepository.findByTotalPriceGreaterThanEqual(amount)
                 .stream()
-                .map(orderMapper::toGetDto)
+                .map(orderMapper::toGetOrderDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<OrderDTO.GetDto> findByCreatedBetween(LocalDateTime start, LocalDateTime end) {
+    public List<OrderDTO.GetOrderDto> findByCreatedBetween(LocalDateTime start, LocalDateTime end) {
         return orderRepository.findByCreatedAtBetween(start, end)
                 .stream()
-                .map(orderMapper::toGetDto)
+                .map(orderMapper::toGetOrderDto)
                 .collect(Collectors.toList());
     }
 

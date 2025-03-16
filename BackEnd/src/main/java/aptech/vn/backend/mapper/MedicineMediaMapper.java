@@ -11,7 +11,7 @@ public interface MedicineMediaMapper {
     @Mapping(target = "medicineId", source = "medicine.id")
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")
-    MedicineMediaDTO.GetDto toGetDto(MedicineMedia entity);
+    MedicineMediaDTO.GetMedicineMediaDto toGetMedicineMediaDto(MedicineMedia entity);
 
-    MedicineMedia toEntity(MedicineMediaDTO.SaveDto dto);
+    MedicineMedia toMedicineMediaEntity(MedicineMediaDTO.SaveMedicineMediaDto dto);
 }

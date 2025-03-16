@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OrderDetailService {
-    List<OrderDetailDTO.GetDto> findAll();
-    Optional<OrderDetailDTO.GetDto> findById(Long id);
-    OrderDetailDTO.GetDto saveOrUpdate(OrderDetailDTO.SaveDto orderDetailDTO);
+    List<OrderDetailDTO.GetOrderDetailDto> findAll();
+    Optional<OrderDetailDTO.GetOrderDetailDto> findById(Long id);
+    OrderDetailDTO.GetOrderDetailDto saveOrUpdate(OrderDetailDTO.SaveOrderDetailDto orderDetailDTO);
     void deleteById(Long id);
-    List<OrderDetailDTO.GetDto> findByOrderId(Long orderId);
-    List<OrderDetailDTO.GetDto> findByMedicineId(Long medicineId);
-    List<OrderDetailDTO.GetDto> findByOrderIdAndMedicineId(Long orderId, Long medicineId);
-    List<OrderDetailDTO.GetDto> findByQuantityGreaterThan(Integer quantity);
+    List<OrderDetailDTO.GetOrderDetailDto> findByOrderId(Long orderId);
+    List<OrderDetailDTO.GetOrderDetailDto> findByMedicineId(Long medicineId);
+    List<OrderDetailDTO.GetOrderDetailDto> findByOrderIdAndMedicineId(Long orderId, Long medicineId);
+    List<OrderDetailDTO.GetOrderDetailDto> findByQuantityGreaterThan(Integer quantity);
 }

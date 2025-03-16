@@ -12,7 +12,7 @@ public class MedicineCategoryDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetDto {
+    public static class GetMedicineCategoryDto {
         private Long id;
         private Long medicineId;
         private Long categoryId;
@@ -23,7 +23,7 @@ public class MedicineCategoryDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SaveDto {
+    public static class SaveMedicineCategoryDto {
         private Long id;
         private Long medicineId;
         private Long categoryId;

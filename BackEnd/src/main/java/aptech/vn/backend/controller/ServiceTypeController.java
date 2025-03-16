@@ -20,32 +20,32 @@ public class ServiceTypeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ServiceTypeDTO.GetDto>> getAllServiceTypes() {
+    public ResponseEntity<List<ServiceTypeDTO.GetServiceTypeDto>> getAllServiceTypes() {
         return ResponseEntity.ok(serviceTypeService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ServiceTypeDTO.GetDto> getServiceTypeById(@PathVariable Long id) {
+    public ResponseEntity<ServiceTypeDTO.GetServiceTypeDto> getServiceTypeById(@PathVariable Long id) {
         return serviceTypeService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/name/{name}")
-    public ResponseEntity<ServiceTypeDTO.GetDto> getServiceTypeByName(@PathVariable String name) {
+    public ResponseEntity<ServiceTypeDTO.GetServiceTypeDto> getServiceTypeByName(@PathVariable String name) {
         return serviceTypeService.findByName(name)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<ServiceTypeDTO.GetDto>> getServiceTypesByNameContaining(@RequestParam String query) {
+    public ResponseEntity<List<ServiceTypeDTO.GetServiceTypeDto>> getServiceTypesByNameContaining(@RequestParam String query) {
         return ResponseEntity.ok(serviceTypeService.findByNameContaining(query));
     }
 
     @PostMapping("/save")
-    public ResponseEntity<ServiceTypeDTO.GetDto> saveOrUpdateServiceType(@RequestBody ServiceTypeDTO.SaveDto serviceTypeDTO) {
-        ServiceTypeDTO.GetDto savedType = serviceTypeService.saveOrUpdate(serviceTypeDTO);
+    public ResponseEntity<ServiceTypeDTO.GetServiceTypeDto> saveOrUpdateServiceType(@RequestBody ServiceTypeDTO.SaveServiceTypeDto serviceTypeDTO) {
+        ServiceTypeDTO.GetServiceTypeDto savedType = serviceTypeService.saveOrUpdate(serviceTypeDTO);
         return new ResponseEntity<>(savedType, HttpStatus.CREATED);
     }
 

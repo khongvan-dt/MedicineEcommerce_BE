@@ -1,6 +1,6 @@
 package aptech.vn.backend.controller;
 
-import aptech.vn.backend.dto.AppointmentDTO;
+import aptech.vn.backend.dto.ApiResponse;
 import aptech.vn.backend.entity.Appointment;
 import aptech.vn.backend.entity.User;
 import aptech.vn.backend.service.AppointmentService;
@@ -22,32 +22,32 @@ public class AppointmentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AppointmentDTO>> getAllAppointments() {
-        List<AppointmentDTO> appointments = appointmentService.findAll();
+    public ResponseEntity<List<ApiResponse>> getAllAppointments() {
+        List<ApiResponse> appointments = appointmentService.findAll();
         return new ResponseEntity<>(appointments, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AppointmentDTO> getAppointmentById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse> getAppointmentById(@PathVariable Long id) {
         return appointmentService.findById(id)
                 .map(appointment -> new ResponseEntity<>(appointment, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
-    public ResponseEntity<AppointmentDTO> createAppointment(@RequestBody AppointmentDTO appointmentDTO) {
-        AppointmentDTO createAppointment = appointmentService.save(appointmentDTO);
+    public ResponseEntity<ApiResponse> createAppointment(@RequestBody ApiResponse ApiResponse) {
+        ApiResponse createAppointment = appointmentService.save(ApiResponse);
         return new ResponseEntity<>(createAppointment, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AppointmentDTO> updateAppointment(
+    public ResponseEntity<ApiResponse> updateAppointment(
             @PathVariable Long id,
-            @RequestBody AppointmentDTO appointmentDTO) {
+            @RequestBody ApiResponse ApiResponse) {
 
         return appointmentService.findById(id)
                 .map(existingAppointment -> {
-                    AppointmentDTO updatedAppointment = appointmentService.save(appointmentDTO);
+                    ApiResponse updatedAppointment = appointmentService.save(ApiResponse);
                     return new ResponseEntity<>(updatedAppointment, HttpStatus.OK);
                 })
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -64,32 +64,32 @@ public class AppointmentController {
     }
 
     @GetMapping("/patient/{patientId}")
-    public ResponseEntity<List<AppointmentDTO>> getAppointmentsByPatientId(@PathVariable Long patientId) {
-        List<AppointmentDTO> appointments = appointmentService.findByPatientId(patientId);
+    public ResponseEntity<List<ApiResponse>> getAppointmentsByPatientId(@PathVariable Long patientId) {
+        List<ApiResponse> appointments = appointmentService.findByPatientId(patientId);
         return new ResponseEntity<>(appointments, HttpStatus.OK);
     }
 
     @GetMapping("/doctor/{doctorId}")
-    public ResponseEntity<List<AppointmentDTO>> getAppointmentsByDoctorId(@PathVariable Long doctorId) {
-        List<AppointmentDTO> appointments = appointmentService.findByDoctorId(doctorId);
+    public ResponseEntity<List<ApiResponse>> getAppointmentsByDoctorId(@PathVariable Long doctorId) {
+        List<ApiResponse> appointments = appointmentService.findByDoctorId(doctorId);
         return new ResponseEntity<>(appointments, HttpStatus.OK);
     }
 
     @GetMapping("/date-range")
-    public ResponseEntity<List<AppointmentDTO>> getAppointmentsByDateRange(
+    public ResponseEntity<List<ApiResponse>> getAppointmentsByDateRange(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
 
-        List<AppointmentDTO> appointments = appointmentService.findByAppointmentDateBetween(start, end);
+        List<ApiResponse> appointments = appointmentService.findByAppointmentDateBetween(start, end);
         return new ResponseEntity<>(appointments, HttpStatus.OK);
     }
 
     @GetMapping("/patient/{patientId}/doctor/{doctorId}")
-    public ResponseEntity<List<AppointmentDTO>> getAppointmentsByPatientAndDoctor(
+    public ResponseEntity<List<ApiResponse>> getAppointmentsByPatientAndDoctor(
             @PathVariable Long patientId,
             @PathVariable Long doctorId) {
 
-        List<AppointmentDTO> appointments = appointmentService.findByPatientIdAndDoctorId(patientId, doctorId);
+        List<ApiResponse> appointments = appointmentService.findByPatientIdAndDoctorId(patientId, doctorId);
         return new ResponseEntity<>(appointments, HttpStatus.OK);
     }
 }

@@ -10,7 +10,7 @@ import org.mapstruct.ReportingPolicy;
 public interface MedicineBatchMapper {
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")
-    MedicineBatchDTO.GetDto toGetDto(MedicineBatch entity);
+    MedicineBatchDTO.GetMedicineBatchDto toGetMedicineBatchDto(MedicineBatch entity);
 
-    MedicineBatch toEntity(MedicineBatchDTO.SaveDto dto);
+    MedicineBatch toMedicineBatchEntity(MedicineBatchDTO.SaveMedicineBatchDto dto);
 }

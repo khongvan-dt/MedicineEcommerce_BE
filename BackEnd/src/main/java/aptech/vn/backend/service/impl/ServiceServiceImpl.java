@@ -24,22 +24,22 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public List<ServiceDTO.GetDto> findAll() {
+    public List<ServiceDTO.GetServiceDto> findAll() {
         return serviceRepository.findAll()
                 .stream()
-                .map(serviceMapper::toGetDto)
+                .map(serviceMapper::toGetServiceDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<ServiceDTO.GetDto> findById(Long id) {
+    public Optional<ServiceDTO.GetServiceDto> findById(Long id) {
         return serviceRepository.findById(id)
-                .map(serviceMapper::toGetDto);
+                .map(serviceMapper::toGetServiceDto);
     }
 
     @Override
     @Transactional
-    public ServiceDTO.GetDto saveOrUpdate(ServiceDTO.SaveDto serviceDTO) {
+    public ServiceDTO.GetServiceDto saveOrUpdate(ServiceDTO.SaveServiceDto serviceDTO) {
         Service service;
 
         if (serviceDTO.getId() == null || serviceDTO.getId() == 0) {
@@ -63,7 +63,7 @@ public class ServiceServiceImpl implements ServiceService {
         service.setDescription(serviceDTO.getDescription());
 
         Service savedService = serviceRepository.save(service);
-        return serviceMapper.toGetDto(savedService);
+        return serviceMapper.toGetServiceDto(savedService);
     }
 
     @Override
@@ -72,42 +72,42 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public List<ServiceDTO.GetDto> findByName(String name) {
+    public List<ServiceDTO.GetServiceDto> findByName(String name) {
         return serviceRepository.findByName(name)
                 .stream()
-                .map(serviceMapper::toGetDto)
+                .map(serviceMapper::toGetServiceDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ServiceDTO.GetDto> findByNameContaining(String namePattern) {
+    public List<ServiceDTO.GetServiceDto> findByNameContaining(String namePattern) {
         return serviceRepository.findByNameContaining(namePattern)
                 .stream()
-                .map(serviceMapper::toGetDto)
+                .map(serviceMapper::toGetServiceDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ServiceDTO.GetDto> findByPriceLessThanEqual(BigDecimal maxPrice) {
+    public List<ServiceDTO.GetServiceDto> findByPriceLessThanEqual(BigDecimal maxPrice) {
         return serviceRepository.findByPriceLessThanEqual(maxPrice)
                 .stream()
-                .map(serviceMapper::toGetDto)
+                .map(serviceMapper::toGetServiceDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ServiceDTO.GetDto> findByPriceGreaterThanEqual(BigDecimal minPrice) {
+    public List<ServiceDTO.GetServiceDto> findByPriceGreaterThanEqual(BigDecimal minPrice) {
         return serviceRepository.findByPriceGreaterThanEqual(minPrice)
                 .stream()
-                .map(serviceMapper::toGetDto)
+                .map(serviceMapper::toGetServiceDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ServiceDTO.GetDto> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice) {
+    public List<ServiceDTO.GetServiceDto> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice) {
         return serviceRepository.findByPriceBetween(minPrice, maxPrice)
                 .stream()
-                .map(serviceMapper::toGetDto)
+                .map(serviceMapper::toGetServiceDto)
                 .collect(Collectors.toList());
     }
 }

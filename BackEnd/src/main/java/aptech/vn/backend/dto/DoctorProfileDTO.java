@@ -13,7 +13,7 @@ public class DoctorProfileDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetDto {
+    public static class GetDoctorProfileDto {
         private Long id;
         private Long userId;
         private String experience;
@@ -27,7 +27,7 @@ public class DoctorProfileDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SaveDto {
+    public static class SaveDoctorProfileDto {
         private Long id;
         private Long userId;
         private String experience;

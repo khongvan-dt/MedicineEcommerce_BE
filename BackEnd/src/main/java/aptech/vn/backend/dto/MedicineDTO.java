@@ -11,7 +11,7 @@ public class MedicineDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SaveDto {
+    public static class SaveMedicineDto {
         private Long id;
         private String code;
         private String name;
@@ -23,7 +23,7 @@ public class MedicineDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetDto {
+    public static class GetMedicineDto {
         private Long id;
         private String code;
         private String name;

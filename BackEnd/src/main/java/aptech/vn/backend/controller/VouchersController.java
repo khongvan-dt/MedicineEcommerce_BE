@@ -1,7 +1,7 @@
 package aptech.vn.backend.controller;
 
-import aptech.vn.backend.dto.VoucherDTO;
-import aptech.vn.backend.service.VoucherService;
+import aptech.vn.backend.dto.VouchersDTO;
+import aptech.vn.backend.service.VouchersService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,30 +11,30 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/vouchers")
 @CrossOrigin("*")
-public class VoucherController {
+public class VouchersController {
 
-    private final VoucherService voucherService;
+    private final VouchersService voucherService;
 
-    public VoucherController(VoucherService voucherService) {
+    public VouchersController(VouchersService voucherService) {
         this.voucherService = voucherService;
     }
 
     @GetMapping
-    public ResponseEntity<List<VoucherDTO.GetDto>> getAllVouchers() {
-        List<VoucherDTO.GetDto> vouchers = voucherService.findAll();
+    public ResponseEntity<List<VouchersDTO.GetVouchersDto>> getAllVouchers() {
+        List<VouchersDTO.GetVouchersDto> vouchers = voucherService.findAll();
         return ResponseEntity.ok(vouchers);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<VoucherDTO.GetDto> getVoucherById(@PathVariable Long id) {
+    public ResponseEntity<VouchersDTO.GetVouchersDto> getVoucherById(@PathVariable Long id) {
         return voucherService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/save")
-    public ResponseEntity<VoucherDTO.GetDto> saveOrUpdateVoucher(@RequestBody VoucherDTO.SaveDto voucherDTO) {
-        VoucherDTO.GetDto savedVoucher = voucherService.saveOrUpdate(voucherDTO);
+    public ResponseEntity<VouchersDTO.GetVouchersDto> saveOrUpdateVoucher(@RequestBody VouchersDTO.SaveVouchersDto voucherDTO) {
+        VouchersDTO.GetVouchersDto savedVoucher = voucherService.saveOrUpdate(voucherDTO);
         return ResponseEntity.ok(savedVoucher);
     }
 
@@ -48,34 +48,34 @@ public class VoucherController {
     }
 
     @GetMapping("/by-code")
-    public ResponseEntity<VoucherDTO.GetDto> getVoucherByCode(@RequestParam String code) {
+    public ResponseEntity<VouchersDTO.GetVouchersDto> getVoucherByCode(@RequestParam String code) {
         return voucherService.findByCode(code)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/by-stock")
-    public ResponseEntity<List<VoucherDTO.GetDto>> getVouchersByStock(@RequestParam Integer minStock) {
+    public ResponseEntity<List<VouchersDTO.GetVouchersDto>> getVouchersByStock(@RequestParam Integer minStock) {
         return ResponseEntity.ok(voucherService.findByStockGreaterThan(minStock));
     }
 
     @GetMapping("/by-percentage")
-    public ResponseEntity<List<VoucherDTO.GetDto>> getVouchersByPercentage(@RequestParam Double percentage) {
+    public ResponseEntity<List<VouchersDTO.GetVouchersDto>> getVouchersByPercentage(@RequestParam Double percentage) {
         return ResponseEntity.ok(voucherService.findByVoucherPercentageGreaterThanEqual(percentage));
     }
 
     @GetMapping("/active")
-    public ResponseEntity<List<VoucherDTO.GetDto>> getActiveVouchers() {
+    public ResponseEntity<List<VouchersDTO.GetVouchersDto>> getActiveVouchers() {
         return ResponseEntity.ok(voucherService.findActive(LocalDateTime.now()));
     }
 
     @GetMapping("/expired")
-    public ResponseEntity<List<VoucherDTO.GetDto>> getExpiredVouchers() {
+    public ResponseEntity<List<VouchersDTO.GetVouchersDto>> getExpiredVouchers() {
         return ResponseEntity.ok(voucherService.findExpired(LocalDateTime.now()));
     }
 
     @GetMapping("/never-expires")
-    public ResponseEntity<List<VoucherDTO.GetDto>> getNeverExpiresVouchers() {
+    public ResponseEntity<List<VouchersDTO.GetVouchersDto>> getNeverExpiresVouchers() {
         return ResponseEntity.ok(voucherService.findNeverExpires());
     }
 }

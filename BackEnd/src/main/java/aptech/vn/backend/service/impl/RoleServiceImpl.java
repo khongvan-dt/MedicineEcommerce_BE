@@ -25,22 +25,22 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<RoleDTO.GetDto> findAll() {
+    public List<RoleDTO.GetRoleDto> findAll() {
         return roleRepository.findAll()
                 .stream()
-                .map(roleMapper::toGetDto)
+                .map(roleMapper::toGetRoleDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<RoleDTO.GetDto> findById(Long id) {
+    public Optional<RoleDTO.GetRoleDto> findById(Long id) {
         return roleRepository.findById(id)
-                .map(roleMapper::toGetDto);
+                .map(roleMapper::toGetRoleDto);
     }
 
     @Override
     @Transactional
-    public RoleDTO.GetDto saveOrUpdate(RoleDTO.SaveDto roleDTO) {
+    public RoleDTO.GetRoleDto saveOrUpdate(RoleDTO.SaveRoleDto roleDTO) {
         Role role;
 
         if (roleDTO.getId() == null || roleDTO.getId() == 0) {
@@ -62,7 +62,7 @@ public class RoleServiceImpl implements RoleService {
         role.setName(roleDTO.getName());
 
         Role savedRole = roleRepository.save(role);
-        return roleMapper.toGetDto(savedRole);
+        return roleMapper.toGetRoleDto(savedRole);
     }
 
     @Override
@@ -71,8 +71,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Optional<RoleDTO.GetDto> findByName(String name) {
+    public Optional<RoleDTO.GetRoleDto> findByName(String name) {
         return roleRepository.findByName(name)
-                .map(roleMapper::toGetDto);
+                .map(roleMapper::toGetRoleDto);
     }
 }

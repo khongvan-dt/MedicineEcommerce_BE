@@ -2,8 +2,10 @@ package aptech.vn.backend.controller;
 
 import aptech.vn.backend.dto.MessageDTO;
 import aptech.vn.backend.service.MessageService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -25,36 +27,36 @@ public class MessageController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MessageDTO.GetDto>> getAllMessages() {
+    public ResponseEntity<List<MessageDTO.GetMessageDto>> getAllMessages() {
         return ResponseEntity.ok(messageService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MessageDTO.GetDto> getMessageById(@PathVariable Long id) {
+    public ResponseEntity<MessageDTO.GetMessageDto> getMessageById(@PathVariable Long id) {
         return messageService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/sent/{senderId}")
-    public ResponseEntity<List<MessageDTO.GetDto>> getMessagesBySenderId(@PathVariable Long senderId) {
+    public ResponseEntity<List<MessageDTO.GetMessageDto>> getMessagesBySenderId(@PathVariable Long senderId) {
         return ResponseEntity.ok(messageService.findBySenderId(senderId));
     }
 
     @GetMapping("/received/{receiverId}")
-    public ResponseEntity<List<MessageDTO.GetDto>> getMessagesByReceiverId(@PathVariable Long receiverId) {
+    public ResponseEntity<List<MessageDTO.GetMessageDto>> getMessagesByReceiverId(@PathVariable Long receiverId) {
         return ResponseEntity.ok(messageService.findByReceiverId(receiverId));
     }
 
     @GetMapping("/conversation")
-    public ResponseEntity<List<MessageDTO.GetDto>> getConversation(
+    public ResponseEntity<List<MessageDTO.GetMessageDto>> getConversation(
             @RequestParam Long user1Id,
             @RequestParam Long user2Id) {
         return ResponseEntity.ok(messageService.findConversation(user1Id, user2Id));
     }
 
     @GetMapping("/conversation/paged")
-    public ResponseEntity<List<MessageDTO.GetDto>> getConversationPaged(
+    public ResponseEntity<List<MessageDTO.GetMessageDto>> getConversationPaged(
             @RequestParam Long user1Id,
             @RequestParam Long user2Id,
             @PageableDefault(size = 20, sort = "createdAt") Pageable pageable) {
@@ -62,8 +64,19 @@ public class MessageController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<MessageDTO.GetDto> saveOrUpdateMessage(@RequestBody MessageDTO.SaveDto messageDTO) {
-        MessageDTO.GetDto savedMessage = messageService.saveOrUpdate(messageDTO);
+    @Operation(
+            summary = "Save message",
+            description = "save message",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Request",
+                    required = true,
+                    content = @Content(
+                            schema = @Schema(implementation = MessageDTO.GetMessageDto.class)
+                    )
+            )
+    )
+    public ResponseEntity<MessageDTO.GetMessageDto> saveOrUpdateMessage(@RequestBody MessageDTO.SaveMessageDto messageDTO) {
+        MessageDTO.GetMessageDto savedMessage = messageService.saveOrUpdate(messageDTO);
         return new ResponseEntity<>(savedMessage, HttpStatus.CREATED);
     }
 

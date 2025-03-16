@@ -12,7 +12,7 @@ public class ServiceTypeDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetDto {
+    public static class GetServiceTypeDto {
         private Long id;
         private String name;
         private LocalDateTime createdAt;
@@ -22,7 +22,7 @@ public class ServiceTypeDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SaveDto {
+    public static class SaveServiceTypeDto {
         private Long id;
         private String name;
     }

@@ -19,21 +19,21 @@ public class UserRoleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserRoleDTO.GetDto>> getAllUserRoles() {
-        List<UserRoleDTO.GetDto> userRoles = userRoleService.findAll();
+    public ResponseEntity<List<UserRoleDTO.GetUserRoleDto>> getAllUserRoles() {
+        List<UserRoleDTO.GetUserRoleDto> userRoles = userRoleService.findAll();
         return ResponseEntity.ok(userRoles);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserRoleDTO.GetDto> getUserRoleById(@PathVariable Long id) {
+    public ResponseEntity<UserRoleDTO.GetUserRoleDto> getUserRoleById(@PathVariable Long id) {
         return userRoleService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/save")
-    public ResponseEntity<UserRoleDTO.GetDto> saveOrUpdateUserRole(@RequestBody UserRoleDTO.SaveDto userRoleDTO) {
-        UserRoleDTO.GetDto savedUserRole = userRoleService.saveOrUpdate(userRoleDTO);
+    public ResponseEntity<UserRoleDTO.GetUserRoleDto> saveOrUpdateUserRole(@RequestBody UserRoleDTO.SaveUserRoleDto userRoleDTO) {
+        UserRoleDTO.GetUserRoleDto savedUserRole = userRoleService.saveOrUpdate(userRoleDTO);
         return ResponseEntity.ok(savedUserRole);
     }
 
@@ -47,19 +47,19 @@ public class UserRoleController {
     }
 
     @GetMapping("/by-user/{userId}")
-    public ResponseEntity<List<UserRoleDTO.GetDto>> getUserRolesByUserId(@PathVariable Long userId) {
-        List<UserRoleDTO.GetDto> userRoles = userRoleService.findByUserId(userId);
+    public ResponseEntity<List<UserRoleDTO.GetUserRoleDto>> getUserRolesByUserId(@PathVariable Long userId) {
+        List<UserRoleDTO.GetUserRoleDto> userRoles = userRoleService.findByUserId(userId);
         return ResponseEntity.ok(userRoles);
     }
 
     @GetMapping("/by-role/{roleId}")
-    public ResponseEntity<List<UserRoleDTO.GetDto>> getUserRolesByRoleId(@PathVariable Long roleId) {
-        List<UserRoleDTO.GetDto> userRoles = userRoleService.findByRoleId(roleId);
+    public ResponseEntity<List<UserRoleDTO.GetUserRoleDto>> getUserRolesByRoleId(@PathVariable Long roleId) {
+        List<UserRoleDTO.GetUserRoleDto> userRoles = userRoleService.findByRoleId(roleId);
         return ResponseEntity.ok(userRoles);
     }
 
     @GetMapping("/by-user-role")
-    public ResponseEntity<UserRoleDTO.GetDto> getUserRoleByUserIdAndRoleId(
+    public ResponseEntity<UserRoleDTO.GetUserRoleDto> getUserRoleByUserIdAndRoleId(
             @RequestParam Long userId,
             @RequestParam Long roleId) {
         return userRoleService.findByUserIdAndRoleId(userId, roleId)

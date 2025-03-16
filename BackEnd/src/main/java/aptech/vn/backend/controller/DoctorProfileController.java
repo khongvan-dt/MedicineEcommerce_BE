@@ -20,21 +20,21 @@ public class DoctorProfileController {
     }
 
     @GetMapping
-    public ResponseEntity<List<DoctorProfileDTO.GetDto>> getAllDoctorProfiles() {
-        List<DoctorProfileDTO.GetDto> doctorProfiles = doctorProfileService.findAll();
+    public ResponseEntity<List<DoctorProfileDTO.GetDoctorProfileDto>> getAllDoctorProfiles() {
+        List<DoctorProfileDTO.GetDoctorProfileDto> doctorProfiles = doctorProfileService.findAll();
         return ResponseEntity.ok(doctorProfiles);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DoctorProfileDTO.GetDto> getDoctorProfileById(@PathVariable Long id) {
+    public ResponseEntity<DoctorProfileDTO.GetDoctorProfileDto> getDoctorProfileById(@PathVariable Long id) {
         return doctorProfileService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/save")
-    public ResponseEntity<DoctorProfileDTO.GetDto> saveOrUpdateDoctorProfile(@RequestBody DoctorProfileDTO.SaveDto doctorProfileDTO) {
-        DoctorProfileDTO.GetDto savedDoctorProfile = doctorProfileService.saveOrUpdate(doctorProfileDTO);
+    public ResponseEntity<DoctorProfileDTO.GetDoctorProfileDto> saveOrUpdateDoctorProfile(@RequestBody DoctorProfileDTO.SaveDoctorProfileDto doctorProfileDTO) {
+        DoctorProfileDTO.GetDoctorProfileDto savedDoctorProfile = doctorProfileService.saveOrUpdate(doctorProfileDTO);
         return ResponseEntity.ok(savedDoctorProfile);
     }
 
@@ -48,27 +48,27 @@ public class DoctorProfileController {
     }
 
     @GetMapping("/search/user/{userId}")
-    public ResponseEntity<DoctorProfileDTO.GetDto> findByUserId(@PathVariable Long userId) {
+    public ResponseEntity<DoctorProfileDTO.GetDoctorProfileDto> findByUserId(@PathVariable Long userId) {
         return doctorProfileService.findByUserId(userId)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/search/specialization")
-    public ResponseEntity<List<DoctorProfileDTO.GetDto>> findBySpecialization(@RequestParam String specialization) {
-        List<DoctorProfileDTO.GetDto> doctorProfiles = doctorProfileService.findBySpecializationContaining(specialization);
+    public ResponseEntity<List<DoctorProfileDTO.GetDoctorProfileDto>> findBySpecialization(@RequestParam String specialization) {
+        List<DoctorProfileDTO.GetDoctorProfileDto> doctorProfiles = doctorProfileService.findBySpecializationContaining(specialization);
         return ResponseEntity.ok(doctorProfiles);
     }
 
     @GetMapping("/search/workplace")
-    public ResponseEntity<List<DoctorProfileDTO.GetDto>> findByWorkplace(@RequestParam String workplace) {
-        List<DoctorProfileDTO.GetDto> doctorProfiles = doctorProfileService.findByWorkplaceContaining(workplace);
+    public ResponseEntity<List<DoctorProfileDTO.GetDoctorProfileDto>> findByWorkplace(@RequestParam String workplace) {
+        List<DoctorProfileDTO.GetDoctorProfileDto> doctorProfiles = doctorProfileService.findByWorkplaceContaining(workplace);
         return ResponseEntity.ok(doctorProfiles);
     }
 
     @GetMapping("/search/account-balance")
-    public ResponseEntity<List<DoctorProfileDTO.GetDto>> findByAccountBalanceGreaterThanEqual(@RequestParam BigDecimal amount) {
-        List<DoctorProfileDTO.GetDto> doctorProfiles = doctorProfileService.findByAccountBalanceGreaterThanEqual(amount);
+    public ResponseEntity<List<DoctorProfileDTO.GetDoctorProfileDto>> findByAccountBalanceGreaterThanEqual(@RequestParam BigDecimal amount) {
+        List<DoctorProfileDTO.GetDoctorProfileDto> doctorProfiles = doctorProfileService.findByAccountBalanceGreaterThanEqual(amount);
         return ResponseEntity.ok(doctorProfiles);
     }
 }

@@ -11,7 +11,7 @@ public interface DiscountMapper {
     @Mapping(target = "medicineId", source = "medicine.id")
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")
-    DiscountDTO.GetDto toGetDto(Discount entity);
+    DiscountDTO.GetDiscountDto toGetDiscountDto(Discount entity);
 
-    Discount toEntity(DiscountDTO.SaveDto dto);
+    Discount toEntity(DiscountDTO.SaveDiscountDto dto);
 }

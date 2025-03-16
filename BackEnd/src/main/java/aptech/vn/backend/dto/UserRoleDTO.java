@@ -12,7 +12,7 @@ public class UserRoleDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetDto {
+    public static class GetUserRoleDto {
         private Long id;
         private Long userId;
         private Long roleId;
@@ -23,7 +23,7 @@ public class UserRoleDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SaveDto {
+    public static class SaveUserRoleDto {
         private Long id;
         private Long userId;
         private Long roleId;

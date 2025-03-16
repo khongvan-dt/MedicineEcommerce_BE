@@ -44,22 +44,22 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<ReviewDTO.GetDto> findAll() {
+    public List<ReviewDTO.GetReviewDto> findAll() {
         return reviewRepository.findAll()
                 .stream()
-                .map(reviewMapper::toGetDto)
+                .map(reviewMapper::toGetReviewDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<ReviewDTO.GetDto> findById(Long id) {
+    public Optional<ReviewDTO.GetReviewDto> findById(Long id) {
         return reviewRepository.findById(id)
-                .map(reviewMapper::toGetDto);
+                .map(reviewMapper::toGetReviewDto);
     }
 
     @Override
     @Transactional
-    public ReviewDTO.GetDto saveOrUpdate(ReviewDTO.SaveDto reviewDTO) {
+    public ReviewDTO.GetReviewDto saveOrUpdate(ReviewDTO.SaveReviewDto reviewDTO) {
         Review review;
 
         if (reviewDTO.getId() == null || reviewDTO.getId() == 0) {
@@ -110,7 +110,7 @@ public class ReviewServiceImpl implements ReviewService {
         review.setComment(reviewDTO.getComment());
 
         Review savedReview = reviewRepository.save(review);
-        return reviewMapper.toGetDto(savedReview);
+        return reviewMapper.toGetReviewDto(savedReview);
     }
 
     @Override
@@ -119,74 +119,74 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<ReviewDTO.GetDto> findByUserId(Long userId) {
+    public List<ReviewDTO.GetReviewDto> findByUserId(Long userId) {
         return reviewRepository.findByUser_Id(userId)
                 .stream()
-                .map(reviewMapper::toGetDto)
+                .map(reviewMapper::toGetReviewDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ReviewDTO.GetDto> findByRating(Integer rating) {
+    public List<ReviewDTO.GetReviewDto> findByRating(Integer rating) {
         return reviewRepository.findByRating(rating)
                 .stream()
-                .map(reviewMapper::toGetDto)
+                .map(reviewMapper::toGetReviewDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ReviewDTO.GetDto> findByRatingGreaterThanEqual(Integer minRating) {
+    public List<ReviewDTO.GetReviewDto> findByRatingGreaterThanEqual(Integer minRating) {
         return reviewRepository.findByRatingGreaterThanEqual(minRating)
                 .stream()
-                .map(reviewMapper::toGetDto)
+                .map(reviewMapper::toGetReviewDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ReviewDTO.GetDto> findByDoctorId(Long doctorId) {
+    public List<ReviewDTO.GetReviewDto> findByDoctorId(Long doctorId) {
         return reviewRepository.findByDoctor_Id(doctorId)
                 .stream()
-                .map(reviewMapper::toGetDto)
+                .map(reviewMapper::toGetReviewDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ReviewDTO.GetDto> findByMedicineId(Long medicineId) {
+    public List<ReviewDTO.GetReviewDto> findByMedicineId(Long medicineId) {
         return reviewRepository.findByMedicine_Id(medicineId)
                 .stream()
-                .map(reviewMapper::toGetDto)
+                .map(reviewMapper::toGetReviewDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ReviewDTO.GetDto> findByServiceId(Long serviceId) {
+    public List<ReviewDTO.GetReviewDto> findByServiceId(Long serviceId) {
         return reviewRepository.findByService_Id(serviceId)
                 .stream()
-                .map(reviewMapper::toGetDto)
+                .map(reviewMapper::toGetReviewDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ReviewDTO.GetDto> findByDoctorIdAndMinRating(Long doctorId, Integer minRating) {
+    public List<ReviewDTO.GetReviewDto> findByDoctorIdAndMinRating(Long doctorId, Integer minRating) {
         return reviewRepository.findByDoctor_IdAndRatingGreaterThanEqual(doctorId, minRating)
                 .stream()
-                .map(reviewMapper::toGetDto)
+                .map(reviewMapper::toGetReviewDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ReviewDTO.GetDto> findByMedicineIdAndMinRating(Long medicineId, Integer minRating) {
+    public List<ReviewDTO.GetReviewDto> findByMedicineIdAndMinRating(Long medicineId, Integer minRating) {
         return reviewRepository.findByMedicine_IdAndRatingGreaterThanEqual(medicineId, minRating)
                 .stream()
-                .map(reviewMapper::toGetDto)
+                .map(reviewMapper::toGetReviewDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ReviewDTO.GetDto> findByServiceIdAndMinRating(Long serviceId, Integer minRating) {
+    public List<ReviewDTO.GetReviewDto> findByServiceIdAndMinRating(Long serviceId, Integer minRating) {
         return reviewRepository.findByService_IdAndRatingGreaterThanEqual(serviceId, minRating)
                 .stream()
-                .map(reviewMapper::toGetDto)
+                .map(reviewMapper::toGetReviewDto)
                 .collect(Collectors.toList());
     }
 }

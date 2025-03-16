@@ -53,6 +53,10 @@ public class User extends BaseEntity {
     @Column(name = "locked", nullable = false)
     private Boolean locked = false;
 
+
+    @Column(name = "avatar", nullable = true, columnDefinition = "varchar(255) default 'default-avatar.png'")
+    private String avatar;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<UserRole> userRoles = new HashSet<>();
 

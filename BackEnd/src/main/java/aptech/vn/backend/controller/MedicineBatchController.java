@@ -20,21 +20,21 @@ public class MedicineBatchController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MedicineBatchDTO.GetDto>> getAllMedicineBatches() {
-        List<MedicineBatchDTO.GetDto> medicineBatches = medicineBatchService.findAll();
+    public ResponseEntity<List<MedicineBatchDTO.GetMedicineBatchDto>> getAllMedicineBatches() {
+        List<MedicineBatchDTO.GetMedicineBatchDto> medicineBatches = medicineBatchService.findAll();
         return ResponseEntity.ok(medicineBatches);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MedicineBatchDTO.GetDto> getMedicineBatchById(@PathVariable Long id) {
+    public ResponseEntity<MedicineBatchDTO.GetMedicineBatchDto> getMedicineBatchById(@PathVariable Long id) {
         return medicineBatchService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/save")
-    public ResponseEntity<MedicineBatchDTO.GetDto> saveOrUpdateMedicineBatch(@RequestBody MedicineBatchDTO.SaveDto medicineBatchDTO) {
-        MedicineBatchDTO.GetDto savedMedicineBatch = medicineBatchService.saveOrUpdate(medicineBatchDTO);
+    public ResponseEntity<MedicineBatchDTO.GetMedicineBatchDto> saveOrUpdateMedicineBatch(@RequestBody MedicineBatchDTO.SaveMedicineBatchDto medicineBatchDTO) {
+        MedicineBatchDTO.GetMedicineBatchDto savedMedicineBatch = medicineBatchService.saveOrUpdate(medicineBatchDTO);
         return ResponseEntity.ok(savedMedicineBatch);
     }
 
@@ -48,28 +48,28 @@ public class MedicineBatchController {
     }
 
     @GetMapping("/search/batch-name")
-    public ResponseEntity<MedicineBatchDTO.GetDto> findByBatchName(@RequestParam String batchName) {
+    public ResponseEntity<MedicineBatchDTO.GetMedicineBatchDto> findByBatchName(@RequestParam String batchName) {
         return medicineBatchService.findByBatchName(batchName)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/search/medicine-code")
-    public ResponseEntity<List<MedicineBatchDTO.GetDto>> findByMedicineCode(@RequestParam String medicineCode) {
-        List<MedicineBatchDTO.GetDto> medicineBatches = medicineBatchService.findByMedicineCode(medicineCode);
+    public ResponseEntity<List<MedicineBatchDTO.GetMedicineBatchDto>> findByMedicineCode(@RequestParam String medicineCode) {
+        List<MedicineBatchDTO.GetMedicineBatchDto> medicineBatches = medicineBatchService.findByMedicineCode(medicineCode);
         return ResponseEntity.ok(medicineBatches);
     }
 
     @GetMapping("/search/quantity")
-    public ResponseEntity<List<MedicineBatchDTO.GetDto>> findByQuantityGreaterThan(@RequestParam Integer quantity) {
-        List<MedicineBatchDTO.GetDto> medicineBatches = medicineBatchService.findByQuantityGreaterThan(quantity);
+    public ResponseEntity<List<MedicineBatchDTO.GetMedicineBatchDto>> findByQuantityGreaterThan(@RequestParam Integer quantity) {
+        List<MedicineBatchDTO.GetMedicineBatchDto> medicineBatches = medicineBatchService.findByQuantityGreaterThan(quantity);
         return ResponseEntity.ok(medicineBatches);
     }
 
     @GetMapping("/search/expiry-date")
-    public ResponseEntity<List<MedicineBatchDTO.GetDto>> findByExpiryDateBefore(@RequestParam String date) {
+    public ResponseEntity<List<MedicineBatchDTO.GetMedicineBatchDto>> findByExpiryDateBefore(@RequestParam String date) {
         LocalDate expiryDate = LocalDate.parse(date);
-        List<MedicineBatchDTO.GetDto> medicineBatches = medicineBatchService.findByExpiryDateBefore(expiryDate);
+        List<MedicineBatchDTO.GetMedicineBatchDto> medicineBatches = medicineBatchService.findByExpiryDateBefore(expiryDate);
         return ResponseEntity.ok(medicineBatches);
     }
 }

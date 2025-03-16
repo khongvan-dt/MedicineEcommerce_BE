@@ -10,7 +10,7 @@ import org.mapstruct.ReportingPolicy;
 public interface RoleMapper {
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")
-    RoleDTO.GetDto toGetDto(Role entity);
+    RoleDTO.GetRoleDto toGetRoleDto(Role entity);
 
-    Role toEntity(RoleDTO.SaveDto dto);
+    Role toRoleEntity(RoleDTO.SaveRoleDto dto);
 }

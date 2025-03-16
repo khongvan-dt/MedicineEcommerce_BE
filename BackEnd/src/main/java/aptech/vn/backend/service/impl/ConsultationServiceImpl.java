@@ -37,22 +37,22 @@ public class ConsultationServiceImpl implements ConsultationService {
     }
 
     @Override
-    public List<ConsultationDTO.GetDto> findAll() {
+    public List<ConsultationDTO.GetConsultationDto> findAll() {
         return consultationRepository.findAll()
                 .stream()
-                .map(consultationMapper::toGetDto)  // Đảm bảo sử dụng đúng tên phương thức
+                .map(consultationMapper::toGetConsultationDto)  // Đảm bảo sử dụng đúng tên phương thức
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<ConsultationDTO.GetDto> findById(Long id) {
+    public Optional<ConsultationDTO.GetConsultationDto> findById(Long id) {
         return consultationRepository.findById(id)
-                .map(consultationMapper::toGetDto);  // Đảm bảo sử dụng đúng tên phương thức
+                .map(consultationMapper::toGetConsultationDto);  // Đảm bảo sử dụng đúng tên phương thức
     }
 
     @Override
     @Transactional
-    public ConsultationDTO.GetDto saveOrUpdate(ConsultationDTO.SaveDto consultationDTO) {
+    public ConsultationDTO.GetConsultationDto saveOrUpdate(ConsultationDTO.SaveConsultationDto consultationDTO) {
         Consultation consultation;
 
         if (consultationDTO.getId() == null || consultationDTO.getId() == 0) {
@@ -84,7 +84,7 @@ public class ConsultationServiceImpl implements ConsultationService {
 
 
         Consultation savedConsultation = consultationRepository.save(consultation);
-        return consultationMapper.toGetDto(savedConsultation);
+        return consultationMapper.toGetConsultationDto(savedConsultation);
     }
     @Override
     public void deleteById(Long id) {
@@ -92,50 +92,50 @@ public class ConsultationServiceImpl implements ConsultationService {
     }
 
     @Override
-    public List<ConsultationDTO.GetDto> findByPatientId(Long patientId) {
+    public List<ConsultationDTO.GetConsultationDto> findByPatientId(Long patientId) {
         return consultationRepository.findByPatient_Id(patientId)
                 .stream()
-                .map(consultationMapper::toGetDto)  // Đảm bảo sử dụng đúng tên phương thức
+                .map(consultationMapper::toGetConsultationDto)  // Đảm bảo sử dụng đúng tên phương thức
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ConsultationDTO.GetDto> findByDoctorId(Long doctorId) {
+    public List<ConsultationDTO.GetConsultationDto> findByDoctorId(Long doctorId) {
         return consultationRepository.findByDoctor_Id(doctorId)
                 .stream()
-                .map(consultationMapper::toGetDto)  // Đảm bảo sử dụng đúng tên phương thức
+                .map(consultationMapper::toGetConsultationDto)  // Đảm bảo sử dụng đúng tên phương thức
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ConsultationDTO.GetDto> findByStatus(ConsultationStatus status) {
+    public List<ConsultationDTO.GetConsultationDto> findByStatus(ConsultationStatus status) {
         return consultationRepository.findByStatus(status)
                 .stream()
-                .map(consultationMapper::toGetDto)  // Đảm bảo sử dụng đúng tên phương thức
+                .map(consultationMapper::toGetConsultationDto)  // Đảm bảo sử dụng đúng tên phương thức
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ConsultationDTO.GetDto> findByPatientIdAndDoctorId(Long patientId, Long doctorId) {
+    public List<ConsultationDTO.GetConsultationDto> findByPatientIdAndDoctorId(Long patientId, Long doctorId) {
         return consultationRepository.findByPatient_IdAndDoctor_Id(patientId, doctorId)
                 .stream()
-                .map(consultationMapper::toGetDto)  // Đảm bảo sử dụng đúng tên phương thức
+                .map(consultationMapper::toGetConsultationDto)  // Đảm bảo sử dụng đúng tên phương thức
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ConsultationDTO.GetDto> findByDoctorIdAndStatus(Long doctorId, ConsultationStatus status) {
+    public List<ConsultationDTO.GetConsultationDto> findByDoctorIdAndStatus(Long doctorId, ConsultationStatus status) {
         return consultationRepository.findByDoctor_IdAndStatus(doctorId, status)
                 .stream()
-                .map(consultationMapper::toGetDto)  // Đảm bảo sử dụng đúng tên phương thức
+                .map(consultationMapper::toGetConsultationDto)  // Đảm bảo sử dụng đúng tên phương thức
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ConsultationDTO.GetDto> findByPatientIdAndStatus(Long patientId, ConsultationStatus status) {
+    public List<ConsultationDTO.GetConsultationDto> findByPatientIdAndStatus(Long patientId, ConsultationStatus status) {
         return consultationRepository.findByPatient_IdAndStatus(patientId, status)
                 .stream()
-                .map(consultationMapper::toGetDto)
+                .map(consultationMapper::toGetConsultationDto)
                 .collect(Collectors.toList());
     }
 }

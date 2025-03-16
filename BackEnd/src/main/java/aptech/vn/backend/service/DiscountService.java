@@ -6,14 +6,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DiscountService {
-    List<DiscountDTO.GetDto> findAll();
-    Optional<DiscountDTO.GetDto> findById(Long id);
-    DiscountDTO.GetDto saveOrUpdate(DiscountDTO.SaveDto discountDTO);
+    List<DiscountDTO.GetDiscountDto> findAll();
+    Optional<DiscountDTO.GetDiscountDto> findById(Long id);
+    DiscountDTO.GetDiscountDto saveOrUpdate(DiscountDTO.SaveDiscountDto discountDTO);
     void deleteById(Long id);
-    Optional<DiscountDTO.GetDto> findByCode(String code);
-    List<DiscountDTO.GetDto> findByMedicineId(Long medicineId);
-    List<DiscountDTO.GetDto> findByActive(LocalDateTime now);
-    List<DiscountDTO.GetDto> findByDiscountPercentageGreaterThanEqual(Double percentage);
-    List<DiscountDTO.GetDto> findByExpired(LocalDateTime date);
-    List<DiscountDTO.GetDto> findByNoExpiration();
+    Optional<DiscountDTO.GetDiscountDto> findByCode(String code);
+    List<DiscountDTO.GetDiscountDto> findByMedicineId(Long medicineId);
+    List<DiscountDTO.GetDiscountDto> findByActive(LocalDateTime now);
+    List<DiscountDTO.GetDiscountDto> findByDiscountPercentageGreaterThanEqual(Double percentage);
+    List<DiscountDTO.GetDiscountDto> findByExpired(LocalDateTime date);
+    List<DiscountDTO.GetDiscountDto> findByNoExpiration();
 }

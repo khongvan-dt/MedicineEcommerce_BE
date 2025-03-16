@@ -11,7 +11,7 @@ public interface OrderMapper {
     @Mapping(target = "patientId", source = "patient.id")
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")
-    OrderDTO.GetDto toGetDto(Order entity);
+    OrderDTO.GetOrderDto toGetOrderDto(Order entity);
 
-    Order toEntity(OrderDTO.SaveDto dto);
+    Order toOrderEntity(OrderDTO.SaveOrderDto dto);
 }

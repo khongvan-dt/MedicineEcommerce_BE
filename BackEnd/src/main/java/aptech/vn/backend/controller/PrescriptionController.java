@@ -19,21 +19,21 @@ public class PrescriptionController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PrescriptionDTO.GetDto>> getAllPrescriptions() {
-        List<PrescriptionDTO.GetDto> prescriptions = prescriptionService.findAll();
+    public ResponseEntity<List<PrescriptionDTO.GetPrescriptionDto>> getAllPrescriptions() {
+        List<PrescriptionDTO.GetPrescriptionDto> prescriptions = prescriptionService.findAll();
         return ResponseEntity.ok(prescriptions);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PrescriptionDTO.GetDto> getPrescriptionById(@PathVariable Long id) {
+    public ResponseEntity<PrescriptionDTO.GetPrescriptionDto> getPrescriptionById(@PathVariable Long id) {
         return prescriptionService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/save")
-    public ResponseEntity<PrescriptionDTO.GetDto> saveOrUpdatePrescription(@RequestBody PrescriptionDTO.SaveDto prescriptionDTO) {
-        PrescriptionDTO.GetDto savedPrescription = prescriptionService.saveOrUpdate(prescriptionDTO);
+    public ResponseEntity<PrescriptionDTO.GetPrescriptionDto> saveOrUpdatePrescription(@RequestBody PrescriptionDTO.SavePrescriptionDto prescriptionDTO) {
+        PrescriptionDTO.GetPrescriptionDto savedPrescription = prescriptionService.saveOrUpdate(prescriptionDTO);
         return ResponseEntity.ok(savedPrescription);
     }
 
@@ -47,34 +47,34 @@ public class PrescriptionController {
     }
 
     @GetMapping("/by-doctor/{doctorId}")
-    public ResponseEntity<List<PrescriptionDTO.GetDto>> getPrescriptionsByDoctorId(@PathVariable Long doctorId) {
-        List<PrescriptionDTO.GetDto> prescriptions = prescriptionService.findByDoctorId(doctorId);
+    public ResponseEntity<List<PrescriptionDTO.GetPrescriptionDto>> getPrescriptionsByDoctorId(@PathVariable Long doctorId) {
+        List<PrescriptionDTO.GetPrescriptionDto> prescriptions = prescriptionService.findByDoctorId(doctorId);
         return ResponseEntity.ok(prescriptions);
     }
 
     @GetMapping("/by-patient/{patientId}")
-    public ResponseEntity<List<PrescriptionDTO.GetDto>> getPrescriptionsByPatientId(@PathVariable Long patientId) {
-        List<PrescriptionDTO.GetDto> prescriptions = prescriptionService.findByPatientId(patientId);
+    public ResponseEntity<List<PrescriptionDTO.GetPrescriptionDto>> getPrescriptionsByPatientId(@PathVariable Long patientId) {
+        List<PrescriptionDTO.GetPrescriptionDto> prescriptions = prescriptionService.findByPatientId(patientId);
         return ResponseEntity.ok(prescriptions);
     }
 
     @GetMapping("/by-medicine/{medicineId}")
-    public ResponseEntity<List<PrescriptionDTO.GetDto>> getPrescriptionsByMedicineId(@PathVariable Long medicineId) {
-        List<PrescriptionDTO.GetDto> prescriptions = prescriptionService.findByMedicineId(medicineId);
+    public ResponseEntity<List<PrescriptionDTO.GetPrescriptionDto>> getPrescriptionsByMedicineId(@PathVariable Long medicineId) {
+        List<PrescriptionDTO.GetPrescriptionDto> prescriptions = prescriptionService.findByMedicineId(medicineId);
         return ResponseEntity.ok(prescriptions);
     }
 
     @GetMapping("/by-patient-and-doctor")
-    public ResponseEntity<List<PrescriptionDTO.GetDto>> getPrescriptionsByPatientAndDoctor(
+    public ResponseEntity<List<PrescriptionDTO.GetPrescriptionDto>> getPrescriptionsByPatientAndDoctor(
             @RequestParam Long patientId, @RequestParam Long doctorId) {
-        List<PrescriptionDTO.GetDto> prescriptions = prescriptionService.findByPatientIdAndDoctorId(patientId, doctorId);
+        List<PrescriptionDTO.GetPrescriptionDto> prescriptions = prescriptionService.findByPatientIdAndDoctorId(patientId, doctorId);
         return ResponseEntity.ok(prescriptions);
     }
 
     @GetMapping("/by-patient-and-medicine")
-    public ResponseEntity<List<PrescriptionDTO.GetDto>> getPrescriptionsByPatientAndMedicine(
+    public ResponseEntity<List<PrescriptionDTO.GetPrescriptionDto>> getPrescriptionsByPatientAndMedicine(
             @RequestParam Long patientId, @RequestParam Long medicineId) {
-        List<PrescriptionDTO.GetDto> prescriptions = prescriptionService.findByPatientIdAndMedicineId(patientId, medicineId);
+        List<PrescriptionDTO.GetPrescriptionDto> prescriptions = prescriptionService.findByPatientIdAndMedicineId(patientId, medicineId);
         return ResponseEntity.ok(prescriptions);
     }
 }

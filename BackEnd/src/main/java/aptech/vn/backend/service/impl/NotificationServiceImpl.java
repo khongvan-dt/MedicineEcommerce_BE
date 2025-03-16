@@ -34,21 +34,21 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public List<NotificationDTO.GetDto> findAll() {
+    public List<NotificationDTO.GetNotificationDto> findAll() {
         return notificationRepository.findAll().stream()
-                .map(notificationMapper::toGetDto)
+                .map(notificationMapper::toGetNotificationDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<NotificationDTO.GetDto> findById(Long id) {
+    public Optional<NotificationDTO.GetNotificationDto> findById(Long id) {
         return notificationRepository.findById(id)
-                .map(notificationMapper::toGetDto);
+                .map(notificationMapper::toGetNotificationDto);
     }
 
     @Override
     @Transactional
-    public NotificationDTO.GetDto saveOrUpdate(NotificationDTO.SaveDto notificationDTO) {
+    public NotificationDTO.GetNotificationDto saveOrUpdate(NotificationDTO.SaveNotificationDto notificationDTO) {
         Notification notification;
 
         if (notificationDTO.getId() == null || notificationDTO.getId() == 0) {
@@ -75,7 +75,7 @@ public class NotificationServiceImpl implements NotificationService {
         notification.setMessage(notificationDTO.getMessage());
 
         Notification savedNotification = notificationRepository.save(notification);
-        return notificationMapper.toGetDto(savedNotification);
+        return notificationMapper.toGetNotificationDto(savedNotification);
     }
 
     @Override
@@ -84,16 +84,16 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public List<NotificationDTO.GetDto> findByUserId(Long userId) {
+    public List<NotificationDTO.GetNotificationDto> findByUserId(Long userId) {
         return notificationRepository.findByUser_Id(userId).stream()
-                .map(notificationMapper::toGetDto)
+                .map(notificationMapper::toGetNotificationDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<NotificationDTO.GetDto> findByUserIdAndCreatedAfter(Long userId, LocalDateTime date) {
+    public List<NotificationDTO.GetNotificationDto> findByUserIdAndCreatedAfter(Long userId, LocalDateTime date) {
         return notificationRepository.findByUser_IdAndCreatedAtAfter(userId, date).stream()
-                .map(notificationMapper::toGetDto)
+                .map(notificationMapper::toGetNotificationDto)
                 .collect(Collectors.toList());
     }
 }

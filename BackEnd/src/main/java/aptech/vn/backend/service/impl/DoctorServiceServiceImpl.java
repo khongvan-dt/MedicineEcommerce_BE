@@ -7,7 +7,6 @@ import aptech.vn.backend.repository.DoctorServiceRepository;
 import aptech.vn.backend.service.DoctorServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,41 +24,48 @@ public class DoctorServiceServiceImpl implements DoctorServiceService {
         this.doctorServiceMapper = doctorServiceMapper;
     }
 
-    public List<DoctorServiceDTO> findAll() {
+    @Override
+    public List<DoctorServiceDTO.GetDoctorServiceDto> findAll() {
         return doctorServiceRepository.findAll().stream()
-                .map(doctorServiceMapper::toDto)
+                .map(doctorServiceMapper::toDoctorServiceDto)
                 .collect(Collectors.toList());
     }
 
-    public Optional<DoctorServiceDTO> findById(Long id) {
+    @Override
+    public Optional<DoctorServiceDTO.GetDoctorServiceDto> findById(Long id) {
         return doctorServiceRepository.findById(id)
-                .map(doctorServiceMapper::toDto);
+                .map(doctorServiceMapper::toDoctorServiceDto);
     }
 
-    public DoctorServiceDTO save(DoctorServiceDTO doctorServiceDTO) {
-        DoctorService doctorService = doctorServiceMapper.toEntity(doctorServiceDTO);
+    @Override
+    public DoctorServiceDTO.GetDoctorServiceDto save(DoctorServiceDTO.SaveDoctorServiceDto doctorServiceDTO) {
+        DoctorService doctorService = doctorServiceMapper.toDoctorServiceEntity(doctorServiceDTO);
         DoctorService savedDoctorService = doctorServiceRepository.save(doctorService);
-        return doctorServiceMapper.toDto(savedDoctorService);
+        return doctorServiceMapper.toDoctorServiceDto(savedDoctorService);
     }
 
+    @Override
     public void deleteById(Long id) {
         doctorServiceRepository.deleteById(id);
     }
 
-    public List<DoctorServiceDTO> findByDoctorId(Long doctorId) {
+    @Override
+    public List<DoctorServiceDTO.GetDoctorServiceDto> findByDoctorId(Long doctorId) {
         return doctorServiceRepository.findByDoctor_Id(doctorId).stream()
-                .map(doctorServiceMapper::toDto)
+                .map(doctorServiceMapper::toDoctorServiceDto)
                 .collect(Collectors.toList());
     }
 
-    public List<DoctorServiceDTO> findByServiceId(Long serviceId) {
+    @Override
+    public List<DoctorServiceDTO.GetDoctorServiceDto> findByServiceId(Long serviceId) {
         return doctorServiceRepository.findByService_Id(serviceId).stream()
-                .map(doctorServiceMapper::toDto)
+                .map(doctorServiceMapper::toDoctorServiceDto)
                 .collect(Collectors.toList());
     }
 
-    public Optional<DoctorServiceDTO> findByDoctorIdAndServiceId(Long doctorId, Long serviceId) {
+    @Override
+    public Optional<DoctorServiceDTO.GetDoctorServiceDto> findByDoctorIdAndServiceId(Long doctorId, Long serviceId) {
         return doctorServiceRepository.findByDoctor_IdAndService_Id(doctorId, serviceId)
-                .map(doctorServiceMapper::toDto);
+                .map(doctorServiceMapper::toDoctorServiceDto);
     }
 }

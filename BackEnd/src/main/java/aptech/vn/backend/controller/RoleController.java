@@ -19,21 +19,21 @@ public class RoleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RoleDTO.GetDto>> getAllRoles() {
-        List<RoleDTO.GetDto> roles = roleService.findAll();
+    public ResponseEntity<List<RoleDTO.GetRoleDto>> getAllRoles() {
+        List<RoleDTO.GetRoleDto> roles = roleService.findAll();
         return ResponseEntity.ok(roles);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RoleDTO.GetDto> getRoleById(@PathVariable Long id) {
+    public ResponseEntity<RoleDTO.GetRoleDto> getRoleById(@PathVariable Long id) {
         return roleService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/save")
-    public ResponseEntity<RoleDTO.GetDto> saveOrUpdateRole(@RequestBody RoleDTO.SaveDto roleDTO) {
-        RoleDTO.GetDto savedRole = roleService.saveOrUpdate(roleDTO);
+    public ResponseEntity<RoleDTO.GetRoleDto> saveOrUpdateRole(@RequestBody RoleDTO.SaveRoleDto roleDTO) {
+        RoleDTO.GetRoleDto savedRole = roleService.saveOrUpdate(roleDTO);
         return ResponseEntity.ok(savedRole);
     }
 
@@ -47,7 +47,7 @@ public class RoleController {
     }
 
     @GetMapping("/by-name/{name}")
-    public ResponseEntity<RoleDTO.GetDto> getRoleByName(@PathVariable String name) {
+    public ResponseEntity<RoleDTO.GetRoleDto> getRoleByName(@PathVariable String name) {
         return roleService.findByName(name)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());

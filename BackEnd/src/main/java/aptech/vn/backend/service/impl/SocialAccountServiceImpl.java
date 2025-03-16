@@ -32,22 +32,22 @@ public class SocialAccountServiceImpl implements SocialAccountService {
     }
 
     @Override
-    public List<SocialAccountDTO.GetDto> findAll() {
+    public List<SocialAccountDTO.GetSocialAccountDto> findAll() {
         return socialAccountRepository.findAll()
                 .stream()
-                .map(socialAccountMapper::toGetDto)
+                .map(socialAccountMapper::toGetSocialAccountDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<SocialAccountDTO.GetDto> findById(Long id) {
+    public Optional<SocialAccountDTO.GetSocialAccountDto> findById(Long id) {
         return socialAccountRepository.findById(id)
-                .map(socialAccountMapper::toGetDto);
+                .map(socialAccountMapper::toGetSocialAccountDto);
     }
 
     @Override
     @Transactional
-    public SocialAccountDTO.GetDto saveOrUpdate(SocialAccountDTO.SaveDto socialAccountDTO) {
+    public SocialAccountDTO.GetSocialAccountDto saveOrUpdate(SocialAccountDTO.SaveSocialAccountDto socialAccountDTO) {
         SocialAccount socialAccount;
 
         if (socialAccountDTO.getId() == null || socialAccountDTO.getId() == 0) {
@@ -81,7 +81,7 @@ public class SocialAccountServiceImpl implements SocialAccountService {
         socialAccount.setTokenExpiresAt(socialAccountDTO.getTokenExpiresAt());
 
         SocialAccount savedAccount = socialAccountRepository.save(socialAccount);
-        return socialAccountMapper.toGetDto(savedAccount);
+        return socialAccountMapper.toGetSocialAccountDto(savedAccount);
     }
 
     @Override
@@ -90,36 +90,36 @@ public class SocialAccountServiceImpl implements SocialAccountService {
     }
 
     @Override
-    public List<SocialAccountDTO.GetDto> findByUserId(Long userId) {
+    public List<SocialAccountDTO.GetSocialAccountDto> findByUserId(Long userId) {
         return socialAccountRepository.findByUser_Id(userId)
                 .stream()
-                .map(socialAccountMapper::toGetDto)
+                .map(socialAccountMapper::toGetSocialAccountDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<SocialAccountDTO.GetDto> findByProviderAndProviderId(SocialProvider provider, String providerId) {
+    public Optional<SocialAccountDTO.GetSocialAccountDto> findByProviderAndProviderId(SocialProvider provider, String providerId) {
         return socialAccountRepository.findByProviderAndProviderId(provider, providerId)
-                .map(socialAccountMapper::toGetDto);
+                .map(socialAccountMapper::toGetSocialAccountDto);
     }
 
     @Override
-    public List<SocialAccountDTO.GetDto> findByProvider(SocialProvider provider) {
+    public List<SocialAccountDTO.GetSocialAccountDto> findByProvider(SocialProvider provider) {
         return socialAccountRepository.findByProvider(provider)
                 .stream()
-                .map(socialAccountMapper::toGetDto)
+                .map(socialAccountMapper::toGetSocialAccountDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<SocialAccountDTO.GetDto> findByUserIdAndProvider(Long userId, SocialProvider provider) {
+    public Optional<SocialAccountDTO.GetSocialAccountDto> findByUserIdAndProvider(Long userId, SocialProvider provider) {
         return socialAccountRepository.findByUser_IdAndProvider(userId, provider)
-                .map(socialAccountMapper::toGetDto);
+                .map(socialAccountMapper::toGetSocialAccountDto);
     }
 
     @Override
-    public Optional<SocialAccountDTO.GetDto> findByProviderEmail(String email) {
+    public Optional<SocialAccountDTO.GetSocialAccountDto> findByProviderEmail(String email) {
         return socialAccountRepository.findByProviderEmail(email)
-                .map(socialAccountMapper::toGetDto);
+                .map(socialAccountMapper::toGetSocialAccountDto);
     }
 }

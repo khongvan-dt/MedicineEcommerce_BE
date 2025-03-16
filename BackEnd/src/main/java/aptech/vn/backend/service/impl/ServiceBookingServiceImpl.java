@@ -36,22 +36,22 @@ public class ServiceBookingServiceImpl implements ServiceBookingService {
     }
 
     @Override
-    public List<ServiceBookingDTO.GetDto> findAll() {
+    public List<ServiceBookingDTO.GetServiceBookingDto> findAll() {
         return serviceBookingRepository.findAll()
                 .stream()
-                .map(serviceBookingMapper::toGetDto)
+                .map(serviceBookingMapper::toGetServiceBookingDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<ServiceBookingDTO.GetDto> findById(Long id) {
+    public Optional<ServiceBookingDTO.GetServiceBookingDto> findById(Long id) {
         return serviceBookingRepository.findById(id)
-                .map(serviceBookingMapper::toGetDto);
+                .map(serviceBookingMapper::toGetServiceBookingDto);
     }
 
     @Override
     @Transactional
-    public ServiceBookingDTO.GetDto saveOrUpdate(ServiceBookingDTO.SaveDto serviceBookingDTO) {
+    public ServiceBookingDTO.GetServiceBookingDto saveOrUpdate(ServiceBookingDTO.SaveServiceBookingDto serviceBookingDTO) {
         ServiceBooking serviceBooking;
 
         if (serviceBookingDTO.getId() == null || serviceBookingDTO.getId() == 0) {
@@ -85,7 +85,7 @@ public class ServiceBookingServiceImpl implements ServiceBookingService {
         serviceBooking.setStatus(serviceBookingDTO.getStatus());
 
         ServiceBooking savedBooking = serviceBookingRepository.save(serviceBooking);
-        return serviceBookingMapper.toGetDto(savedBooking);
+        return serviceBookingMapper.toGetServiceBookingDto(savedBooking);
     }
 
     @Override
@@ -94,50 +94,50 @@ public class ServiceBookingServiceImpl implements ServiceBookingService {
     }
 
     @Override
-    public List<ServiceBookingDTO.GetDto> findByServiceId(Long serviceId) {
+    public List<ServiceBookingDTO.GetServiceBookingDto> findByServiceId(Long serviceId) {
         return serviceBookingRepository.findByService_Id(serviceId)
                 .stream()
-                .map(serviceBookingMapper::toGetDto)
+                .map(serviceBookingMapper::toGetServiceBookingDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ServiceBookingDTO.GetDto> findByPatientId(Long patientId) {
+    public List<ServiceBookingDTO.GetServiceBookingDto> findByPatientId(Long patientId) {
         return serviceBookingRepository.findByPatient_Id(patientId)
                 .stream()
-                .map(serviceBookingMapper::toGetDto)
+                .map(serviceBookingMapper::toGetServiceBookingDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ServiceBookingDTO.GetDto> findByStatus(BookingStatus status) {
+    public List<ServiceBookingDTO.GetServiceBookingDto> findByStatus(BookingStatus status) {
         return serviceBookingRepository.findByStatus(status)
                 .stream()
-                .map(serviceBookingMapper::toGetDto)
+                .map(serviceBookingMapper::toGetServiceBookingDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ServiceBookingDTO.GetDto> findByPaymentMethod(PaymentMethod paymentMethod) {
+    public List<ServiceBookingDTO.GetServiceBookingDto> findByPaymentMethod(PaymentMethod paymentMethod) {
         return serviceBookingRepository.findByPaymentMethod(paymentMethod)
                 .stream()
-                .map(serviceBookingMapper::toGetDto)
+                .map(serviceBookingMapper::toGetServiceBookingDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ServiceBookingDTO.GetDto> findByTotalPriceGreaterThanEqual(BigDecimal amount) {
+    public List<ServiceBookingDTO.GetServiceBookingDto> findByTotalPriceGreaterThanEqual(BigDecimal amount) {
         return serviceBookingRepository.findByTotalPriceGreaterThanEqual(amount)
                 .stream()
-                .map(serviceBookingMapper::toGetDto)
+                .map(serviceBookingMapper::toGetServiceBookingDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ServiceBookingDTO.GetDto> findByCreatedBetween(LocalDateTime start, LocalDateTime end) {
+    public List<ServiceBookingDTO.GetServiceBookingDto> findByCreatedBetween(LocalDateTime start, LocalDateTime end) {
         return serviceBookingRepository.findByCreatedAtBetween(start, end)
                 .stream()
-                .map(serviceBookingMapper::toGetDto)
+                .map(serviceBookingMapper::toGetServiceBookingDto)
                 .collect(Collectors.toList());
     }
 }

@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MessageService {
-    MessageDTO.GetDto saveOrUpdate(MessageDTO.SaveDto messageDTO);
-    Optional<MessageDTO.GetDto> findById(Long id);
-    List<MessageDTO.GetDto> findAll();
-    Page<MessageDTO.GetDto> findAll(Pageable pageable);
+    MessageDTO.GetMessageDto saveOrUpdate(MessageDTO.SaveMessageDto messageDTO);
+    Optional<MessageDTO.GetMessageDto> findById(Long id);
+    List<MessageDTO.GetMessageDto> findAll();
+    Page<MessageDTO.GetMessageDto> findAll(Pageable pageable);
     void deleteById(Long id);
-    List<MessageDTO.GetDto> findBySenderId(Long senderId);
-    List<MessageDTO.GetDto> findByReceiverId(Long receiverId);
-    List<MessageDTO.GetDto> findConversation(Long user1Id, Long user2Id);
-    List<MessageDTO.GetDto> findConversationPaged(Long user1Id, Long user2Id, Pageable pageable);
+    List<MessageDTO.GetMessageDto> findBySenderId(Long senderId);
+    List<MessageDTO.GetMessageDto> findByReceiverId(Long receiverId);
+    List<MessageDTO.GetMessageDto> findConversation(Long user1Id, Long user2Id);
+    List<MessageDTO.GetMessageDto> findConversationPaged(Long user1Id, Long user2Id, Pageable pageable);
 }

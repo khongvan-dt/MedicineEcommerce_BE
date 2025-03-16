@@ -27,20 +27,20 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public List<BrandDTO.GetDto> findAll() {
+    public List<BrandDTO.GetBrandDto> findAll() {
         return brandRepository.findAll().stream()
-                .map(brandMapper::toGetDto)
+                .map(brandMapper::toGetBrandDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<BrandDTO.GetDto> findById(Long id) {
+    public Optional<BrandDTO.GetBrandDto> findById(Long id) {
         return brandRepository.findById(id)
-                .map(brandMapper::toGetDto);
+                .map(brandMapper::toGetBrandDto);
     }
 
     @Override
-    public BrandDTO.GetDto saveOrUpdate(BrandDTO.SaveDto brandDTO) {
+    public BrandDTO.GetBrandDto saveOrUpdate(BrandDTO.SaveBrandDto brandDTO) {
         Brand brand;
 
         if (brandDTO.getId() == null || brandDTO.getId() == 0) {
@@ -61,7 +61,7 @@ public class BrandServiceImpl implements BrandService {
         }
 
         Brand savedBrand = brandRepository.save(brand);
-        return brandMapper.toGetDto(savedBrand);
+        return brandMapper.toGetBrandDto(savedBrand);
     }
 
     @Override
@@ -70,15 +70,15 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public Optional<BrandDTO.GetDto> findByName(String name) {
+    public Optional<BrandDTO.GetBrandDto> findByName(String name) {
         return brandRepository.findByName(name)
-                .map(brandMapper::toGetDto);
+                .map(brandMapper::toGetBrandDto);
     }
 
     @Override
-    public List<BrandDTO.GetDto> findByNameContaining(String namePattern) {
+    public List<BrandDTO.GetBrandDto> findByNameContaining(String namePattern) {
         return brandRepository.findByNameContaining(namePattern).stream()
-                .map(brandMapper::toGetDto)
+                .map(brandMapper::toGetBrandDto)
                 .collect(Collectors.toList());
     }
 }

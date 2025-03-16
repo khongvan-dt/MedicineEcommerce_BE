@@ -26,20 +26,20 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryDTO.GetDto> findAll() {
+    public List<CategoryDTO.GetCategoryDto> findAll() {
         return categoryRepository.findAll().stream()
-                .map(categoryMapper::toGetDto)
+                .map(categoryMapper::toGetCategoryDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<CategoryDTO.GetDto> findById(Long id) {
+    public Optional<CategoryDTO.GetCategoryDto> findById(Long id) {
         return categoryRepository.findById(id)
-                .map(categoryMapper::toGetDto);
+                .map(categoryMapper::toGetCategoryDto);
     }
 
     @Override
-    public CategoryDTO.GetDto saveOrUpdate(CategoryDTO.SaveDto categoryDTO) {
+    public CategoryDTO.GetCategoryDto saveOrUpdate(CategoryDTO.SaveCategoryDto categoryDTO) {
         Category category;
 
         if (categoryDTO.getId() == null || categoryDTO.getId() == 0) {
@@ -82,7 +82,7 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         Category savedCategory = categoryRepository.save(category);
-        return categoryMapper.toGetDto(savedCategory);
+        return categoryMapper.toGetCategoryDto(savedCategory);
     }
 
     @Override
@@ -91,23 +91,23 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryDTO.GetDto> findByName(String name) {
+    public List<CategoryDTO.GetCategoryDto> findByName(String name) {
         return categoryRepository.findByName(name).stream()
-                .map(categoryMapper::toGetDto)
+                .map(categoryMapper::toGetCategoryDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<CategoryDTO.GetDto> findByParentId(Long parentId) {
+    public List<CategoryDTO.GetCategoryDto> findByParentId(Long parentId) {
         return categoryRepository.findByParent_Id(parentId).stream()
-                .map(categoryMapper::toGetDto)
+                .map(categoryMapper::toGetCategoryDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<CategoryDTO.GetDto> findRootCategories() {
+    public List<CategoryDTO.GetCategoryDto> findRootCategories() {
         return categoryRepository.findByParentIsNull().stream()
-                .map(categoryMapper::toGetDto)
+                .map(categoryMapper::toGetCategoryDto)
                 .collect(Collectors.toList());
     }
 }

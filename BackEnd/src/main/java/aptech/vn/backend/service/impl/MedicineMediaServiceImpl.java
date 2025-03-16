@@ -35,21 +35,21 @@ public class MedicineMediaServiceImpl implements MedicineMediaService {
     }
 
     @Override
-    public List<MedicineMediaDTO.GetDto> findAll() {
+    public List<MedicineMediaDTO.GetMedicineMediaDto> findAll() {
         return medicineMediaRepository.findAll().stream()
-                .map(medicineMediaMapper::toGetDto)
+                .map(medicineMediaMapper::toGetMedicineMediaDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<MedicineMediaDTO.GetDto> findById(Long id) {
+    public Optional<MedicineMediaDTO.GetMedicineMediaDto> findById(Long id) {
         return medicineMediaRepository.findById(id)
-                .map(medicineMediaMapper::toGetDto);
+                .map(medicineMediaMapper::toGetMedicineMediaDto);
     }
 
     @Override
     @Transactional
-    public MedicineMediaDTO.GetDto saveOrUpdate(MedicineMediaDTO.SaveDto medicineMediaDTO) {
+    public MedicineMediaDTO.GetMedicineMediaDto saveOrUpdate(MedicineMediaDTO.SaveMedicineMediaDto medicineMediaDTO) {
         MedicineMedia medicineMedia;
 
         if (medicineMediaDTO.getId() == null || medicineMediaDTO.getId() == 0) {
@@ -89,7 +89,7 @@ public class MedicineMediaServiceImpl implements MedicineMediaService {
         }
 
         MedicineMedia savedMedia = medicineMediaRepository.save(medicineMedia);
-        return medicineMediaMapper.toGetDto(savedMedia);
+        return medicineMediaMapper.toGetMedicineMediaDto(savedMedia);
     }
 
     @Override
@@ -98,29 +98,29 @@ public class MedicineMediaServiceImpl implements MedicineMediaService {
     }
 
     @Override
-    public List<MedicineMediaDTO.GetDto> findByMedicineId(Long medicineId) {
+    public List<MedicineMediaDTO.GetMedicineMediaDto> findByMedicineId(Long medicineId) {
         return medicineMediaRepository.findByMedicine_Id(medicineId).stream()
-                .map(medicineMediaMapper::toGetDto)
+                .map(medicineMediaMapper::toGetMedicineMediaDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<MedicineMediaDTO.GetDto> findByMediaType(MediaType mediaType) {
+    public List<MedicineMediaDTO.GetMedicineMediaDto> findByMediaType(MediaType mediaType) {
         return medicineMediaRepository.findByMediaType(mediaType).stream()
-                .map(medicineMediaMapper::toGetDto)
+                .map(medicineMediaMapper::toGetMedicineMediaDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<MedicineMediaDTO.GetDto> findByMedicineIdAndMediaType(Long medicineId, MediaType mediaType) {
+    public List<MedicineMediaDTO.GetMedicineMediaDto> findByMedicineIdAndMediaType(Long medicineId, MediaType mediaType) {
         return medicineMediaRepository.findByMedicine_IdAndMediaType(medicineId, mediaType).stream()
-                .map(medicineMediaMapper::toGetDto)
+                .map(medicineMediaMapper::toGetMedicineMediaDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<MedicineMediaDTO.GetDto> findMainImageByMedicineId(Long medicineId) {
+    public Optional<MedicineMediaDTO.GetMedicineMediaDto> findMainImageByMedicineId(Long medicineId) {
         return medicineMediaRepository.findByMedicine_IdAndMainImageTrue(medicineId)
-                .map(medicineMediaMapper::toGetDto);
+                .map(medicineMediaMapper::toGetMedicineMediaDto);
     }
 }

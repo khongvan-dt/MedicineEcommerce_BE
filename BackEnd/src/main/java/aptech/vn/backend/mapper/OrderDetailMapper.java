@@ -12,7 +12,7 @@ public interface OrderDetailMapper {
     @Mapping(target = "medicineId", source = "medicine.id")
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")
-    OrderDetailDTO.GetDto toGetDto(OrderDetail entity);
+    OrderDetailDTO.GetOrderDetailDto toGetOrderDetailDto(OrderDetail entity);
 
-    OrderDetail toEntity(OrderDetailDTO.SaveDto dto);
+    OrderDetail toOrderDetailEntity(OrderDetailDTO.SaveOrderDetailDto dto);
 }

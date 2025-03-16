@@ -19,21 +19,21 @@ public class OrderDetailController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderDetailDTO.GetDto>> getAllOrderDetails() {
-        List<OrderDetailDTO.GetDto> orderDetails = orderDetailService.findAll();
+    public ResponseEntity<List<OrderDetailDTO.GetOrderDetailDto>> getAllOrderDetails() {
+        List<OrderDetailDTO.GetOrderDetailDto> orderDetails = orderDetailService.findAll();
         return ResponseEntity.ok(orderDetails);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderDetailDTO.GetDto> getOrderDetailById(@PathVariable Long id) {
+    public ResponseEntity<OrderDetailDTO.GetOrderDetailDto> getOrderDetailById(@PathVariable Long id) {
         return orderDetailService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/save")
-    public ResponseEntity<OrderDetailDTO.GetDto> saveOrUpdateOrderDetail(@RequestBody OrderDetailDTO.SaveDto orderDetailDTO) {
-        OrderDetailDTO.GetDto savedOrderDetail = orderDetailService.saveOrUpdate(orderDetailDTO);
+    public ResponseEntity<OrderDetailDTO.GetOrderDetailDto> saveOrUpdateOrderDetail(@RequestBody OrderDetailDTO.SaveOrderDetailDto orderDetailDTO) {
+        OrderDetailDTO.GetOrderDetailDto savedOrderDetail = orderDetailService.saveOrUpdate(orderDetailDTO);
         return ResponseEntity.ok(savedOrderDetail);
     }
 
@@ -47,28 +47,28 @@ public class OrderDetailController {
     }
 
     @GetMapping("/by-order/{orderId}")
-    public ResponseEntity<List<OrderDetailDTO.GetDto>> getOrderDetailsByOrderId(@PathVariable Long orderId) {
-        List<OrderDetailDTO.GetDto> orderDetails = orderDetailService.findByOrderId(orderId);
+    public ResponseEntity<List<OrderDetailDTO.GetOrderDetailDto>> getOrderDetailsByOrderId(@PathVariable Long orderId) {
+        List<OrderDetailDTO.GetOrderDetailDto> orderDetails = orderDetailService.findByOrderId(orderId);
         return ResponseEntity.ok(orderDetails);
     }
 
     @GetMapping("/by-medicine/{medicineId}")
-    public ResponseEntity<List<OrderDetailDTO.GetDto>> getOrderDetailsByMedicineId(@PathVariable Long medicineId) {
-        List<OrderDetailDTO.GetDto> orderDetails = orderDetailService.findByMedicineId(medicineId);
+    public ResponseEntity<List<OrderDetailDTO.GetOrderDetailDto>> getOrderDetailsByMedicineId(@PathVariable Long medicineId) {
+        List<OrderDetailDTO.GetOrderDetailDto> orderDetails = orderDetailService.findByMedicineId(medicineId);
         return ResponseEntity.ok(orderDetails);
     }
 
     @GetMapping("/by-order-and-medicine")
-    public ResponseEntity<List<OrderDetailDTO.GetDto>> getOrderDetailsByOrderAndMedicine(
+    public ResponseEntity<List<OrderDetailDTO.GetOrderDetailDto>> getOrderDetailsByOrderAndMedicine(
             @RequestParam Long orderId,
             @RequestParam Long medicineId) {
-        List<OrderDetailDTO.GetDto> orderDetails = orderDetailService.findByOrderIdAndMedicineId(orderId, medicineId);
+        List<OrderDetailDTO.GetOrderDetailDto> orderDetails = orderDetailService.findByOrderIdAndMedicineId(orderId, medicineId);
         return ResponseEntity.ok(orderDetails);
     }
 
     @GetMapping("/by-quantity-greater-than/{quantity}")
-    public ResponseEntity<List<OrderDetailDTO.GetDto>> getOrderDetailsByQuantityGreaterThan(@PathVariable Integer quantity) {
-        List<OrderDetailDTO.GetDto> orderDetails = orderDetailService.findByQuantityGreaterThan(quantity);
+    public ResponseEntity<List<OrderDetailDTO.GetOrderDetailDto>> getOrderDetailsByQuantityGreaterThan(@PathVariable Integer quantity) {
+        List<OrderDetailDTO.GetOrderDetailDto> orderDetails = orderDetailService.findByQuantityGreaterThan(quantity);
         return ResponseEntity.ok(orderDetails);
     }
 }

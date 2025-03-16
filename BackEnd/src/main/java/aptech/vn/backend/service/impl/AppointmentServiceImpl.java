@@ -26,21 +26,21 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<AppointmentDTO> findAll() {
+    public List<ApiResponse> findAll() {
         return appointmentRepository.findAll().stream()
                 .map(appointmentMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<AppointmentDTO> findById(Long id) {
+    public Optional<ApiResponse> findById(Long id) {
         return appointmentRepository.findById(id)
                 .map(appointmentMapper::toDto);
     }
 
     @Override
-    public AppointmentDTO save(AppointmentDTO appointmentDTO) {
-        Appointment appointment = appointmentMapper.toEntity(appointmentDTO);
+    public ApiResponse save(ApiResponse ApiResponse) {
+        Appointment appointment = appointmentMapper.toEntity(ApiResponse);
         Appointment savedAppointment = appointmentRepository.save(appointment);
         return appointmentMapper.toDto(savedAppointment);
     }
@@ -51,28 +51,28 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<AppointmentDTO> findByPatientId(Long patientId) {
+    public List<ApiResponse> findByPatientId(Long patientId) {
         return appointmentRepository.findByPatient_Id(patientId).stream()
                 .map(appointmentMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<AppointmentDTO> findByDoctorId(Long doctorId) {
+    public List<ApiResponse> findByDoctorId(Long doctorId) {
         return appointmentRepository.findByDoctor_Id(doctorId).stream()
                 .map(appointmentMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<AppointmentDTO> findByAppointmentDateBetween(LocalDateTime start, LocalDateTime end) {
+    public List<ApiResponse> findByAppointmentDateBetween(LocalDateTime start, LocalDateTime end) {
         return appointmentRepository.findByAppointmentDateBetween(start, end).stream()
                 .map(appointmentMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<AppointmentDTO> findByPatientIdAndDoctorId(Long patientId, Long doctorId) {
+    public List<ApiResponse> findByPatientIdAndDoctorId(Long patientId, Long doctorId) {
         return appointmentRepository.findByPatient_IdAndDoctor_Id(patientId, doctorId).stream()
                 .map(appointmentMapper::toDto)
                 .collect(Collectors.toList());

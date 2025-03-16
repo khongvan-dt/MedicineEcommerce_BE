@@ -35,21 +35,21 @@ public class DoctorProfileServiceImpl implements DoctorProfileService {
     }
 
     @Override
-    public List<DoctorProfileDTO.GetDto> findAll() {
+    public List<DoctorProfileDTO.GetDoctorProfileDto> findAll() {
         return doctorProfileRepository.findAll().stream()
-                .map(doctorProfileMapper::toGetDto)
+                .map(doctorProfileMapper::toGetDoctorProfileDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<DoctorProfileDTO.GetDto> findById(Long id) {
+    public Optional<DoctorProfileDTO.GetDoctorProfileDto> findById(Long id) {
         return doctorProfileRepository.findById(id)
-                .map(doctorProfileMapper::toGetDto);
+                .map(doctorProfileMapper::toGetDoctorProfileDto);
     }
 
     @Override
     @Transactional
-    public DoctorProfileDTO.GetDto saveOrUpdate(DoctorProfileDTO.SaveDto doctorProfileDTO) {
+    public DoctorProfileDTO.GetDoctorProfileDto saveOrUpdate(DoctorProfileDTO.SaveDoctorProfileDto doctorProfileDTO) {
         DoctorProfile doctorProfile;
 
         if (doctorProfileDTO.getId() == null || doctorProfileDTO.getId() == 0) {
@@ -79,7 +79,7 @@ public class DoctorProfileServiceImpl implements DoctorProfileService {
         doctorProfile.setAccountBalance(doctorProfileDTO.getAccountBalance());
 
         DoctorProfile savedDoctorProfile = doctorProfileRepository.save(doctorProfile);
-        return doctorProfileMapper.toGetDto(savedDoctorProfile);
+        return doctorProfileMapper.toGetDoctorProfileDto(savedDoctorProfile);
     }
 
     @Override
@@ -88,29 +88,29 @@ public class DoctorProfileServiceImpl implements DoctorProfileService {
     }
 
     @Override
-    public Optional<DoctorProfileDTO.GetDto> findByUserId(Long userId) {
+    public Optional<DoctorProfileDTO.GetDoctorProfileDto> findByUserId(Long userId) {
         return doctorProfileRepository.findByUser_Id(userId)
-                .map(doctorProfileMapper::toGetDto);
+                .map(doctorProfileMapper::toGetDoctorProfileDto);
     }
 
     @Override
-    public List<DoctorProfileDTO.GetDto> findBySpecializationContaining(String specialization) {
+    public List<DoctorProfileDTO.GetDoctorProfileDto> findBySpecializationContaining(String specialization) {
         return doctorProfileRepository.findBySpecializationContaining(specialization).stream()
-                .map(doctorProfileMapper::toGetDto)
+                .map(doctorProfileMapper::toGetDoctorProfileDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<DoctorProfileDTO.GetDto> findByWorkplaceContaining(String workplace) {
+    public List<DoctorProfileDTO.GetDoctorProfileDto> findByWorkplaceContaining(String workplace) {
         return doctorProfileRepository.findByWorkplaceContaining(workplace).stream()
-                .map(doctorProfileMapper::toGetDto)
+                .map(doctorProfileMapper::toGetDoctorProfileDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<DoctorProfileDTO.GetDto> findByAccountBalanceGreaterThanEqual(BigDecimal amount) {
+    public List<DoctorProfileDTO.GetDoctorProfileDto> findByAccountBalanceGreaterThanEqual(BigDecimal amount) {
         return doctorProfileRepository.findByAccountBalanceGreaterThanEqual(amount).stream()
-                .map(doctorProfileMapper::toGetDto)
+                .map(doctorProfileMapper::toGetDoctorProfileDto)
                 .collect(Collectors.toList());
     }
 }

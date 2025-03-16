@@ -44,22 +44,22 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     }
 
     @Override
-    public List<PrescriptionDTO.GetDto> findAll() {
+    public List<PrescriptionDTO.GetPrescriptionDto> findAll() {
         return prescriptionRepository.findAll()
                 .stream()
-                .map(prescriptionMapper::toGetDto)
+                .map(prescriptionMapper::toGetPrescriptionDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<PrescriptionDTO.GetDto> findById(Long id) {
+    public Optional<PrescriptionDTO.GetPrescriptionDto> findById(Long id) {
         return prescriptionRepository.findById(id)
-                .map(prescriptionMapper::toGetDto);
+                .map(prescriptionMapper::toGetPrescriptionDto);
     }
 
     @Override
     @Transactional
-    public PrescriptionDTO.GetDto saveOrUpdate(PrescriptionDTO.SaveDto prescriptionDTO) {
+    public PrescriptionDTO.GetPrescriptionDto saveOrUpdate(PrescriptionDTO.SavePrescriptionDto prescriptionDTO) {
         Prescription prescription;
 
         if (prescriptionDTO.getId() == null || prescriptionDTO.getId() == 0) {
@@ -96,7 +96,7 @@ public class PrescriptionServiceImpl implements PrescriptionService {
         prescription.setDosage(prescriptionDTO.getDosage());
 
         Prescription savedPrescription = prescriptionRepository.save(prescription);
-        return prescriptionMapper.toGetDto(savedPrescription);
+        return prescriptionMapper.toGetPrescriptionDto(savedPrescription);
     }
     @Override
     public void deleteById(Long id) {
@@ -104,42 +104,42 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     }
 
     @Override
-    public List<PrescriptionDTO.GetDto> findByDoctorId(Long doctorId) {
+    public List<PrescriptionDTO.GetPrescriptionDto> findByDoctorId(Long doctorId) {
         return prescriptionRepository.findByDoctor_Id(doctorId)
                 .stream()
-                .map(prescriptionMapper::toGetDto)
+                .map(prescriptionMapper::toGetPrescriptionDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<PrescriptionDTO.GetDto> findByPatientId(Long patientId) {
+    public List<PrescriptionDTO.GetPrescriptionDto> findByPatientId(Long patientId) {
         return prescriptionRepository.findByPatient_Id(patientId)
                 .stream()
-                .map(prescriptionMapper::toGetDto)
+                .map(prescriptionMapper::toGetPrescriptionDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<PrescriptionDTO.GetDto> findByMedicineId(Long medicineId) {
+    public List<PrescriptionDTO.GetPrescriptionDto> findByMedicineId(Long medicineId) {
         return prescriptionRepository.findByMedicine_Id(medicineId)
                 .stream()
-                .map(prescriptionMapper::toGetDto)
+                .map(prescriptionMapper::toGetPrescriptionDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<PrescriptionDTO.GetDto> findByPatientIdAndDoctorId(Long patientId, Long doctorId) {
+    public List<PrescriptionDTO.GetPrescriptionDto> findByPatientIdAndDoctorId(Long patientId, Long doctorId) {
         return prescriptionRepository.findByPatient_IdAndDoctor_Id(patientId, doctorId)
                 .stream()
-                .map(prescriptionMapper::toGetDto)
+                .map(prescriptionMapper::toGetPrescriptionDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<PrescriptionDTO.GetDto> findByPatientIdAndMedicineId(Long patientId, Long medicineId) {
+    public List<PrescriptionDTO.GetPrescriptionDto> findByPatientIdAndMedicineId(Long patientId, Long medicineId) {
         return prescriptionRepository.findByPatient_IdAndMedicine_Id(patientId, medicineId)
                 .stream()
-                .map(prescriptionMapper::toGetDto)
+                .map(prescriptionMapper::toGetPrescriptionDto)
                 .collect(Collectors.toList());
     }
 }

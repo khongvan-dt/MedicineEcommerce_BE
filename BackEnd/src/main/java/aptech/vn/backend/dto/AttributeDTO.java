@@ -13,7 +13,7 @@ public class AttributeDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetDto {
+    public static class GetAttributeDto {
         private Long id;
         private String name;
         private BigDecimal priceIn;
@@ -26,7 +26,7 @@ public class AttributeDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SaveDto {
+    public static class SaveAttributeDto {
         private Long id;
         private String name;
         private BigDecimal priceIn;

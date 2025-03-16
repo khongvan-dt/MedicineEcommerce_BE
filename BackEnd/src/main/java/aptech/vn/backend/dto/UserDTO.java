@@ -12,7 +12,7 @@ public class UserDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetDto {
+    public static class GetUserDto {
         private Long id;
         private String fullName;
         private String phone;
@@ -24,12 +24,14 @@ public class UserDTO {
         private Boolean locked;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
+        private String avatar;
+
     }
 
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SaveDto {
+    public static class SaveUserDto {
         private Long id;
         private String fullName;
         private String phone;
@@ -39,5 +41,7 @@ public class UserDTO {
         private Boolean enabled;
         private Boolean locked;
         private Integer countLock;
+        private String avatar;
+
     }
 }

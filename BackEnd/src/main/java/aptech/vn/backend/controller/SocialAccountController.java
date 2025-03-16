@@ -20,21 +20,21 @@ public class SocialAccountController {
     }
 
     @GetMapping
-    public ResponseEntity<List<SocialAccountDTO.GetDto>> getAllSocialAccounts() {
-        List<SocialAccountDTO.GetDto> accounts = socialAccountService.findAll();
+    public ResponseEntity<List<SocialAccountDTO.GetSocialAccountDto>> getAllSocialAccounts() {
+        List<SocialAccountDTO.GetSocialAccountDto> accounts = socialAccountService.findAll();
         return ResponseEntity.ok(accounts);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SocialAccountDTO.GetDto> getSocialAccountById(@PathVariable Long id) {
+    public ResponseEntity<SocialAccountDTO.GetSocialAccountDto> getSocialAccountById(@PathVariable Long id) {
         return socialAccountService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/save")
-    public ResponseEntity<SocialAccountDTO.GetDto> saveOrUpdateSocialAccount(@RequestBody SocialAccountDTO.SaveDto socialAccountDTO) {
-        SocialAccountDTO.GetDto savedAccount = socialAccountService.saveOrUpdate(socialAccountDTO);
+    public ResponseEntity<SocialAccountDTO.GetSocialAccountDto> saveOrUpdateSocialAccount(@RequestBody SocialAccountDTO.SaveSocialAccountDto socialAccountDTO) {
+        SocialAccountDTO.GetSocialAccountDto savedAccount = socialAccountService.saveOrUpdate(socialAccountDTO);
         return ResponseEntity.ok(savedAccount);
     }
 
@@ -48,13 +48,13 @@ public class SocialAccountController {
     }
 
     @GetMapping("/by-user/{userId}")
-    public ResponseEntity<List<SocialAccountDTO.GetDto>> getSocialAccountsByUserId(@PathVariable Long userId) {
-        List<SocialAccountDTO.GetDto> accounts = socialAccountService.findByUserId(userId);
+    public ResponseEntity<List<SocialAccountDTO.GetSocialAccountDto>> getSocialAccountsByUserId(@PathVariable Long userId) {
+        List<SocialAccountDTO.GetSocialAccountDto> accounts = socialAccountService.findByUserId(userId);
         return ResponseEntity.ok(accounts);
     }
 
     @GetMapping("/by-provider-and-id")
-    public ResponseEntity<SocialAccountDTO.GetDto> getSocialAccountByProviderAndId(
+    public ResponseEntity<SocialAccountDTO.GetSocialAccountDto> getSocialAccountByProviderAndId(
             @RequestParam SocialProvider provider,
             @RequestParam String providerId) {
         return socialAccountService.findByProviderAndProviderId(provider, providerId)
@@ -63,13 +63,13 @@ public class SocialAccountController {
     }
 
     @GetMapping("/by-provider/{provider}")
-    public ResponseEntity<List<SocialAccountDTO.GetDto>> getSocialAccountsByProvider(@PathVariable SocialProvider provider) {
-        List<SocialAccountDTO.GetDto> accounts = socialAccountService.findByProvider(provider);
+    public ResponseEntity<List<SocialAccountDTO.GetSocialAccountDto>> getSocialAccountsByProvider(@PathVariable SocialProvider provider) {
+        List<SocialAccountDTO.GetSocialAccountDto> accounts = socialAccountService.findByProvider(provider);
         return ResponseEntity.ok(accounts);
     }
 
     @GetMapping("/by-user-and-provider")
-    public ResponseEntity<SocialAccountDTO.GetDto> getSocialAccountByUserIdAndProvider(
+    public ResponseEntity<SocialAccountDTO.GetSocialAccountDto> getSocialAccountByUserIdAndProvider(
             @RequestParam Long userId,
             @RequestParam SocialProvider provider) {
         return socialAccountService.findByUserIdAndProvider(userId, provider)
@@ -78,7 +78,7 @@ public class SocialAccountController {
     }
 
     @GetMapping("/by-email/{email}")
-    public ResponseEntity<SocialAccountDTO.GetDto> getSocialAccountByEmail(@PathVariable String email) {
+    public ResponseEntity<SocialAccountDTO.GetSocialAccountDto> getSocialAccountByEmail(@PathVariable String email) {
         return socialAccountService.findByProviderEmail(email)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());

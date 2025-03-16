@@ -11,7 +11,7 @@ public interface SalaryMapper {
     @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")
-    SalaryDTO.GetDto toGetDto(Salary entity);
+    SalaryDTO.GetSalaryDto toGetSalaryDto(Salary entity);
 
-    Salary toEntity(SalaryDTO.SaveDto dto);
+    Salary toSalaryEntity(SalaryDTO.SaveSalaryDto dto);
 }

@@ -10,6 +10,6 @@ import org.mapstruct.ReportingPolicy;
 public interface BrandMapper {
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")
-    BrandDTO.GetDto toGetDto(Brand entity);
-    Brand toEntity(BrandDTO.SaveDto dto);
+    BrandDTO.GetBrandDto toGetBrandDto(Brand entity);
+    Brand toEntity(BrandDTO.SaveBrandDto dto);
 }

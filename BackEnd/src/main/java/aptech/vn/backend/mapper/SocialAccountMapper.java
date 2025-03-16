@@ -11,7 +11,7 @@ public interface SocialAccountMapper {
     @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")
-    SocialAccountDTO.GetDto toGetDto(SocialAccount entity);
+    SocialAccountDTO.GetSocialAccountDto toGetSocialAccountDto(SocialAccount entity);
 
-    SocialAccount toEntity(SocialAccountDTO.SaveDto dto);
+    SocialAccount toSocialAccountEntity(SocialAccountDTO.SaveSocialAccountDto dto);
 }

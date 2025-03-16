@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MedicineBatchService {
-    List<MedicineBatchDTO.GetDto> findAll();
-    Optional<MedicineBatchDTO.GetDto> findById(Long id);
-    MedicineBatchDTO.GetDto saveOrUpdate(MedicineBatchDTO.SaveDto medicineBatchDTO);
+    List<MedicineBatchDTO.GetMedicineBatchDto> findAll();
+    Optional<MedicineBatchDTO.GetMedicineBatchDto> findById(Long id);
+    MedicineBatchDTO.GetMedicineBatchDto saveOrUpdate(MedicineBatchDTO.SaveMedicineBatchDto medicineBatchDTO);
     void deleteById(Long id);
-    Optional<MedicineBatchDTO.GetDto> findByBatchName(String batchName);
-    List<MedicineBatchDTO.GetDto> findByMedicineCode(String medicineCode);
-    List<MedicineBatchDTO.GetDto> findByQuantityGreaterThan(Integer quantity);
-    List<MedicineBatchDTO.GetDto> findByExpiryDateBefore(LocalDate date);
+    Optional<MedicineBatchDTO.GetMedicineBatchDto> findByBatchName(String batchName);
+    List<MedicineBatchDTO.GetMedicineBatchDto> findByMedicineCode(String medicineCode);
+    List<MedicineBatchDTO.GetMedicineBatchDto> findByQuantityGreaterThan(Integer quantity);
+    List<MedicineBatchDTO.GetMedicineBatchDto> findByExpiryDateBefore(LocalDate date);
 }

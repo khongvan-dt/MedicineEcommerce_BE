@@ -20,21 +20,21 @@ public class ServiceController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ServiceDTO.GetDto>> getAllServices() {
-        List<ServiceDTO.GetDto> services = serviceService.findAll();
+    public ResponseEntity<List<ServiceDTO.GetServiceDto>> getAllServices() {
+        List<ServiceDTO.GetServiceDto> services = serviceService.findAll();
         return ResponseEntity.ok(services);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ServiceDTO.GetDto> getServiceById(@PathVariable Long id) {
+    public ResponseEntity<ServiceDTO.GetServiceDto> getServiceById(@PathVariable Long id) {
         return serviceService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/save")
-    public ResponseEntity<ServiceDTO.GetDto> saveOrUpdateService(@RequestBody ServiceDTO.SaveDto serviceDTO) {
-        ServiceDTO.GetDto savedService = serviceService.saveOrUpdate(serviceDTO);
+    public ResponseEntity<ServiceDTO.GetServiceDto> saveOrUpdateService(@RequestBody ServiceDTO.SaveServiceDto serviceDTO) {
+        ServiceDTO.GetServiceDto savedService = serviceService.saveOrUpdate(serviceDTO);
         return ResponseEntity.ok(savedService);
     }
 
@@ -48,34 +48,34 @@ public class ServiceController {
     }
 
     @GetMapping("/by-name")
-    public ResponseEntity<List<ServiceDTO.GetDto>> getServicesByName(@RequestParam String name) {
-        List<ServiceDTO.GetDto> services = serviceService.findByName(name);
+    public ResponseEntity<List<ServiceDTO.GetServiceDto>> getServicesByName(@RequestParam String name) {
+        List<ServiceDTO.GetServiceDto> services = serviceService.findByName(name);
         return ResponseEntity.ok(services);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<ServiceDTO.GetDto>> getServicesByNameContaining(@RequestParam String query) {
-        List<ServiceDTO.GetDto> services = serviceService.findByNameContaining(query);
+    public ResponseEntity<List<ServiceDTO.GetServiceDto>> getServicesByNameContaining(@RequestParam String query) {
+        List<ServiceDTO.GetServiceDto> services = serviceService.findByNameContaining(query);
         return ResponseEntity.ok(services);
     }
 
     @GetMapping("/by-max-price")
-    public ResponseEntity<List<ServiceDTO.GetDto>> getServicesByMaxPrice(@RequestParam BigDecimal maxPrice) {
-        List<ServiceDTO.GetDto> services = serviceService.findByPriceLessThanEqual(maxPrice);
+    public ResponseEntity<List<ServiceDTO.GetServiceDto>> getServicesByMaxPrice(@RequestParam BigDecimal maxPrice) {
+        List<ServiceDTO.GetServiceDto> services = serviceService.findByPriceLessThanEqual(maxPrice);
         return ResponseEntity.ok(services);
     }
 
     @GetMapping("/by-min-price")
-    public ResponseEntity<List<ServiceDTO.GetDto>> getServicesByMinPrice(@RequestParam BigDecimal minPrice) {
-        List<ServiceDTO.GetDto> services = serviceService.findByPriceGreaterThanEqual(minPrice);
+    public ResponseEntity<List<ServiceDTO.GetServiceDto>> getServicesByMinPrice(@RequestParam BigDecimal minPrice) {
+        List<ServiceDTO.GetServiceDto> services = serviceService.findByPriceGreaterThanEqual(minPrice);
         return ResponseEntity.ok(services);
     }
 
     @GetMapping("/by-price-range")
-    public ResponseEntity<List<ServiceDTO.GetDto>> getServicesByPriceRange(
+    public ResponseEntity<List<ServiceDTO.GetServiceDto>> getServicesByPriceRange(
             @RequestParam BigDecimal minPrice,
             @RequestParam BigDecimal maxPrice) {
-        List<ServiceDTO.GetDto> services = serviceService.findByPriceBetween(minPrice, maxPrice);
+        List<ServiceDTO.GetServiceDto> services = serviceService.findByPriceBetween(minPrice, maxPrice);
         return ResponseEntity.ok(services);
     }
 }

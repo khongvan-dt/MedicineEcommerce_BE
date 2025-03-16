@@ -10,7 +10,7 @@ import org.mapstruct.ReportingPolicy;
 public interface ServiceMapper {
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")
-    ServiceDTO.GetDto toGetDto(Service entity);
+    ServiceDTO.GetServiceDto toGetServiceDto(Service entity);
 
-    Service toEntity(ServiceDTO.SaveDto dto);
+    Service toServiceEntity(ServiceDTO.SaveServiceDto dto);
 }

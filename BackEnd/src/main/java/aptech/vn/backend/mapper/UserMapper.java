@@ -10,7 +10,7 @@ import org.mapstruct.ReportingPolicy;
 public interface UserMapper {
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")
-    UserDTO.GetDto toGetDto(User entity);
+    UserDTO.GetUserDto toGetUserDto(User entity);
 
-    User toEntity(UserDTO.SaveDto dto);
+    User totoGetUserDtoEntity(UserDTO.SaveUserDto dto);
 }

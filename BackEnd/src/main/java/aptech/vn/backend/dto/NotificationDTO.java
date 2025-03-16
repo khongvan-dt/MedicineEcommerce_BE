@@ -12,7 +12,7 @@ public class NotificationDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetDto {
+    public static class GetNotificationDto {
         private Long id;
         private Long userId;
         private String message;
@@ -23,7 +23,7 @@ public class NotificationDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SaveDto {
+    public static class SaveNotificationDto {
         private Long id;
         private Long userId;
         private String message;

@@ -12,7 +12,7 @@ public class ReviewDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetDto {
+    public static class GetReviewDto {
         private Long id;
         private Long userId;
         private Integer rating;
@@ -27,7 +27,7 @@ public class ReviewDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SaveDto {
+    public static class SaveReviewDto {
         private Long id;
         private Long userId;
         private Integer rating;

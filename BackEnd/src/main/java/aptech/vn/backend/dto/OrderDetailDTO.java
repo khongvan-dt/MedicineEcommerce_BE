@@ -13,7 +13,7 @@ public class OrderDetailDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetDto {
+    public static class GetOrderDetailDto {
         private Long id;
         private Long orderId;
         private Long medicineId;
@@ -26,7 +26,7 @@ public class OrderDetailDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SaveDto {
+    public static class SaveOrderDetailDto {
         private Long id;
         private Long orderId;
         private Long medicineId;

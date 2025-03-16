@@ -11,7 +11,7 @@ public class DiscountDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetDto {
+    public static class GetDiscountDto {
         private Long id;
         private String code;
         private String name;
@@ -26,7 +26,7 @@ public class DiscountDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SaveDto {
+    public static class SaveDiscountDto {
         private Long id;
         private String code;
         private String name;

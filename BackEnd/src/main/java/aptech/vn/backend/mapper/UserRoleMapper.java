@@ -12,7 +12,7 @@ public interface UserRoleMapper {
     @Mapping(target = "roleId", source = "role.id")
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")
-    UserRoleDTO.GetDto toGetDto(UserRole entity);
+    UserRoleDTO.GetUserRoleDto toGetUserRoleDto(UserRole entity);
 
-    UserRole toEntity(UserRoleDTO.SaveDto dto);
+    UserRole toUserRoleEntity(UserRoleDTO.SaveUserRoleDto dto);
 }

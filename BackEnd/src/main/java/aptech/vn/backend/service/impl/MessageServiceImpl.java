@@ -37,7 +37,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public MessageDTO.GetDto saveOrUpdate(MessageDTO.SaveDto messageDTO) {
+    public MessageDTO.GetMessageDto saveOrUpdate(MessageDTO.SaveMessageDto messageDTO) {
         Message message;
 
         if (messageDTO.getId() == null || messageDTO.getId() == 0) {
@@ -69,26 +69,26 @@ public class MessageServiceImpl implements MessageService {
         message.setContent(messageDTO.getContent());
 
         Message savedMessage = messageRepository.save(message);
-        return messageMapper.toGetDto(savedMessage);
+        return messageMapper.toGetMessageDto(savedMessage);
     }
 
     @Override
-    public Optional<MessageDTO.GetDto> findById(Long id) {
+    public Optional<MessageDTO.GetMessageDto> findById(Long id) {
         return messageRepository.findById(id)
-                .map(messageMapper::toGetDto);
+                .map(messageMapper::toGetMessageDto);
     }
 
     @Override
-    public List<MessageDTO.GetDto> findAll() {
+    public List<MessageDTO.GetMessageDto> findAll() {
         return messageRepository.findAll().stream()
-                .map(messageMapper::toGetDto)
+                .map(messageMapper::toGetMessageDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Page<MessageDTO.GetDto> findAll(Pageable pageable) {
+    public Page<MessageDTO.GetMessageDto> findAll(Pageable pageable) {
         return messageRepository.findAll(pageable)
-                .map(messageMapper::toGetDto);
+                .map(messageMapper::toGetMessageDto);
     }
 
     @Override
@@ -97,21 +97,21 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<MessageDTO.GetDto> findBySenderId(Long senderId) {
+    public List<MessageDTO.GetMessageDto> findBySenderId(Long senderId) {
         return messageRepository.findBySenderId(senderId).stream()
-                .map(messageMapper::toGetDto)
+                .map(messageMapper::toGetMessageDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<MessageDTO.GetDto> findByReceiverId(Long receiverId) {
+    public List<MessageDTO.GetMessageDto> findByReceiverId(Long receiverId) {
         return messageRepository.findByReceiverId(receiverId).stream()
-                .map(messageMapper::toGetDto)
+                .map(messageMapper::toGetMessageDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<MessageDTO.GetDto> findConversation(Long user1Id, Long user2Id) {
+    public List<MessageDTO.GetMessageDto> findConversation(Long user1Id, Long user2Id) {
         // Cần tìm cả tin nhắn từ user1 gửi cho user2 và ngược lại
         List<Message> sent = messageRepository.findBySenderIdAndReceiverId(user1Id, user2Id);
         List<Message> received = messageRepository.findBySenderIdAndReceiverId(user2Id, user1Id);
@@ -122,12 +122,12 @@ public class MessageServiceImpl implements MessageService {
         conversation.sort((m1, m2) -> m1.getCreatedAt().compareTo(m2.getCreatedAt()));
 
         return conversation.stream()
-                .map(messageMapper::toGetDto)
+                .map(messageMapper::toGetMessageDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<MessageDTO.GetDto> findConversationPaged(Long user1Id, Long user2Id, Pageable pageable) {
+    public List<MessageDTO.GetMessageDto> findConversationPaged(Long user1Id, Long user2Id, Pageable pageable) {
 
         return findConversation(user1Id, user2Id).stream()
                 .skip(pageable.getOffset())

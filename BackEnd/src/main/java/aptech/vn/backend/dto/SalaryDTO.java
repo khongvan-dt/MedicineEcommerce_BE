@@ -14,7 +14,7 @@ public class SalaryDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetDto {
+    public static class GetSalaryDto {
         private Long id;
         private Long userId;
         private String bankCode;
@@ -28,7 +28,7 @@ public class SalaryDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SaveDto {
+    public static class SaveSalaryDto {
         private Long id;
         private Long userId;
         private String bankCode;

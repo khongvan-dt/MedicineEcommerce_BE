@@ -10,7 +10,7 @@ import org.mapstruct.ReportingPolicy;
 public interface ConsultationMapper {
     @Mapping(target = "doctorId", source = "doctor.id")
     @Mapping(target = "patientId", source = "patient.id")
-    ConsultationDTO.GetDto toGetDto(Consultation entity);  // Đảm bảo phương thức này tồn tại
+    ConsultationDTO.GetConsultationDto toGetConsultationDto(Consultation entity);
 
-    Consultation toEntity(ConsultationDTO.SaveDto dto);
+    Consultation toEntity(ConsultationDTO.SaveConsultationDto dto);
 }

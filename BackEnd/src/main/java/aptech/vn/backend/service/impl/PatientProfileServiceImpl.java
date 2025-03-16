@@ -32,22 +32,22 @@ public class PatientProfileServiceImpl implements PatientProfileService {
     }
 
     @Override
-    public List<PatientProfileDTO.GetDto> findAll() {
+    public List<PatientProfileDTO.GetPatientProfileDto> findAll() {
         return patientProfileRepository.findAll()
                 .stream()
-                .map(patientProfileMapper::toGetDto)
+                .map(patientProfileMapper::toGetPatientProfileDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<PatientProfileDTO.GetDto> findById(Long id) {
+    public Optional<PatientProfileDTO.GetPatientProfileDto> findById(Long id) {
         return patientProfileRepository.findById(id)
-                .map(patientProfileMapper::toGetDto);
+                .map(patientProfileMapper::toGetPatientProfileDto);
     }
 
     @Override
     @Transactional
-    public PatientProfileDTO.GetDto saveOrUpdate(PatientProfileDTO.SaveDto patientProfileDTO) {
+    public PatientProfileDTO.GetPatientProfileDto saveOrUpdate(PatientProfileDTO.SavePatientProfileDto patientProfileDTO) {
         PatientProfile patientProfile;
 
         if (patientProfileDTO.getId() == null || patientProfileDTO.getId() == 0) {
@@ -77,7 +77,7 @@ public class PatientProfileServiceImpl implements PatientProfileService {
         patientProfile.setAccountBalance(patientProfileDTO.getAccountBalance());
 
         PatientProfile savedProfile = patientProfileRepository.save(patientProfile);
-        return patientProfileMapper.toGetDto(savedProfile);
+        return patientProfileMapper.toGetPatientProfileDto(savedProfile);
     }
 
     @Override
@@ -86,40 +86,40 @@ public class PatientProfileServiceImpl implements PatientProfileService {
     }
 
     @Override
-    public Optional<PatientProfileDTO.GetDto> findByUserId(Long userId) {
+    public Optional<PatientProfileDTO.GetPatientProfileDto> findByUserId(Long userId) {
         return patientProfileRepository.findByUser_Id(userId)
-                .map(patientProfileMapper::toGetDto);
+                .map(patientProfileMapper::toGetPatientProfileDto);
     }
 
     @Override
-    public List<PatientProfileDTO.GetDto> findByBloodType(String bloodType) {
+    public List<PatientProfileDTO.GetPatientProfileDto> findByBloodType(String bloodType) {
         return patientProfileRepository.findByBloodType(bloodType)
                 .stream()
-                .map(patientProfileMapper::toGetDto)
+                .map(patientProfileMapper::toGetPatientProfileDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<PatientProfileDTO.GetDto> findByMedicalHistoryContaining(String keyword) {
+    public List<PatientProfileDTO.GetPatientProfileDto> findByMedicalHistoryContaining(String keyword) {
         return patientProfileRepository.findByMedicalHistoryContaining(keyword)
                 .stream()
-                .map(patientProfileMapper::toGetDto)
+                .map(patientProfileMapper::toGetPatientProfileDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<PatientProfileDTO.GetDto> findByAllergiesContaining(String keyword) {
+    public List<PatientProfileDTO.GetPatientProfileDto> findByAllergiesContaining(String keyword) {
         return patientProfileRepository.findByAllergiesContaining(keyword)
                 .stream()
-                .map(patientProfileMapper::toGetDto)
+                .map(patientProfileMapper::toGetPatientProfileDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<PatientProfileDTO.GetDto> findByAccountBalanceGreaterThanEqual(BigDecimal amount) {
+    public List<PatientProfileDTO.GetPatientProfileDto> findByAccountBalanceGreaterThanEqual(BigDecimal amount) {
         return patientProfileRepository.findByAccountBalanceGreaterThanEqual(amount)
                 .stream()
-                .map(patientProfileMapper::toGetDto)
+                .map(patientProfileMapper::toGetPatientProfileDto)
                 .collect(Collectors.toList());
     }
 }

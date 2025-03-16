@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface NotificationService {
-    List<NotificationDTO.GetDto> findAll();
-    Optional<NotificationDTO.GetDto> findById(Long id);
-    NotificationDTO.GetDto saveOrUpdate(NotificationDTO.SaveDto notificationDTO);
+    List<NotificationDTO.GetNotificationDto> findAll();
+    Optional<NotificationDTO.GetNotificationDto> findById(Long id);
+    NotificationDTO.GetNotificationDto saveOrUpdate(NotificationDTO.SaveNotificationDto notificationDTO);
     void deleteById(Long id);
-    List<NotificationDTO.GetDto> findByUserId(Long userId);
-    List<NotificationDTO.GetDto> findByUserIdAndCreatedAfter(Long userId, LocalDateTime date);
+    List<NotificationDTO.GetNotificationDto> findByUserId(Long userId);
+    List<NotificationDTO.GetNotificationDto> findByUserIdAndCreatedAfter(Long userId, LocalDateTime date);
 }

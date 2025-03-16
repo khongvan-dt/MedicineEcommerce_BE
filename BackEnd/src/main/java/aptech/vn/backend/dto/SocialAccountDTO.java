@@ -13,7 +13,7 @@ public class SocialAccountDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetDto {
+    public static class GetSocialAccountDto {
         private Long id;
         private Long userId;
         private SocialProvider provider;
@@ -31,7 +31,7 @@ public class SocialAccountDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SaveDto {
+    public static class SaveSocialAccountDto {
         private Long id;
         private Long userId;
         private SocialProvider provider;

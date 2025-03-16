@@ -2,7 +2,6 @@ package aptech.vn.backend.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Min;
@@ -19,7 +18,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(callSuper = true)
-public class Voucher extends BaseEntity {
+public class Vouchers extends BaseEntity {
     @NotBlank
     @Column(name = "code", nullable = false, unique = true)
     private String code;

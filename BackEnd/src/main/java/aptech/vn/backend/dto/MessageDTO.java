@@ -1,5 +1,6 @@
 package aptech.vn.backend.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ public class MessageDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetDto {
+    public static class GetMessageDto {
         private Long id;
         private Long senderId;
         private Long receiverId;
@@ -24,10 +25,10 @@ public class MessageDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SaveDto {
-        private Long id;
-        private Long senderId;
-        private Long receiverId;
-        private String content;
+    public static class SaveMessageDto {
+         private Long id;
+         private Long senderId;
+         private Long receiverId;
+         private String content;
     }
 }

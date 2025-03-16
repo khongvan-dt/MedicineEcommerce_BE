@@ -1,22 +1,22 @@
-//package aptech.vn.backend.service;
-//
-//import aptech.vn.backend.dto.UserDTO;
-//
-//import java.time.LocalDateTime;
-//import java.util.List;
-//import java.util.Optional;
-//
-//public interface UserService {
-//    List<UserDTO.GetDto> findAll();
-//    Optional<UserDTO.GetDto> findById(Long id);
-//    UserDTO.GetDto saveOrUpdate(UserDTO.SaveDto userDTO);
-//    void deleteById(Long id);
-//    Optional<UserDTO.GetDto> findByEmail(String email);
-//    List<UserDTO.GetDto> findByFullNameContaining(String fullName);
-//    List<UserDTO.GetDto> findByPhone(String phone);
-//    List<UserDTO.GetDto> findByAddressContaining(String address);
-//    List<UserDTO.GetDto> findByEnabled(Boolean enabled);
-//    List<UserDTO.GetDto> findByLocked(Boolean locked);
-//    List<UserDTO.GetDto> findByLastLoginAfter(LocalDateTime date);
-//    List<UserDTO.GetDto> findByCountLockGreaterThanEqual(Integer count);
-//}
+package aptech.vn.backend.service;
+
+import aptech.vn.backend.dto.UserDTO;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+public interface UserService {
+    List<UserDTO.GetUserDto> findAll();
+    Optional<UserDTO.GetUserDto> findById(Long id);
+    UserDTO.GetUserDto saveOrUpdate(UserDTO.SaveUserDto userDTO);
+    void deleteById(Long id);
+    Optional<UserDTO.GetUserDto> findByEmail(String email);
+    List<UserDTO.GetUserDto> findByFullNameContaining(String fullName);
+    List<UserDTO.GetUserDto> findByPhone(String phone);
+    List<UserDTO.GetUserDto> findByAddressContaining(String address);
+    List<UserDTO.GetUserDto> findByEnabled(Boolean enabled);
+    List<UserDTO.GetUserDto> findByLocked(Boolean locked);
+    List<UserDTO.GetUserDto> findByLastLoginAfter(LocalDateTime date);
+    List<UserDTO.GetUserDto> findByCountLockGreaterThanEqual(Integer count);
+}

@@ -26,23 +26,23 @@ public class TrackingServiceImpl implements TrackingService {
     }
 
     @Override
-    public List<TrackingDTO> findAll() {
+    public List<TrackingDTO.GetTrackingDto> findAll() {
         return trackingRepository.findAll()
                 .stream()
-                .map(trackingMapper::toDto)
+                .map(trackingMapper::toTrackingDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<TrackingDTO> findById(Long id) {
+    public Optional<TrackingDTO.GetTrackingDto> findById(Long id) {
         return Optional.empty();
     }
 
     @Override
-    public TrackingDTO save(TrackingDTO trackingDTO) {
-        Tracking tracking = trackingMapper.toEntity(trackingDTO);
+    public TrackingDTO.GetTrackingDto save(TrackingDTO.SaveTrackingDto trackingDTO) {
+        Tracking tracking = trackingMapper.toTrackingEntity(trackingDTO);
         trackingRepository.save(tracking);
-        return trackingMapper.toDto(tracking);
+        return trackingMapper.toTrackingDto(tracking);
     }
 
     @Override
@@ -51,31 +51,31 @@ public class TrackingServiceImpl implements TrackingService {
     }
 
     @Override
-    public List<TrackingDTO> findByOrderId(Long orderId) {
+    public List<TrackingDTO.GetTrackingDto> findByOrderId(Long orderId) {
         return trackingRepository.findByOrder_Id(orderId)
                 .stream()
-                .map(trackingMapper::toDto)
+                .map(trackingMapper::toTrackingDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<TrackingDTO> findByStatus(TrackingStatus status) {
+    public List<TrackingDTO.GetTrackingDto> findByStatus(TrackingStatus status) {
         return trackingRepository.findByStatus(status)
                 .stream()
-                .map(trackingMapper::toDto)
+                .map(trackingMapper::toTrackingDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<TrackingDTO> findByLocationContaining(String location) {
+    public List<TrackingDTO.GetTrackingDto> findByLocationContaining(String location) {
         return trackingRepository.findByLocationContaining(location)
                 .stream()
-                .map(trackingMapper::toDto)
+                .map(trackingMapper::toTrackingDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<TrackingDTO> findLatestByOrderId(Long orderId) {
-        return  trackingRepository.findFirstByOrder_IdOrderByCreatedAtDesc(orderId).map(trackingMapper::toDto);
+    public Optional<TrackingDTO.GetTrackingDto> findLatestByOrderId(Long orderId) {
+        return  trackingRepository.findFirstByOrder_IdOrderByCreatedAtDesc(orderId).map(trackingMapper::toTrackingDto);
     }
 }

@@ -11,7 +11,7 @@ public class BrandDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetDto {
+    public static class GetBrandDto {
         private Long id;
         private String name;
         private String image;
@@ -22,7 +22,7 @@ public class BrandDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SaveDto {
+    public static class SaveBrandDto {
         private Long id;
         private String name;
         private String image;

@@ -12,7 +12,7 @@ public class RoleDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetDto {
+    public static class GetRoleDto {
         private Long id;
         private String name;
         private LocalDateTime createdAt;
@@ -22,7 +22,7 @@ public class RoleDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SaveDto {
+    public static class SaveRoleDto {
         private Long id;
         private String name;
     }

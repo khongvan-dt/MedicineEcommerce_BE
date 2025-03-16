@@ -12,7 +12,7 @@ public class PrescriptionDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetDto {
+    public static class GetPrescriptionDto {
         private Long id;
         private Long doctorId;
         private Long patientId;
@@ -25,7 +25,7 @@ public class PrescriptionDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SaveDto {
+    public static class SavePrescriptionDto {
         private Long id;
         private Long doctorId;
         private Long patientId;

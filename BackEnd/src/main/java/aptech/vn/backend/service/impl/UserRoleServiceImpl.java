@@ -36,22 +36,22 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
-    public List<UserRoleDTO.GetDto> findAll() {
+    public List<UserRoleDTO.GetUserRoleDto> findAll() {
         return userRoleRepository.findAll()
                 .stream()
-                .map(userRoleMapper::toGetDto)
+                .map(userRoleMapper::toGetUserRoleDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<UserRoleDTO.GetDto> findById(Long id) {
+    public Optional<UserRoleDTO.GetUserRoleDto> findById(Long id) {
         return userRoleRepository.findById(id)
-                .map(userRoleMapper::toGetDto);
+                .map(userRoleMapper::toGetUserRoleDto);
     }
 
     @Override
     @Transactional
-    public UserRoleDTO.GetDto saveOrUpdate(UserRoleDTO.SaveDto userRoleDTO) {
+    public UserRoleDTO.GetUserRoleDto saveOrUpdate(UserRoleDTO.SaveUserRoleDto userRoleDTO) {
         UserRole userRole;
 
         if (userRoleDTO.getId() == null || userRoleDTO.getId() == 0) {
@@ -80,7 +80,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         userRole.setRole(role);
 
         UserRole savedUserRole = userRoleRepository.save(userRole);
-        return userRoleMapper.toGetDto(savedUserRole);
+        return userRoleMapper.toGetUserRoleDto(savedUserRole);
     }
 
     @Override
@@ -89,24 +89,24 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
-    public List<UserRoleDTO.GetDto> findByUserId(Long userId) {
+    public List<UserRoleDTO.GetUserRoleDto> findByUserId(Long userId) {
         return userRoleRepository.findByUser_Id(userId)
                 .stream()
-                .map(userRoleMapper::toGetDto)
+                .map(userRoleMapper::toGetUserRoleDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<UserRoleDTO.GetDto> findByRoleId(Long roleId) {
+    public List<UserRoleDTO.GetUserRoleDto> findByRoleId(Long roleId) {
         return userRoleRepository.findByRole_Id(roleId)
                 .stream()
-                .map(userRoleMapper::toGetDto)
+                .map(userRoleMapper::toGetUserRoleDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<UserRoleDTO.GetDto> findByUserIdAndRoleId(Long userId, Long roleId) {
+    public Optional<UserRoleDTO.GetUserRoleDto> findByUserIdAndRoleId(Long userId, Long roleId) {
         return userRoleRepository.findByUser_IdAndRole_Id(userId, roleId)
-                .map(userRoleMapper::toGetDto);
+                .map(userRoleMapper::toGetUserRoleDto);
     }
 }

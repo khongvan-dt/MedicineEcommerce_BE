@@ -33,22 +33,22 @@ public class SalaryServiceImpl implements SalaryService {
     }
 
     @Override
-    public List<SalaryDTO.GetDto> findAll() {
+    public List<SalaryDTO.GetSalaryDto> findAll() {
         return salaryRepository.findAll()
                 .stream()
-                .map(salaryMapper::toGetDto)
+                .map(salaryMapper::toGetSalaryDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<SalaryDTO.GetDto> findById(Long id) {
+    public Optional<SalaryDTO.GetSalaryDto> findById(Long id) {
         return salaryRepository.findById(id)
-                .map(salaryMapper::toGetDto);
+                .map(salaryMapper::toGetSalaryDto);
     }
 
     @Override
     @Transactional
-    public SalaryDTO.GetDto saveOrUpdate(SalaryDTO.SaveDto salaryDTO) {
+    public SalaryDTO.GetSalaryDto saveOrUpdate(SalaryDTO.SaveSalaryDto salaryDTO) {
         Salary salary;
 
         if (salaryDTO.getId() == null || salaryDTO.getId() == 0) {
@@ -80,7 +80,7 @@ public class SalaryServiceImpl implements SalaryService {
         salary.setStatus(salaryDTO.getStatus());
 
         Salary savedSalary = salaryRepository.save(salary);
-        return salaryMapper.toGetDto(savedSalary);
+        return salaryMapper.toGetSalaryDto(savedSalary);
     }
 
     @Override
@@ -89,50 +89,50 @@ public class SalaryServiceImpl implements SalaryService {
     }
 
     @Override
-    public List<SalaryDTO.GetDto> findByUserId(Long userId) {
+    public List<SalaryDTO.GetSalaryDto> findByUserId(Long userId) {
         return salaryRepository.findByUser_Id(userId)
                 .stream()
-                .map(salaryMapper::toGetDto)
+                .map(salaryMapper::toGetSalaryDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<SalaryDTO.GetDto> findByBankCode(String bankCode) {
+    public List<SalaryDTO.GetSalaryDto> findByBankCode(String bankCode) {
         return salaryRepository.findByBankCode(bankCode)
                 .stream()
-                .map(salaryMapper::toGetDto)
+                .map(salaryMapper::toGetSalaryDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<SalaryDTO.GetDto> findByBankName(String bankName) {
+    public List<SalaryDTO.GetSalaryDto> findByBankName(String bankName) {
         return salaryRepository.findByBankName(bankName)
                 .stream()
-                .map(salaryMapper::toGetDto)
+                .map(salaryMapper::toGetSalaryDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<SalaryDTO.GetDto> findByStatus(PaymentStatus status) {
+    public List<SalaryDTO.GetSalaryDto> findByStatus(PaymentStatus status) {
         return salaryRepository.findByStatus(status)
                 .stream()
-                .map(salaryMapper::toGetDto)
+                .map(salaryMapper::toGetSalaryDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<SalaryDTO.GetDto> findByPriceGreaterThanEqual(BigDecimal amount) {
+    public List<SalaryDTO.GetSalaryDto> findByPriceGreaterThanEqual(BigDecimal amount) {
         return salaryRepository.findByPriceGreaterThanEqual(amount)
                 .stream()
-                .map(salaryMapper::toGetDto)
+                .map(salaryMapper::toGetSalaryDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<SalaryDTO.GetDto> findByCreatedBetween(LocalDateTime start, LocalDateTime end) {
+    public List<SalaryDTO.GetSalaryDto> findByCreatedBetween(LocalDateTime start, LocalDateTime end) {
         return salaryRepository.findByCreatedAtBetween(start, end)
                 .stream()
-                .map(salaryMapper::toGetDto)
+                .map(salaryMapper::toGetSalaryDto)
                 .collect(Collectors.toList());
     }
 }

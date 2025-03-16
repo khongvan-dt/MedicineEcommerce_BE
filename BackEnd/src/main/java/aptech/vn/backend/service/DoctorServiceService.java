@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DoctorServiceService {
-    List<DoctorServiceDTO> findAll();
-    Optional<DoctorServiceDTO> findById(Long id);
-    DoctorServiceDTO save(DoctorServiceDTO doctorServiceDTO);
+    List<DoctorServiceDTO.GetDoctorServiceDto> findAll();
+    Optional<DoctorServiceDTO.GetDoctorServiceDto> findById(Long id);
+    DoctorServiceDTO.GetDoctorServiceDto save(DoctorServiceDTO.SaveDoctorServiceDto doctorServiceDTO);
     void deleteById(Long id);
-    List<DoctorServiceDTO> findByDoctorId(Long doctorId);
-    List<DoctorServiceDTO> findByServiceId(Long serviceId);
-    Optional<DoctorServiceDTO> findByDoctorIdAndServiceId(Long doctorId, Long serviceId);
+    List<DoctorServiceDTO.GetDoctorServiceDto> findByDoctorId(Long doctorId);
+    List<DoctorServiceDTO.GetDoctorServiceDto> findByServiceId(Long serviceId);
+    Optional<DoctorServiceDTO.GetDoctorServiceDto> findByDoctorIdAndServiceId(Long doctorId, Long serviceId);
 }

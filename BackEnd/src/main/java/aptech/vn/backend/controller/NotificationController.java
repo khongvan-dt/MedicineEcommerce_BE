@@ -20,21 +20,21 @@ public class NotificationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<NotificationDTO.GetDto>> getAllNotifications() {
-        List<NotificationDTO.GetDto> notifications = notificationService.findAll();
+    public ResponseEntity<List<NotificationDTO.GetNotificationDto>> getAllNotifications() {
+        List<NotificationDTO.GetNotificationDto> notifications = notificationService.findAll();
         return ResponseEntity.ok(notifications);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<NotificationDTO.GetDto> getNotificationById(@PathVariable Long id) {
+    public ResponseEntity<NotificationDTO.GetNotificationDto> getNotificationById(@PathVariable Long id) {
         return notificationService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/save")
-    public ResponseEntity<NotificationDTO.GetDto> saveOrUpdateNotification(@RequestBody NotificationDTO.SaveDto notificationDTO) {
-        NotificationDTO.GetDto savedNotification = notificationService.saveOrUpdate(notificationDTO);
+    public ResponseEntity<NotificationDTO.GetNotificationDto> saveOrUpdateNotification(@RequestBody NotificationDTO.SaveNotificationDto notificationDTO) {
+        NotificationDTO.GetNotificationDto savedNotification = notificationService.saveOrUpdate(notificationDTO);
         return ResponseEntity.ok(savedNotification);
     }
 
@@ -48,17 +48,17 @@ public class NotificationController {
     }
 
     @GetMapping("/by-user/{userId}")
-    public ResponseEntity<List<NotificationDTO.GetDto>> getNotificationsByUserId(@PathVariable Long userId) {
-        List<NotificationDTO.GetDto> notifications = notificationService.findByUserId(userId);
+    public ResponseEntity<List<NotificationDTO.GetNotificationDto>> getNotificationsByUserId(@PathVariable Long userId) {
+        List<NotificationDTO.GetNotificationDto> notifications = notificationService.findByUserId(userId);
         return ResponseEntity.ok(notifications);
     }
 
     @GetMapping("/by-user-and-date")
-    public ResponseEntity<List<NotificationDTO.GetDto>> getNotificationsByUserAndDate(
+    public ResponseEntity<List<NotificationDTO.GetNotificationDto>> getNotificationsByUserAndDate(
             @RequestParam Long userId,
             @RequestParam String date) {
         LocalDateTime dateTime = LocalDateTime.parse(date);
-        List<NotificationDTO.GetDto> notifications = notificationService.findByUserIdAndCreatedAfter(userId, dateTime);
+        List<NotificationDTO.GetNotificationDto> notifications = notificationService.findByUserIdAndCreatedAfter(userId, dateTime);
         return ResponseEntity.ok(notifications);
     }
 }

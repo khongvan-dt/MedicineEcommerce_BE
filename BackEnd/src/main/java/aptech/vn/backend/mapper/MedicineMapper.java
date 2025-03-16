@@ -10,7 +10,7 @@ import org.mapstruct.ReportingPolicy;
 public interface MedicineMapper {
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")
-    MedicineDTO.GetDto toGetDto(Medicine medicine);
+    MedicineDTO.GetMedicineDto toGetMedicineDto(Medicine medicine);
 
-    Medicine toEntity(MedicineDTO.SaveDto dto);
+    Medicine toMedicineEntity(MedicineDTO.SaveMedicineDto dto);
 }

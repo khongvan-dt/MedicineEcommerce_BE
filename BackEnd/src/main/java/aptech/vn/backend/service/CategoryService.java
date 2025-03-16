@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CategoryService {
-    List<CategoryDTO.GetDto> findAll();
-    Optional<CategoryDTO.GetDto> findById(Long id);
-    CategoryDTO.GetDto saveOrUpdate(CategoryDTO.SaveDto categoryDTO);
+    List<CategoryDTO.GetCategoryDto> findAll();
+    Optional<CategoryDTO.GetCategoryDto> findById(Long id);
+    CategoryDTO.GetCategoryDto saveOrUpdate(CategoryDTO.SaveCategoryDto categoryDTO);
     void deleteById(Long id);
-    List<CategoryDTO.GetDto> findByName(String name);
-    List<CategoryDTO.GetDto> findByParentId(Long parentId);
-    List<CategoryDTO.GetDto> findRootCategories();
+    List<CategoryDTO.GetCategoryDto> findByName(String name);
+    List<CategoryDTO.GetCategoryDto> findByParentId(Long parentId);
+    List<CategoryDTO.GetCategoryDto> findRootCategories();
 }

@@ -12,7 +12,7 @@ public interface MedicineCategoryMapper {
     @Mapping(target = "categoryId", source = "category.id")
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")
-    MedicineCategoryDTO.GetDto toGetDto(MedicineCategory entity);
+    MedicineCategoryDTO.GetMedicineCategoryDto toGetMedicineCategoryDto(MedicineCategory entity);
 
-    MedicineCategory toEntity(MedicineCategoryDTO.SaveDto dto);
+    MedicineCategory toMedicineCategoryEntity(MedicineCategoryDTO.SaveMedicineCategoryDto dto);
 }

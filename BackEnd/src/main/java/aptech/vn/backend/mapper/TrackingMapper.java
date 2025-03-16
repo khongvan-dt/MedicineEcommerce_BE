@@ -7,6 +7,6 @@ import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface TrackingMapper {
-    TrackingDTO toDto(Tracking entity);
-    Tracking toEntity(TrackingDTO dto);
+    TrackingDTO.GetTrackingDto toTrackingDto(Tracking entity);
+    Tracking toTrackingEntity(TrackingDTO.SaveTrackingDto dto);
 }

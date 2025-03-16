@@ -28,20 +28,20 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
     }
 
     @Override
-    public List<ServiceTypeDTO.GetDto> findAll() {
+    public List<ServiceTypeDTO.GetServiceTypeDto> findAll() {
         return serviceTypeRepository.findAll().stream()
-                .map(serviceTypeMapper::toGetDto)
+                .map(serviceTypeMapper::toGetServiceTypeDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<ServiceTypeDTO.GetDto> findById(Long id) {
+    public Optional<ServiceTypeDTO.GetServiceTypeDto> findById(Long id) {
         return serviceTypeRepository.findById(id)
-                .map(serviceTypeMapper::toGetDto);
+                .map(serviceTypeMapper::toGetServiceTypeDto);
     }
 
     @Override
-    public ServiceTypeDTO.GetDto saveOrUpdate(ServiceTypeDTO.SaveDto serviceTypeDTO) {
+    public ServiceTypeDTO.GetServiceTypeDto saveOrUpdate(ServiceTypeDTO.SaveServiceTypeDto serviceTypeDTO) {
         ServiceType serviceType;
 
         if (serviceTypeDTO.getId() == null || serviceTypeDTO.getId() == 0) {
@@ -63,7 +63,7 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
         serviceType.setName(serviceTypeDTO.getName());
 
         ServiceType savedType = serviceTypeRepository.save(serviceType);
-        return serviceTypeMapper.toGetDto(savedType);
+        return serviceTypeMapper.toGetServiceTypeDto(savedType);
     }
 
     @Override
@@ -72,21 +72,21 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
     }
 
     @Override
-    public Optional<ServiceTypeDTO.GetDto> findByName(String name) {
+    public Optional<ServiceTypeDTO.GetServiceTypeDto> findByName(String name) {
         return serviceTypeRepository.findByName(name)
-                .map(serviceTypeMapper::toGetDto);
+                .map(serviceTypeMapper::toGetServiceTypeDto);
     }
 
     @Override
-    public Page<ServiceTypeDTO.GetDto> findAll(Pageable pageable) {
+    public Page<ServiceTypeDTO.GetServiceTypeDto> findAll(Pageable pageable) {
         return serviceTypeRepository.findAll(pageable)
-                .map(serviceTypeMapper::toGetDto);
+                .map(serviceTypeMapper::toGetServiceTypeDto);
     }
 
     @Override
-    public List<ServiceTypeDTO.GetDto> findByNameContaining(String namePattern) {
+    public List<ServiceTypeDTO.GetServiceTypeDto> findByNameContaining(String namePattern) {
         return serviceTypeRepository.findByNameContaining(namePattern).stream()
-                .map(serviceTypeMapper::toGetDto)
+                .map(serviceTypeMapper::toGetServiceTypeDto)
                 .collect(Collectors.toList());
     }
 }

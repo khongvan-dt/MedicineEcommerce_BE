@@ -13,7 +13,7 @@ public class MedicineMediaDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetDto {
+    public static class GetMedicineMediaDto {
         private Long id;
         private Long medicineId;
         private MediaType mediaType;
@@ -26,7 +26,7 @@ public class MedicineMediaDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SaveDto {
+    public static class SaveMedicineMediaDto {
         private Long id;
         private Long medicineId;
         private MediaType mediaType;

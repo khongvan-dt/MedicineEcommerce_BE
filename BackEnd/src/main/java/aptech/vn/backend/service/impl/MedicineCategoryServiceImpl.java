@@ -39,21 +39,21 @@ public class MedicineCategoryServiceImpl implements MedicineCategoryService {
     }
 
     @Override
-    public List<MedicineCategoryDTO.GetDto> findAll() {
+    public List<MedicineCategoryDTO.GetMedicineCategoryDto> findAll() {
         return medicineCategoryRepository.findAll().stream()
-                .map(medicineCategoryMapper::toGetDto)
+                .map(medicineCategoryMapper::toGetMedicineCategoryDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<MedicineCategoryDTO.GetDto> findById(Long id) {
+    public Optional<MedicineCategoryDTO.GetMedicineCategoryDto> findById(Long id) {
         return medicineCategoryRepository.findById(id)
-                .map(medicineCategoryMapper::toGetDto);
+                .map(medicineCategoryMapper::toGetMedicineCategoryDto);
     }
 
     @Override
     @Transactional
-    public MedicineCategoryDTO.GetDto saveOrUpdate(MedicineCategoryDTO.SaveDto medicineCategoryDTO) {
+    public MedicineCategoryDTO.GetMedicineCategoryDto saveOrUpdate(MedicineCategoryDTO.SaveMedicineCategoryDto medicineCategoryDTO) {
         MedicineCategory medicineCategory;
 
         if (medicineCategoryDTO.getId() == null || medicineCategoryDTO.getId() == 0) {
@@ -82,7 +82,7 @@ public class MedicineCategoryServiceImpl implements MedicineCategoryService {
         medicineCategory.setCategory(category);
 
         MedicineCategory savedMedicineCategory = medicineCategoryRepository.save(medicineCategory);
-        return medicineCategoryMapper.toGetDto(savedMedicineCategory);
+        return medicineCategoryMapper.toGetMedicineCategoryDto(savedMedicineCategory);
     }
 
     @Override
@@ -91,22 +91,22 @@ public class MedicineCategoryServiceImpl implements MedicineCategoryService {
     }
 
     @Override
-    public List<MedicineCategoryDTO.GetDto> findByMedicineId(Long medicineId) {
+    public List<MedicineCategoryDTO.GetMedicineCategoryDto> findByMedicineId(Long medicineId) {
         return medicineCategoryRepository.findByMedicine_Id(medicineId).stream()
-                .map(medicineCategoryMapper::toGetDto)
+                .map(medicineCategoryMapper::toGetMedicineCategoryDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<MedicineCategoryDTO.GetDto> findByCategoryId(Long categoryId) {
+    public List<MedicineCategoryDTO.GetMedicineCategoryDto> findByCategoryId(Long categoryId) {
         return medicineCategoryRepository.findByCategory_Id(categoryId).stream()
-                .map(medicineCategoryMapper::toGetDto)
+                .map(medicineCategoryMapper::toGetMedicineCategoryDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<MedicineCategoryDTO.GetDto> findByMedicineIdAndCategoryId(Long medicineId, Long categoryId) {
+    public Optional<MedicineCategoryDTO.GetMedicineCategoryDto> findByMedicineIdAndCategoryId(Long medicineId, Long categoryId) {
         return medicineCategoryRepository.findByMedicine_IdAndCategory_Id(medicineId, categoryId)
-                .map(medicineCategoryMapper::toGetDto);
+                .map(medicineCategoryMapper::toGetMedicineCategoryDto);
     }
 }

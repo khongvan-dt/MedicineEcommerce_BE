@@ -34,21 +34,21 @@ public class MedicineServiceImpl implements MedicineService {
     }
 
     @Override
-    public List<MedicineDTO.GetDto> findAll() {
+    public List<MedicineDTO.GetMedicineDto> findAll() {
         return medicineRepository.findAllByDeletedAtIsNull().stream()
-                .map(medicineMapper::toGetDto)
+                .map(medicineMapper::toGetMedicineDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<MedicineDTO.GetDto> findById(Long id) {
+    public Optional<MedicineDTO.GetMedicineDto> findById(Long id) {
         return medicineRepository.findByIdAndDeletedAtIsNull(id)
-                .map(medicineMapper::toGetDto);
+                .map(medicineMapper::toGetMedicineDto);
     }
 
     @Override
     @Transactional
-    public MedicineDTO.GetDto saveOrUpdate(MedicineDTO.SaveDto medicineDTO) {
+    public MedicineDTO.GetMedicineDto saveOrUpdate(MedicineDTO.SaveMedicineDto medicineDTO) {
         Medicine medicine;
 
         if (medicineDTO.getId() == null || medicineDTO.getId() == 0) {
@@ -80,7 +80,7 @@ public class MedicineServiceImpl implements MedicineService {
         medicine.setManufacturer(medicineDTO.getManufacturer());
 
         Medicine savedMedicine = medicineRepository.save(medicine);
-        return medicineMapper.toGetDto(savedMedicine);
+        return medicineMapper.toGetMedicineDto(savedMedicine);
     }
 
     @Override
@@ -92,43 +92,43 @@ public class MedicineServiceImpl implements MedicineService {
     }
 
     @Override
-    public Optional<MedicineDTO.GetDto> findByCode(String code) {
+    public Optional<MedicineDTO.GetMedicineDto> findByCode(String code) {
         return medicineRepository.findByCodeAndDeletedAtIsNull(code)
-                .map(medicineMapper::toGetDto);
+                .map(medicineMapper::toGetMedicineDto);
     }
 
     @Override
-    public List<MedicineDTO.GetDto> findByName(String name) {
+    public List<MedicineDTO.GetMedicineDto> findByName(String name) {
         return medicineRepository.findByNameAndDeletedAtIsNull(name).stream()
-                .map(medicineMapper::toGetDto)
+                .map(medicineMapper::toGetMedicineDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<MedicineDTO.GetDto> findByNameContaining(String namePattern) {
+    public List<MedicineDTO.GetMedicineDto> findByNameContaining(String namePattern) {
         return medicineRepository.findByNameContainingAndDeletedAtIsNull(namePattern).stream()
-                .map(medicineMapper::toGetDto)
+                .map(medicineMapper::toGetMedicineDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<MedicineDTO.GetDto> findByBrandId(Long brandId) {
+    public List<MedicineDTO.GetMedicineDto> findByBrandId(Long brandId) {
         return medicineRepository.findByBrand_IdAndDeletedAtIsNull(brandId).stream()
-                .map(medicineMapper::toGetDto)
+                .map(medicineMapper::toGetMedicineDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<MedicineDTO.GetDto> findByOrigin(String origin) {
+    public List<MedicineDTO.GetMedicineDto> findByOrigin(String origin) {
         return medicineRepository.findByOriginAndDeletedAtIsNull(origin).stream()
-                .map(medicineMapper::toGetDto)
+                .map(medicineMapper::toGetMedicineDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<MedicineDTO.GetDto> findByManufacturer(String manufacturer) {
+    public List<MedicineDTO.GetMedicineDto> findByManufacturer(String manufacturer) {
         return medicineRepository.findByManufacturerAndDeletedAtIsNull(manufacturer).stream()
-                .map(medicineMapper::toGetDto)
+                .map(medicineMapper::toGetMedicineDto)
                 .collect(Collectors.toList());
     }
 }

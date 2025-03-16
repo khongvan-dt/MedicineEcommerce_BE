@@ -13,7 +13,7 @@ public interface PrescriptionMapper {
     @Mapping(target = "medicineId", source = "medicine.id")
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")
-    PrescriptionDTO.GetDto toGetDto(Prescription entity);
+    PrescriptionDTO.GetPrescriptionDto toGetPrescriptionDto(Prescription entity);
 
-    Prescription toEntity(PrescriptionDTO.SaveDto dto);
+    Prescription toPrescriptionEntity(PrescriptionDTO.SavePrescriptionDto dto);
 }

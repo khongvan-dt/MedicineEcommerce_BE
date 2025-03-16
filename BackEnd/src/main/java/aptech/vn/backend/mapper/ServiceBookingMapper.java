@@ -12,7 +12,7 @@ public interface ServiceBookingMapper {
     @Mapping(target = "patientId", source = "patient.id")
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")
-    ServiceBookingDTO.GetDto toGetDto(ServiceBooking entity);
+    ServiceBookingDTO.GetServiceBookingDto toGetServiceBookingDto(ServiceBooking entity);
 
-    ServiceBooking toEntity(ServiceBookingDTO.SaveDto dto);
+    ServiceBooking toServiceBookingEntity(ServiceBookingDTO.SaveServiceBookingDto dto);
 }

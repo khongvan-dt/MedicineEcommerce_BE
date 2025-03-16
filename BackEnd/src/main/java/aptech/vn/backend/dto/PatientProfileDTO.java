@@ -1,5 +1,6 @@
 package aptech.vn.backend.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ public class PatientProfileDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetDto {
+    public static class GetPatientProfileDto {
         private Long id;
         private Long userId;
         private String bloodType;
@@ -27,7 +28,8 @@ public class PatientProfileDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SaveDto {
+    public static class SavePatientProfileDto {
+        @Schema(description = "id")
         private Long id;
         private Long userId;
         private String bloodType;

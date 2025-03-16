@@ -22,21 +22,21 @@ public class BrandController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BrandDTO.GetDto>> getAllBrands() {
-        List<BrandDTO.GetDto> brands = brandService.findAll();
+    public ResponseEntity<List<BrandDTO.GetBrandDto>> getAllBrands() {
+        List<BrandDTO.GetBrandDto> brands = brandService.findAll();
         return ResponseEntity.ok(brands);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BrandDTO.GetDto> getBrandById(@PathVariable Long id) {
+    public ResponseEntity<BrandDTO.GetBrandDto> getBrandById(@PathVariable Long id) {
         return brandService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/save")
-    public ResponseEntity<BrandDTO.GetDto> saveOrUpdateBrand(@RequestBody BrandDTO.SaveDto brandDTO) {
-        BrandDTO.GetDto savedBrand = brandService.saveOrUpdate(brandDTO);
+    public ResponseEntity<BrandDTO.GetBrandDto> saveOrUpdateBrand(@RequestBody BrandDTO.SaveBrandDto brandDTO) {
+        BrandDTO.GetBrandDto savedBrand = brandService.saveOrUpdate(brandDTO);
         return ResponseEntity.ok(savedBrand);
     }
 
@@ -50,15 +50,15 @@ public class BrandController {
     }
 
     @GetMapping("/search/name")
-    public ResponseEntity<BrandDTO.GetDto> findByName(@RequestParam String name) {
+    public ResponseEntity<BrandDTO.GetBrandDto> findByName(@RequestParam String name) {
         return brandService.findByName(name)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/search/name-containing")
-    public ResponseEntity<List<BrandDTO.GetDto>> findByNameContaining(@RequestParam String namePattern) {
-        List<BrandDTO.GetDto> brands = brandService.findByNameContaining(namePattern);
+    public ResponseEntity<List<BrandDTO.GetBrandDto>> findByNameContaining(@RequestParam String namePattern) {
+        List<BrandDTO.GetBrandDto> brands = brandService.findByNameContaining(namePattern);
         return ResponseEntity.ok(brands);
     }
 }

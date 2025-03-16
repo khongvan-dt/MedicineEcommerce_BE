@@ -15,7 +15,7 @@ public class OrderDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetDto {
+    public static class GetOrderDto {
         private Long id;
         private String orderCode;
         private Long patientId;
@@ -32,7 +32,7 @@ public class OrderDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SaveDto {
+    public static class SaveOrderDto {
         private Long id;
         private String orderCode;
         private Long patientId;

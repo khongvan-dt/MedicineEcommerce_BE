@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BrandService {
-    List<BrandDTO.GetDto> findAll();
-    Optional<BrandDTO.GetDto> findById(Long id);
-    BrandDTO.GetDto saveOrUpdate(BrandDTO.SaveDto brandDTO);
+    List<BrandDTO.GetBrandDto> findAll();
+    Optional<BrandDTO.GetBrandDto> findById(Long id);
+    BrandDTO.GetBrandDto saveOrUpdate(BrandDTO.SaveBrandDto brandDTO);
     void deleteById(Long id);
-    Optional<BrandDTO.GetDto> findByName(String name);
-    List<BrandDTO.GetDto> findByNameContaining(String namePattern);
+    Optional<BrandDTO.GetBrandDto> findByName(String name);
+    List<BrandDTO.GetBrandDto> findByNameContaining(String namePattern);
 
 }

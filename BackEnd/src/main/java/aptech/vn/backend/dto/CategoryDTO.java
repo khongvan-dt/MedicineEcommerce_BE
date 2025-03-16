@@ -12,7 +12,7 @@ public class CategoryDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetDto {
+    public static class GetCategoryDto {
         private Long id;
         private String name;
         private Long parentId;
@@ -23,7 +23,7 @@ public class CategoryDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SaveDto {
+    public static class SaveCategoryDto {
         private Long id;
         private String name;
         private Long parentId;

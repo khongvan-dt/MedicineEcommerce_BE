@@ -20,20 +20,20 @@ public class MedicineController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MedicineDTO.GetDto>> getAllMedicines() {
+    public ResponseEntity<List<MedicineDTO.GetMedicineDto>> getAllMedicines() {
         return ResponseEntity.ok(medicineService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MedicineDTO.GetDto> getMedicineById(@PathVariable Long id) {
+    public ResponseEntity<MedicineDTO.GetMedicineDto> getMedicineById(@PathVariable Long id) {
         return medicineService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/save")
-    public ResponseEntity<ApiResponse> saveOrUpdateMedicine(@RequestBody MedicineDTO.SaveDto medicineDTO) {
-        MedicineDTO.GetDto savedMedicine = medicineService.saveOrUpdate(medicineDTO);
+    public ResponseEntity<ApiResponse> saveOrUpdateMedicine(@RequestBody MedicineDTO.SaveMedicineDto medicineDTO) {
+        MedicineDTO.GetMedicineDto savedMedicine = medicineService.saveOrUpdate(medicineDTO);
         return ResponseEntity.ok(new ApiResponse(true,
                 medicineDTO.getId() == null || medicineDTO.getId() == 0 ?
                         "Thêm thuốc thành công!" : "Cập nhật thuốc thành công!",
@@ -47,14 +47,14 @@ public class MedicineController {
     }
 
     @GetMapping("/by-code")
-    public ResponseEntity<MedicineDTO.GetDto> getMedicineByCode(@RequestParam String code) {
+    public ResponseEntity<MedicineDTO.GetMedicineDto> getMedicineByCode(@RequestParam String code) {
         return medicineService.findByCode(code)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/by-name")
-    public ResponseEntity<List<MedicineDTO.GetDto>> getMedicineByName(@RequestParam String name) {
+    public ResponseEntity<List<MedicineDTO.GetMedicineDto>> getMedicineByName(@RequestParam String name) {
         return ResponseEntity.ok(medicineService.findByNameContaining(name));
     }
 }

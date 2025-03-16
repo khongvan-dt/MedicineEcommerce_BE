@@ -21,21 +21,21 @@ public class AttributeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AttributeDTO.GetDto>> getAllAttributes() {
-        List<AttributeDTO.GetDto> attributes = attributeService.findAll();
+    public ResponseEntity<List<AttributeDTO.GetAttributeDto>> getAllAttributes() {
+        List<AttributeDTO.GetAttributeDto> attributes = attributeService.findAll();
         return ResponseEntity.ok(attributes);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AttributeDTO.GetDto> getAttributeById(@PathVariable Long id) {
+    public ResponseEntity<AttributeDTO.GetAttributeDto> getAttributeById(@PathVariable Long id) {
         return attributeService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/save")
-    public ResponseEntity<AttributeDTO.GetDto> saveOrUpdateAttribute(@RequestBody AttributeDTO.SaveDto attributeDTO) {
-        AttributeDTO.GetDto savedAttribute = attributeService.saveOrUpdate(attributeDTO);
+    public ResponseEntity<AttributeDTO.GetAttributeDto> saveOrUpdateAttribute(@RequestBody AttributeDTO.SaveAttributeDto attributeDTO) {
+        AttributeDTO.GetAttributeDto savedAttribute = attributeService.saveOrUpdate(attributeDTO);
         return ResponseEntity.ok(savedAttribute);
     }
 
@@ -49,33 +49,33 @@ public class AttributeController {
     }
 
     @GetMapping("/search/name")
-    public ResponseEntity<List<AttributeDTO.GetDto>> findByName(@RequestParam String name) {
-        List<AttributeDTO.GetDto> attributes = attributeService.findByName(name);
+    public ResponseEntity<List<AttributeDTO.GetAttributeDto>> findByName(@RequestParam String name) {
+        List<AttributeDTO.GetAttributeDto> attributes = attributeService.findByName(name);
         return ResponseEntity.ok(attributes);
     }
 
     @GetMapping("/search/price-in")
-    public ResponseEntity<List<AttributeDTO.GetDto>> findByPriceInLessThanEqual(@RequestParam BigDecimal price) {
-        List<AttributeDTO.GetDto> attributes = attributeService.findByPriceInLessThanEqual(price);
+    public ResponseEntity<List<AttributeDTO.GetAttributeDto>> findByPriceInLessThanEqual(@RequestParam BigDecimal price) {
+        List<AttributeDTO.GetAttributeDto> attributes = attributeService.findByPriceInLessThanEqual(price);
         return ResponseEntity.ok(attributes);
     }
 
     @GetMapping("/search/price-out")
-    public ResponseEntity<List<AttributeDTO.GetDto>> findByPriceOutLessThanEqual(@RequestParam BigDecimal price) {
-        List<AttributeDTO.GetDto> attributes = attributeService.findByPriceOutLessThanEqual(price);
+    public ResponseEntity<List<AttributeDTO.GetAttributeDto>> findByPriceOutLessThanEqual(@RequestParam BigDecimal price) {
+        List<AttributeDTO.GetAttributeDto> attributes = attributeService.findByPriceOutLessThanEqual(price);
         return ResponseEntity.ok(attributes);
     }
 
     @GetMapping("/search/stock")
-    public ResponseEntity<List<AttributeDTO.GetDto>> findByStockGreaterThan(@RequestParam Integer stock) {
-        List<AttributeDTO.GetDto> attributes = attributeService.findByStockGreaterThan(stock);
+    public ResponseEntity<List<AttributeDTO.GetAttributeDto>> findByStockGreaterThan(@RequestParam Integer stock) {
+        List<AttributeDTO.GetAttributeDto> attributes = attributeService.findByStockGreaterThan(stock);
         return ResponseEntity.ok(attributes);
     }
 
     @GetMapping("/search/expiry")
-    public ResponseEntity<List<AttributeDTO.GetDto>> findByExpiryDateBefore(@RequestParam String date) {
+    public ResponseEntity<List<AttributeDTO.GetAttributeDto>> findByExpiryDateBefore(@RequestParam String date) {
         LocalDate expiryDate = LocalDate.parse(date);
-        List<AttributeDTO.GetDto> attributes = attributeService.findByExpiryDateBefore(expiryDate);
+        List<AttributeDTO.GetAttributeDto> attributes = attributeService.findByExpiryDateBefore(expiryDate);
         return ResponseEntity.ok(attributes);
     }
 }

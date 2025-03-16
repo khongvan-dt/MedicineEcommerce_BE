@@ -10,7 +10,7 @@ import org.mapstruct.ReportingPolicy;
 public interface AttributeMapper {
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")
-    AttributeDTO.GetDto toGetDto(Attribute entity);
+    AttributeDTO.GetAttributeDto toGetAttributeDto(Attribute entity);
 
-    Attribute toEntity(AttributeDTO.SaveDto dto);
+    Attribute toAttributeEntity(AttributeDTO.SaveAttributeDto dto);
 }

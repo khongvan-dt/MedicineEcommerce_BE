@@ -14,7 +14,7 @@ public interface ReviewMapper {
     @Mapping(target = "serviceId", source = "service.id")
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")
-    ReviewDTO.GetDto toGetDto(Review entity);
+    ReviewDTO.GetReviewDto toGetReviewDto(Review entity);
 
-    Review toEntity(ReviewDTO.SaveDto dto);
+    Review toReviewEntity(ReviewDTO.SaveReviewDto dto);
 }
